@@ -8,9 +8,18 @@ import { saveTracks } from "./track-store";
 
 /**
  * Saves the user's recently played tracks. Spotify only exposes the last 50 plays, so
- * this runs on a schedule and whenever the user opens the app. `played_at` is stored as
- * Spotify reports it, truncated to the second.
+ * this runs on a schedule and whenever the user opens the app.
  */
+/**
+ * When a recently played item started, truncated to the second. Spotify's `played_at` is
+ * when playback ended (consecutive items are one track length apart), while plays are
+ * stored by their start, as imports from the streaming history export are.
+ */
+export function syncedPlayStart(playedAt: string, durationMs: number): string {
+  const start = new Date(playedAt).getTime() - durationMs;
+  return new Date(Math.floor(start / 1000) * 1000).toISOString();
+}
+
 export async function syncRecentlyPlayed(
   db: Db,
   user: { id: string; last_sync_cursor_ms: number | null },
@@ -39,9 +48,7 @@ export async function syncRecentlyPlayed(
     plays.push({
       user_id: user.id,
       track_id: track.id,
-      played_at: new Date(
-        Math.floor(new Date(item.played_at).getTime() / 1000) * 1000,
-      ).toISOString(),
+      played_at: syncedPlayStart(item.played_at, track.durationMs),
       ms_played: track.durationMs,
       source: PlaySource.Synced,
     });
