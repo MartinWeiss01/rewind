@@ -2,17 +2,29 @@ import { z } from "zod";
 
 /**
  * One entry of Spotify's Extended Streaming History export
- * (Streaming_History_Audio_*.json). Only the fields Rewind needs are read; everything
- * else in the file (IP address, platform, country…) is ignored and never stored.
+ * (Streaming_History_Audio_*.json). Only the fields Rewind needs are read: the track,
+ * when it ended (`ts`, UTC per Spotify's export documentation), how long it played and
+ * the catalog names. Everything else (IP address, platform, country…) is ignored and
+ * never stored. Field names to be re-checked against a real export's "Read Me First".
  */
 const entrySchema = z.looseObject({
   ts: z.iso.datetime({ offset: true }),
   ms_played: z.number().int().nonnegative(),
   spotify_track_uri: z.string().nullable().optional(),
   master_metadata_track_name: z.string().nullable().optional(),
+  master_metadata_album_artist_name: z.string().nullable().optional(),
+  master_metadata_album_album_name: z.string().nullable().optional(),
 });
 
-export type HistoryEntry = { trackId: string; playedAt: Date; msPlayed: number };
+export type HistoryEntry = {
+  trackId: string;
+  playedAt: Date;
+  msPlayed: number;
+  /** Public catalog names from the export, used until the track is fetched from Spotify. */
+  trackName: string | null;
+  artistName: string | null;
+  albumName: string | null;
+};
 
 export type ParsedHistory = {
   entries: HistoryEntry[];
@@ -56,6 +68,9 @@ export function parseStreamingHistory(content: unknown): ParsedHistory {
       trackId,
       playedAt: new Date(endedAt - parsed.data.ms_played),
       msPlayed: parsed.data.ms_played,
+      trackName: parsed.data.master_metadata_track_name ?? null,
+      artistName: parsed.data.master_metadata_album_artist_name ?? null,
+      albumName: parsed.data.master_metadata_album_album_name ?? null,
     });
   }
   if (content.length > 0 && recognised === 0) throw new NotAStreamingHistoryError();

@@ -14,7 +14,14 @@ describe("parseStreamingHistory", () => {
     const { entries, skipped } = parseStreamingHistory([entry()]);
     expect(skipped).toBe(0);
     expect(entries).toEqual([
-      { trackId: "abc123", playedAt: new Date("2026-03-01T20:00:00Z"), msPlayed: 240_000 },
+      {
+        trackId: "abc123",
+        playedAt: new Date("2026-03-01T20:00:00Z"),
+        msPlayed: 240_000,
+        trackName: "Invented Song",
+        artistName: null,
+        albumName: null,
+      },
     ]);
   });
 
