@@ -26,16 +26,19 @@ const albumOne: AlbumRef = {
   id: "al-one",
   name: "Invented One",
   cover: { kind: "generated", seed: 1 },
+  releaseDate: null,
 };
 const albumTwo: AlbumRef = {
   id: "al-two",
   name: "Invented Two",
   cover: { kind: "generated", seed: 2 },
+  releaseDate: null,
 };
 const albumThree: AlbumRef = {
   id: "al-three",
   name: "Invented Three",
   cover: { kind: "generated", seed: 3 },
+  releaseDate: null,
 };
 
 function makeTrack(id: string, name: string, artists: ArtistRef[], album: AlbumRef): Track {
