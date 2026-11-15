@@ -81,6 +81,7 @@ Summary; full rules in [`docs/contributing/git-workflow.md`](docs/contributing/g
 | Build or change a UI component | ui-sdk docs in `node_modules/@ui-sdk/react/docs/` (see Stack) |
 | Call a Spotify endpoint | the official Web API reference; record the endpoint in the Spotify integration doc once it exists |
 | Add a library outside ui-sdk | [`docs/adr/0001-libraries-outside-ui-sdk.md`](docs/adr/0001-libraries-outside-ui-sdk.md) |
+| Read or change data, add a statistic | [`docs/adr/0006-data-sources-and-demo.md`](docs/adr/0006-data-sources-and-demo.md) |
 | Add a route or screen | [`docs/adr/0003-app-router-conventions.md`](docs/adr/0003-app-router-conventions.md) |
 | Add UI copy | [`docs/adr/0002-internationalization-next-intl.md`](docs/adr/0002-internationalization-next-intl.md) |
 | Add an environment variable | `.env.example` and the env schema |
