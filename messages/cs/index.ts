@@ -1,6 +1,7 @@
 import type { Messages } from "../en";
 import common from "./common.json";
 import discover from "./discover.json";
+import history from "./history.json";
 import marketing from "./marketing.json";
 import nav from "./nav.json";
 import placeholder from "./placeholder.json";
@@ -19,6 +20,7 @@ const messages: Messages = {
   states,
   settings,
   discover,
+  history,
 };
 
 export default messages;

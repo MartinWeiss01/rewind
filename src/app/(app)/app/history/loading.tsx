@@ -1,5 +1,5 @@
-import { ScreenSkeleton } from "@/components/feedback/screen-skeleton";
+import { HistorySkeleton } from "@/features/history/history-skeleton";
 
 export default function Loading() {
-  return <ScreenSkeleton />;
+  return <HistorySkeleton />;
 }

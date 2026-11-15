@@ -1,0 +1,109 @@
+{
+  "synced": "Synchronizováno {when}",
+  "plays": "Přehrání",
+  "filters": "Filtrovat přehrání",
+  "search": "Hledat v přehráních",
+  "searchPlaceholder": "Hledej skladbu, interpreta nebo album",
+  "from": "Od",
+  "to": "Do",
+  "sourceLabel": "Zdroj",
+  "sourceFilter": {
+    "all": "Vše",
+    "synced": "Synchronizované",
+    "imported": "Importované"
+  },
+  "showSkips": "Zobrazit přeskočené",
+  "tableCaption": "Tvoje přehrání, nejnovější nahoře, pokud neřadíš jinak",
+  "columns": {
+    "played": "Přehráno",
+    "track": "Skladba",
+    "album": "Album",
+    "listened": "Poslech",
+    "source": "Zdroj",
+    "actions": "Akce"
+  },
+  "skip": "Přeskočeno",
+  "source": {
+    "synced": "Synchronizováno",
+    "imported": "Importováno"
+  },
+  "openInSpotify": "Otevřít {track} ve Spotify",
+  "showing": "{first}–{last} z {total, plural, other {# přehrání}}",
+  "pagination": "Stránky přehrání",
+  "previous": "Předchozí",
+  "next": "Další",
+  "emptyTitle": "Zatím žádná přehrání",
+  "emptyBody": "Naimportuj rozšířenou historii streamování a uvidíš tu každé přehrání.",
+  "noMatchTitle": "Filtrům neodpovídá žádné přehrání",
+  "noMatchBody": "Zkus širší období nebo vymaž hledání.",
+  "clearFilters": "Zrušit filtry",
+  "import": {
+    "open": "Importovat historii",
+    "title": "Import rozšířené historie streamování",
+    "howTo": "Požádej o ni ve Spotify → Účet → Nastavení soukromí. Dostaneš ZIP se soubory <file>Streaming_History_Audio_*.json</file>.",
+    "close": "Zavřít import",
+    "dropTitle": "Přetáhni sem soubory JSON nebo je vyber",
+    "dropHint": "Klidně víc souborů najednou. Opakovaný import stejného souboru nikdy nevytvoří duplicity.",
+    "choose": "Vybrat soubory",
+    "demoChip": "Demo",
+    "demoHint": "Vyzkoušej to s naším ukázkovým exportem. Naimportuje se jen do tvé demo relace.",
+    "useSample": "Použít ukázkový soubor",
+    "overall": "Průběh importu",
+    "waiting": "Čeká",
+    "importing": "Importuje se…",
+    "fileDone": "Hotovo · {count, plural, one {přidáno # přehrání} other {přidáno # přehrání}}",
+    "keepOpen": "Soubory se importují jeden po druhém. Nech stránku otevřenou, dokud import neskončí.",
+    "cancel": "Zrušit",
+    "summary": {
+      "files": "Načtené soubory",
+      "added": "Přidaná přehrání",
+      "duplicates": "Už známá",
+      "duplicatesHint": "přeskočena jako duplicity",
+      "skipped": "Neimportováno",
+      "skippedHint": "podcasty, místní soubory, neznámé řádky"
+    },
+    "noNewPlays": "nic nového",
+    "someFailed": "{count, plural, one {Jeden soubor se nepodařilo} few {# soubory se nepodařilo} other {# souborů se nepodařilo}} naimportovat: {names}",
+    "notes": "Epizody podcastů a místní soubory nemají ID skladby, proto byly přeskočeny. Krátká přehrání se počítají jako přeskočená (práh změníš v Nastavení).",
+    "seeStats": "Zobrazit aktuální statistiky",
+    "importMore": "Importovat další",
+    "chooseAgain": "Vybrat soubory znovu",
+    "errors": {
+      "zip": {
+        "short": "Archiv ZIP",
+        "title": "{name} není export ve formátu JSON",
+        "body": "Nejdřív ho rozbal a nahraj soubory <file>Streaming_History_Audio_*.json</file>, které obsahuje."
+      },
+      "notJson": {
+        "short": "Není JSON",
+        "title": "{name} není soubor JSON",
+        "body": "Nahraj soubory <file>Streaming_History_Audio_*.json</file> ze svého exportu ze Spotify."
+      },
+      "notHistory": {
+        "short": "Není historie streamování",
+        "title": "{name} není soubor rozšířené historie streamování",
+        "body": "Soubory ze základního exportu „Údaje o účtu“ nemají dost podrobností. Požádej o rozšířenou historii streamování a nahraj její soubory <file>Streaming_History_Audio_*.json</file>."
+      },
+      "tooLarge": {
+        "short": "Příliš velký",
+        "title": "{name} je příliš velký",
+        "body": "Každý soubor může mít až 30 MB. Soubory <file>Streaming_History_Audio_*.json</file> ze Spotify bývají mnohem menší."
+      },
+      "empty": {
+        "short": "Prázdný soubor",
+        "title": "{name} je prázdný",
+        "body": "Vyber některý ze souborů <file>Streaming_History_Audio_*.json</file> ze svého exportu."
+      },
+      "tooMany": {
+        "short": "Příliš mnoho souborů",
+        "title": "Příliš mnoho souborů najednou",
+        "body": "Najednou můžeš importovat až 20 souborů <file>Streaming_History_Audio_*.json</file>."
+      },
+      "failed": {
+        "short": "Chyba",
+        "title": "{name} se nepodařilo naimportovat",
+        "body": "Něco se pokazilo na naší straně. Tvoje data jsou v bezpečí; zkus <file>soubor</file> nahrát znovu."
+      }
+    }
+  }
+}
