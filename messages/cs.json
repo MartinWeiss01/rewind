@@ -1,0 +1,51 @@
+{
+  "common": {
+    "appName": "Rewind",
+    "tryDemo": "Vyzkoušet demo",
+    "demoNote": "Demo funguje bez účtu."
+  },
+  "shell": {
+    "skipToContent": "Přeskočit na obsah",
+    "language": "Jazyk",
+    "mainNavigation": "Hlavní navigace"
+  },
+  "nav": {
+    "dashboard": "Přehled",
+    "history": "Historie",
+    "playlists": "Playlisty",
+    "discover": "Objevy",
+    "settings": "Nastavení"
+  },
+  "marketing": {
+    "eyebrow": "Pusť si to znovu",
+    "title": "Hudební knihovna v pořádku.",
+    "lead": "Nástroje, které uklidí roky ukládání do playlistů, a AI doporučení podle toho, co opravdu posloucháš."
+  },
+  "screens": {
+    "dashboard": { "eyebrow": "Tvoje poslouchání", "title": "Přehled" },
+    "history": { "eyebrow": "Každé přehrání, synchronizované i importované", "title": "Historie" },
+    "playlists": { "eyebrow": "Tvoje knihovna", "title": "Playlisty" },
+    "discover": { "eyebrow": "Doporučení", "title": "Objevy" },
+    "settings": { "eyebrow": "Účet a aplikace", "title": "Nastavení" }
+  },
+  "placeholder": {
+    "title": "Tahle obrazovka je na cestě",
+    "body": "Rozvržení je hotové, data přijdou s demo zdrojem dat."
+  },
+  "states": {
+    "loading": "Načítání",
+    "errorTitle": "Něco se pokazilo",
+    "errorBody": "Obrazovku se nepodařilo načíst. Tvoje data jsou v bezpečí.",
+    "retry": "Zkusit znovu",
+    "notFoundTitle": "Tady nic není",
+    "notFoundBody": "Tahle stránka neexistuje nebo se přesunula.",
+    "backHome": "Zpět na začátek"
+  },
+  "settings": {
+    "appearance": "Vzhled",
+    "theme": "Motiv",
+    "themeSystem": "Podle systému",
+    "themeLight": "Světlý",
+    "themeDark": "Tmavý"
+  }
+}
