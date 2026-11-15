@@ -1,5 +1,6 @@
 import common from "./common.json";
 import discover from "./discover.json";
+import dashboard from "./dashboard.json";
 import history from "./history.json";
 import marketing from "./marketing.json";
 import nav from "./nav.json";
@@ -21,6 +22,7 @@ const messages = {
   states,
   settings,
   discover,
+  dashboard,
   history,
   recap,
 };

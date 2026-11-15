@@ -1,5 +1,5 @@
-import { ScreenSkeleton } from "@/components/feedback/screen-skeleton";
+import { DashboardSkeleton } from "@/features/stats/dashboard/dashboard-skeleton";
 
 export default function Loading() {
-  return <ScreenSkeleton />;
+  return <DashboardSkeleton />;
 }
