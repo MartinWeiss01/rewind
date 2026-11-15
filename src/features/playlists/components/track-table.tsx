@@ -3,14 +3,14 @@
 import { createColumnHelper, tableFeatures, useTable } from "@tanstack/react-table";
 import { Button } from "@ui-sdk/react/button";
 import { useFormatter, useTranslations } from "next-intl";
-import { useId, useMemo, useState, useTransition } from "react";
+import { useId, useMemo, useState } from "react";
 import { match } from "ts-pattern";
 import { Cover } from "@/components/ui/cover";
 import { buttonClass, chipClass } from "@/components/ui/styles";
 import type { PlaylistItem } from "@/domain/playlists";
 import { formatClock } from "@/lib/format";
 import { applyEditAction } from "../actions";
-import { ChangeKind } from "../changes";
+import { ChangeKind, thrownWriteFailure } from "../changes";
 import { useNotice } from "./notice";
 import {
   TrackOrderCheck,
@@ -20,6 +20,7 @@ import {
   TrackOrderRow,
 } from "./track-order";
 import { checkbox, table, tableBox, td, th } from "./ui";
+import { usePlaylistWrite } from "./use-playlist-write";
 
 type Row = PlaylistItem & { position: number; duplicate: boolean; plays: number | null };
 
@@ -84,7 +85,8 @@ export function TrackTable({
   const initialOrder = useMemo(() => items.map((i) => i.key), [items]);
   const [order, setOrder] = useState<string[]>(initialOrder);
   const [selected, setSelected] = useState<string[]>([]);
-  const [saving, startSaving] = useTransition();
+  const write = usePlaylistWrite(applyEditAction);
+  const saving = write.isPending;
 
   const byKey = useMemo(() => new Map(items.map((i) => [i.key, i])), [items]);
   const duplicates = useMemo(() => new Set(duplicateKeys), [duplicateKeys]);
@@ -241,25 +243,24 @@ export function TrackTable({
       const item = byKey.get(key);
       return item ? [item.track.id] : [];
     });
-    startSaving(async () => {
-      const result = await applyEditAction({
-        playlistId,
-        basedOn,
-        trackIds,
-        kind: ChangeKind.Edit,
-      });
-      match(result)
-        .with({ status: "ok" }, ({ snapshotId }) =>
-          notify({
-            kind: "done",
-            message:
-              removedCount > 0 ? t("savedRemoved", { count: removedCount }) : t("savedOrder"),
-            playlistId,
-            snapshotId,
-          }),
-        )
-        .otherwise((failure) => notify({ kind: "failed", result: failure }));
-    });
+    write.mutate(
+      { playlistId, basedOn, trackIds, kind: ChangeKind.Edit },
+      {
+        onSuccess: (result) =>
+          match(result)
+            .with({ status: "ok" }, ({ snapshotId }) =>
+              notify({
+                kind: "done",
+                message:
+                  removedCount > 0 ? t("savedRemoved", { count: removedCount }) : t("savedOrder"),
+                playlistId,
+                snapshotId,
+              }),
+            )
+            .otherwise((failure) => notify({ kind: "failed", result: failure })),
+        onError: () => notify({ kind: "failed", result: thrownWriteFailure }),
+      },
+    );
   };
 
   const moveToTop = () => {

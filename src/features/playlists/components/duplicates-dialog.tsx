@@ -15,7 +15,7 @@ import {
   SegmentedControlItem,
 } from "@ui-sdk/react/segmented-control";
 import { useFormatter, useTranslations } from "next-intl";
-import { useId, useMemo, useState, useTransition } from "react";
+import { useId, useMemo, useState } from "react";
 import { match } from "ts-pattern";
 import { StatePanel } from "@/components/feedback/state-panel";
 import { Cover } from "@/components/ui/cover";
@@ -23,7 +23,7 @@ import { segmentedIndicator, segmentedItem, segmentedRoot } from "@/components/u
 import { alert, buttonClass, chipClass } from "@/components/ui/styles";
 import type { PlaylistItem } from "@/domain/playlists";
 import { applyEditAction } from "../actions";
-import { ChangeKind, type WriteResult } from "../changes";
+import { ChangeKind, writeFailure } from "../changes";
 import {
   findDuplicateGroups,
   keysToRemove,
@@ -33,6 +33,7 @@ import {
 } from "../duplicates";
 import { useNotice } from "./notice";
 import { dialogBackdrop, dialogContent, dialogTitle, fieldHint, fieldLabel } from "./ui";
+import { usePlaylistWrite } from "./use-playlist-write";
 import { WriteOutcome } from "./write-outcome";
 
 const reasonTone = (level: MatchLevel) =>
@@ -66,35 +67,31 @@ export function DuplicatesDialog({
   const levelLabel = useId();
   const [level, setLevel] = useState<MatchLevel>(MatchLevel.Recording);
   const [keep, setKeep] = useState<Record<string, string>>({});
-  const [result, setResult] = useState<WriteResult | null>(null);
-  const [pending, startTransition] = useTransition();
+  const write = usePlaylistWrite(applyEditAction);
+  const failure = writeFailure(write);
 
   const groups = useMemo(() => findDuplicateGroups(items, level), [items, level]);
   const removing = useMemo(() => keysToRemove(groups, keep), [groups, keep]);
 
   const apply = () => {
     const trackIds = items.filter((i) => !removing.has(i.key)).map((i) => i.track.id);
-    startTransition(async () => {
-      const outcome = await applyEditAction({
-        playlistId,
-        basedOn,
-        trackIds,
-        kind: ChangeKind.RemoveDuplicates,
-      });
-      if (outcome.status === "ok") {
-        onOpenChange(false);
-        setKeep({});
-        setResult(null);
-        notify({
-          kind: "done",
-          message: t("done", { count: outcome.count }),
-          playlistId,
-          snapshotId: outcome.snapshotId,
-        });
-      } else {
-        setResult(outcome);
-      }
-    });
+    write.mutate(
+      { playlistId, basedOn, trackIds, kind: ChangeKind.RemoveDuplicates },
+      {
+        onSuccess: (outcome) => {
+          if (outcome.status !== "ok") return;
+          onOpenChange(false);
+          setKeep({});
+          write.reset();
+          notify({
+            kind: "done",
+            message: t("done", { count: outcome.count }),
+            playlistId,
+            snapshotId: outcome.snapshotId,
+          });
+        },
+      },
+    );
   };
 
   return (
@@ -102,7 +99,7 @@ export function DuplicatesDialog({
       open={open}
       onOpenChange={(next) => {
         onOpenChange(next);
-        if (!next) setResult(null);
+        if (!next) write.reset();
       }}
     >
       <DialogBackdrop className={dialogBackdrop} />
@@ -212,18 +209,16 @@ export function DuplicatesDialog({
           </>
         )}
 
-        {result && result.status !== "ok" ? (
-          <WriteOutcome result={result} onDismiss={() => setResult(null)} />
-        ) : null}
+        {failure ? <WriteOutcome result={failure} onDismiss={() => write.reset()} /> : null}
 
         <div className="flex justify-end gap-2">
           <DialogClose className={buttonClass("ghost")}>{t("cancel")}</DialogClose>
           <Button
             className={buttonClass("danger")}
-            disabled={removing.size === 0 || pending}
+            disabled={removing.size === 0 || write.isPending}
             onClick={apply}
           >
-            {pending ? t("removing") : t("submit", { count: removing.size })}
+            {write.isPending ? t("removing") : t("submit", { count: removing.size })}
           </Button>
         </div>
       </DialogContent>

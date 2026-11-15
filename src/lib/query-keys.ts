@@ -18,6 +18,8 @@ export const queryKeys = {
   playlists: {
     all: ["playlists"] as const,
     trackSearch: (query: string) => ["playlists", "trackSearch", query] as const,
+    /** Prefix of every merge preview; playlist writes invalidate it. */
+    mergePreviews: ["playlists", "mergePreview"] as const,
     mergePreview: (input: {
       targetId: string | null;
       sourceIds: readonly string[];

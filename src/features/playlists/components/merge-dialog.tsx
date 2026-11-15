@@ -1,5 +1,6 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import {
   AlertDialog,
   AlertDialogBackdrop,
@@ -45,12 +46,13 @@ import {
 import { Switch, SwitchThumb } from "@ui-sdk/react/switch";
 import { useRouter } from "next/navigation";
 import { useFormatter, useTranslations } from "next-intl";
-import { useEffect, useMemo, useState, useTransition } from "react";
+import { useMemo, useState } from "react";
 import { z } from "zod";
 import { Skeleton } from "@/components/feedback/skeleton";
 import { alert, buttonClass } from "@/components/ui/styles";
-import { type MergePreview, mergeAction, previewMergeAction } from "../actions";
-import type { WriteResult } from "../changes";
+import { queryKeys } from "@/lib/query-keys";
+import { mergeAction, previewMergeAction } from "../actions";
+import { writeFailure } from "../changes";
 import { useNotice } from "./notice";
 import {
   dialogBackdrop,
@@ -64,6 +66,7 @@ import {
   switchRoot,
   switchThumb,
 } from "./ui";
+import { usePlaylistWrite } from "./use-playlist-write";
 import { WriteOutcome } from "./write-outcome";
 
 /** A playlist offered as a merge source or target. */
@@ -100,30 +103,21 @@ export function MergeDialog({
   const [sources, setSources] = useState<string[]>([]);
   const [skipExisting, setSkipExisting] = useState(true);
   const [deleteSources, setDeleteSources] = useState(false);
-  const [preview, setPreview] = useState<MergePreview | null>(null);
   const [confirming, setConfirming] = useState(false);
-  const [result, setResult] = useState<WriteResult | null>(null);
-  const [pending, startTransition] = useTransition();
+  const write = usePlaylistWrite(mergeAction);
+  const failure = writeFailure(write);
 
   const targetId = target === NEW_TARGET ? null : target;
   const sourceOptions = playlists.filter((p) => p.readable && p.id !== targetId);
   const chosen = useMemo(() => sources.filter((id) => id !== targetId), [sources, targetId]);
   const nameOf = (id: string) => playlists.find((p) => p.id === id)?.name ?? id;
 
-  useEffect(() => {
-    if (!open || chosen.length === 0) {
-      setPreview(null);
-      return;
-    }
-    let current = true;
-    setPreview(null);
-    previewMergeAction({ targetId, sourceIds: chosen, skipExisting }).then((next) => {
-      if (current) setPreview(next);
-    });
-    return () => {
-      current = false;
-    };
-  }, [open, chosen, targetId, skipExisting]);
+  const previewInput = { targetId, sourceIds: chosen, skipExisting };
+  const preview = useQuery({
+    queryKey: queryKeys.playlists.mergePreview(previewInput),
+    queryFn: () => previewMergeAction(previewInput),
+    enabled: open && chosen.length > 0,
+  });
 
   const reset = () => {
     setTarget(defaultTargetId ?? NEW_TARGET);
@@ -131,42 +125,44 @@ export function MergeDialog({
     setSources([]);
     setSkipExisting(true);
     setDeleteSources(false);
-    setResult(null);
+    write.reset();
   };
 
   const run = () => {
-    startTransition(async () => {
-      const outcome = await mergeAction({
+    write.mutate(
+      {
         targetId,
         newName: targetId ? null : newName.trim() || null,
         sourceIds: chosen,
         skipExisting,
         deleteSources,
-      });
-      setResult(outcome);
-      if (outcome.status === "ok") {
-        onOpenChange(false);
-        reset();
-        if (outcome.playlistId === defaultTargetId) {
-          notify({
-            kind: "done",
-            message: t("done", { count: outcome.count }),
-            playlistId: outcome.playlistId,
-            snapshotId: outcome.snapshotId,
-          });
-        } else {
-          router.push(`/app/playlists/${encodeURIComponent(outcome.playlistId)}`);
-        }
-      }
-    });
+      },
+      {
+        onSuccess: (outcome) => {
+          if (outcome.status !== "ok") return;
+          onOpenChange(false);
+          reset();
+          if (outcome.playlistId === defaultTargetId) {
+            notify({
+              kind: "done",
+              message: t("done", { count: outcome.count }),
+              playlistId: outcome.playlistId,
+              snapshotId: outcome.snapshotId,
+            });
+          } else {
+            router.push(`/app/playlists/${encodeURIComponent(outcome.playlistId)}`);
+          }
+        },
+      },
+    );
   };
 
   const canMerge =
     chosen.length > 0 &&
     (targetId !== null || newName.trim().length > 0) &&
-    preview?.status === "ok" &&
-    !pending;
-  const added = preview?.status === "ok" ? preview.added : 0;
+    preview.data?.status === "ok" &&
+    !write.isPending;
+  const added = preview.data?.status === "ok" ? preview.data.added : 0;
 
   return (
     <>
@@ -317,22 +313,26 @@ export function MergeDialog({
             </Switch>
           </label>
 
-          {chosen.length === 0 ? null : preview === null ? (
+          {chosen.length === 0 ? null : preview.isError ? (
+            <div role="alert" className={`${alert.base} ${alert.tone.danger}`}>
+              {t("previewError.failed")}
+            </div>
+          ) : preview.data === undefined ? (
             <div aria-busy="true" className="grid grid-cols-3 gap-3">
               <Skeleton className="h-20 rounded-2xl" />
               <Skeleton className="h-20 rounded-2xl" />
               <Skeleton className="h-20 rounded-2xl" />
             </div>
-          ) : preview.status === "error" ? (
+          ) : preview.data.status === "error" ? (
             <div role="alert" className={`${alert.base} ${alert.tone.danger}`}>
-              {t(`previewError.${preview.error}`)}
+              {t(`previewError.${preview.data.error}`)}
             </div>
           ) : (
             <dl className="m-0 grid grid-cols-3 gap-3">
               {[
-                [t("added"), `+${format.number(preview.added)}`],
-                [t("skipped"), format.number(preview.skipped)],
-                [t("after"), format.number(preview.total)],
+                [t("added"), `+${format.number(preview.data.added)}`],
+                [t("skipped"), format.number(preview.data.skipped)],
+                [t("after"), format.number(preview.data.total)],
               ].map(([label, value]) => (
                 <div
                   key={label}
@@ -345,9 +345,7 @@ export function MergeDialog({
             </dl>
           )}
 
-          {result && result.status !== "ok" ? (
-            <WriteOutcome result={result} onDismiss={() => setResult(null)} />
-          ) : null}
+          {failure ? <WriteOutcome result={failure} onDismiss={() => write.reset()} /> : null}
 
           <div className="flex justify-end gap-2">
             <DialogClose className={buttonClass("ghost")}>{t("cancel")}</DialogClose>
@@ -356,7 +354,7 @@ export function MergeDialog({
               disabled={!canMerge}
               onClick={() => (deleteSources ? setConfirming(true) : run())}
             >
-              {pending ? t("merging") : t("submit", { count: added })}
+              {write.isPending ? t("merging") : t("submit", { count: added })}
             </Button>
           </div>
         </DialogContent>

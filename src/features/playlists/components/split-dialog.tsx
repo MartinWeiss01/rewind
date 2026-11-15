@@ -23,15 +23,16 @@ import {
 } from "@ui-sdk/react/segmented-control";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useId, useMemo, useState, useTransition } from "react";
+import { useId, useMemo, useState } from "react";
 import { segmentedIndicator, segmentedItem, segmentedRoot } from "@/components/ui/segmented";
 import { buttonClass } from "@/components/ui/styles";
 import type { PlaylistItem } from "@/domain/playlists";
 import { splitAction } from "../actions";
-import type { WriteResult } from "../changes";
+import { writeFailure } from "../changes";
 import { planSplit, SplitBy, splitBySchema } from "../tools";
 import { useNotice } from "./notice";
 import { dialogBackdrop, dialogContent, dialogTitle, fieldHint, fieldLabel, input } from "./ui";
+import { usePlaylistWrite } from "./use-playlist-write";
 import { WriteOutcome } from "./write-outcome";
 
 /** Splits the playlist into new playlists by artist or release year; the original stays. */
@@ -54,28 +55,29 @@ export function SplitDialog({
   const byLabel = useId();
   const [by, setBy] = useState<SplitBy>(SplitBy.Artist);
   const [minSize, setMinSize] = useState(5);
-  const [result, setResult] = useState<WriteResult | null>(null);
-  const [pending, startTransition] = useTransition();
+  const write = usePlaylistWrite(splitAction);
+  const failure = writeFailure(write);
 
   const groups = useMemo(() => planSplit(items, by, minSize), [items, by, minSize]);
 
   const apply = () => {
-    startTransition(async () => {
-      const outcome = await splitAction({ playlistId, by, minSize });
-      if (outcome.status === "ok") {
-        onOpenChange(false);
-        setResult(null);
-        notify({
-          kind: "done",
-          message: t("done", { count: outcome.count }),
-          playlistId,
-          snapshotId: null,
-        });
-        router.refresh();
-      } else {
-        setResult(outcome);
-      }
-    });
+    write.mutate(
+      { playlistId, by, minSize },
+      {
+        onSuccess: (outcome) => {
+          if (outcome.status !== "ok") return;
+          onOpenChange(false);
+          write.reset();
+          notify({
+            kind: "done",
+            message: t("done", { count: outcome.count }),
+            playlistId,
+            snapshotId: null,
+          });
+          router.refresh();
+        },
+      },
+    );
   };
 
   return (
@@ -83,7 +85,7 @@ export function SplitDialog({
       open={open}
       onOpenChange={(next) => {
         onOpenChange(next);
-        if (!next) setResult(null);
+        if (!next) write.reset();
       }}
     >
       <DialogBackdrop className={dialogBackdrop} />
@@ -156,17 +158,15 @@ export function SplitDialog({
             </li>
           ))}
         </ul>
-        {result && result.status !== "ok" ? (
-          <WriteOutcome result={result} onDismiss={() => setResult(null)} />
-        ) : null}
+        {failure ? <WriteOutcome result={failure} onDismiss={() => write.reset()} /> : null}
         <div className="flex justify-end gap-2">
           <DialogClose className={buttonClass("ghost")}>{t("cancel")}</DialogClose>
           <Button
             className={buttonClass("primary")}
-            disabled={groups.length === 0 || pending}
+            disabled={groups.length === 0 || write.isPending}
             onClick={apply}
           >
-            {pending ? t("creating") : t("submit", { count: groups.length })}
+            {write.isPending ? t("creating") : t("submit", { count: groups.length })}
           </Button>
         </div>
       </DialogContent>

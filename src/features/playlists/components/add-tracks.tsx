@@ -1,6 +1,6 @@
 "use client";
 
-import { useAsyncOptions } from "@ui-sdk/react/async-options";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import {
   Combobox,
   ComboboxContent,
@@ -12,13 +12,17 @@ import {
   ComboboxStatus,
 } from "@ui-sdk/react/combobox";
 import { useTranslations } from "next-intl";
-import { useRef, useState, useTransition } from "react";
+import { useState } from "react";
 import { Cover } from "@/components/ui/cover";
 import { chipClass } from "@/components/ui/styles";
 import type { Track } from "@/domain/music";
+import { queryKeys } from "@/lib/query-keys";
+import { useDebouncedValue } from "@/lib/use-debounced-value";
 import { addTracksAction, searchTracksAction } from "../actions";
+import { thrownWriteFailure } from "../changes";
 import { useNotice } from "./notice";
 import { fieldHint, fieldLabel, input, popup } from "./ui";
+import { usePlaylistWrite } from "./use-playlist-write";
 
 /**
  * Search the catalog (up to ten results) and add a track by choosing it.
@@ -34,38 +38,48 @@ export function AddTracks({
   const t = useTranslations("playlists.add");
   const notify = useNotice();
   const [query, setQuery] = useState("");
-  const [, startTransition] = useTransition();
-  const [adding, setAdding] = useState<string | null>(null);
   const existing = new Set(existingTrackIds);
 
-  // Results are listed by track ID; the tracks themselves are kept here for rendering.
-  const found = useRef(new Map<string, Track>());
-  const results = useAsyncOptions<{ value: string; label: string }>(
-    async (text, { signal }) => {
-      const tracks = await searchTracksAction(text);
-      signal.throwIfAborted();
-      for (const track of tracks) found.current.set(track.id, track);
-      return tracks.map((track) => ({ value: track.id, label: track.name }));
-    },
-    { debounce: 250 },
+  // Search waits for a pause in typing; the previous results stay listed while the next load.
+  const searched = useDebouncedValue(query.trim(), 250);
+  const search = useQuery({
+    queryKey: queryKeys.playlists.trackSearch(searched),
+    queryFn: () => searchTracksAction(searched),
+    enabled: searched.length > 0,
+    placeholderData: keepPreviousData,
+  });
+  const tracks: readonly Track[] = query.trim() ? (search.data ?? []) : [];
+  const byId = new Map(tracks.map((track) => [track.id, track]));
+  const items = tracks.map((track) => ({ value: track.id, label: track.name }));
+  const status: "idle" | "loading" | "error" = search.isError
+    ? "error"
+    : query.trim() && (searched !== query.trim() || search.isFetching)
+      ? "loading"
+      : "idle";
+
+  const write = usePlaylistWrite((input: { playlistId: string; trackIds: string[] }) =>
+    addTracksAction(input),
   );
+  const adding = write.isPending ? (write.variables?.trackIds[0] ?? null) : null;
 
   const add = (track: Track) => {
-    setAdding(track.id);
-    startTransition(async () => {
-      const result = await addTracksAction({ playlistId, trackIds: [track.id] });
-      setAdding(null);
-      notify(
-        result.status === "ok"
-          ? {
-              kind: "done",
-              message: t("added", { title: track.name }),
-              playlistId,
-              snapshotId: null,
-            }
-          : { kind: "failed", result },
-      );
-    });
+    write.mutate(
+      { playlistId, trackIds: [track.id] },
+      {
+        onSuccess: (result) =>
+          notify(
+            result.status === "ok"
+              ? {
+                  kind: "done",
+                  message: t("added", { title: track.name }),
+                  playlistId,
+                  snapshotId: null,
+                }
+              : { kind: "failed", result },
+          ),
+        onError: () => notify({ kind: "failed", result: thrownWriteFailure }),
+      },
+    );
   };
 
   return (
@@ -81,19 +95,18 @@ export function AddTracks({
         <span className="eyebrow">{t("eyebrow")}</span>
       </div>
       <Combobox
-        items={results.items}
+        items={items}
         filter={false}
-        status={results.status}
+        status={status}
         query={query}
         value={null}
         onQueryChange={(next, details) => {
           // Only typing and clearing change the search; choosing a track keeps it.
           if (details.reason !== "input-change" && details.reason !== "clear-press") return;
           setQuery(next);
-          results.setQuery(next);
         }}
         onValueChange={(value) => {
-          const track = typeof value === "string" ? found.current.get(value) : undefined;
+          const track = typeof value === "string" ? byId.get(value) : undefined;
           if (track) add(track);
         }}
       >
@@ -125,7 +138,7 @@ export function AddTracks({
           <ComboboxList>
             {(state) =>
               (state.items as { value: string; label: string }[]).flatMap(({ value }) => {
-                const track = found.current.get(value);
+                const track = byId.get(value);
                 if (!track) return [];
                 return [
                   <ComboboxItem

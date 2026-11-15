@@ -10,9 +10,10 @@ describe("queryKeys", () => {
     expect(
       startsWith(
         queryKeys.playlists.mergePreview({ targetId: null, sourceIds: ["a"], skipExisting: true }),
-        queryKeys.playlists.all,
+        queryKeys.playlists.mergePreviews,
       ),
     ).toBe(true);
+    expect(startsWith(queryKeys.playlists.mergePreviews, queryKeys.playlists.all)).toBe(true);
     expect(startsWith(queryKeys.discover.playlistSeed("p"), queryKeys.discover.all)).toBe(true);
     expect(startsWith(queryKeys.discover.generation("g"), queryKeys.discover.all)).toBe(true);
   });

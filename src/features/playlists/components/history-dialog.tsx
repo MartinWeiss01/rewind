@@ -10,15 +10,15 @@ import {
   DialogTitle,
 } from "@ui-sdk/react/dialog";
 import { useFormatter, useTranslations } from "next-intl";
-import { useState, useTransition } from "react";
 import { match } from "ts-pattern";
 import { StatePanel } from "@/components/feedback/state-panel";
 import { alert, buttonClass } from "@/components/ui/styles";
 import type { PlaylistSnapshot } from "@/domain/playlists";
 import { restoreSnapshotAction } from "../actions";
-import { ChangeKind, parseChangeLabel, type WriteResult } from "../changes";
+import { ChangeKind, parseChangeLabel, writeFailure } from "../changes";
 import { useNotice } from "./notice";
 import { dialogBackdrop, dialogContent, dialogTitle } from "./ui";
+import { usePlaylistWrite } from "./use-playlist-write";
 import { WriteOutcome } from "./write-outcome";
 
 const dotColor = (kind: ChangeKind | null) =>
@@ -47,30 +47,34 @@ export function HistoryDialog({
   const t = useTranslations("playlistTools.history");
   const format = useFormatter();
   const notify = useNotice();
-  const [restoring, setRestoring] = useState<string | null>(null);
-  const [result, setResult] = useState<WriteResult | null>(null);
-  const [, startTransition] = useTransition();
+  const write = usePlaylistWrite((input: { playlistId: string; snapshotId: string }) =>
+    restoreSnapshotAction(input),
+  );
+  const failure = writeFailure(write);
+  const restoring = write.isPending ? (write.variables?.snapshotId ?? null) : null;
 
   const restore = (snapshot: PlaylistSnapshot) => {
-    setRestoring(snapshot.id);
-    startTransition(async () => {
-      const outcome = await restoreSnapshotAction({ playlistId, snapshotId: snapshot.id });
-      setRestoring(null);
-      if (outcome.status === "ok") {
-        onOpenChange(false);
-        setResult(null);
-        notify({
-          kind: "done",
-          message: t("done", {
-            date: format.dateTime(snapshot.createdAt, { dateStyle: "medium", timeStyle: "short" }),
-          }),
-          playlistId,
-          snapshotId: outcome.snapshotId,
-        });
-      } else {
-        setResult(outcome);
-      }
-    });
+    write.mutate(
+      { playlistId, snapshotId: snapshot.id },
+      {
+        onSuccess: (outcome) => {
+          if (outcome.status !== "ok") return;
+          onOpenChange(false);
+          write.reset();
+          notify({
+            kind: "done",
+            message: t("done", {
+              date: format.dateTime(snapshot.createdAt, {
+                dateStyle: "medium",
+                timeStyle: "short",
+              }),
+            }),
+            playlistId,
+            snapshotId: outcome.snapshotId,
+          });
+        },
+      },
+    );
   };
 
   return (
@@ -78,7 +82,7 @@ export function HistoryDialog({
       open={open}
       onOpenChange={(next) => {
         onOpenChange(next);
-        if (!next) setResult(null);
+        if (!next) write.reset();
       }}
     >
       <DialogBackdrop className={dialogBackdrop} />
@@ -133,9 +137,7 @@ export function HistoryDialog({
           </ol>
         )}
         <div className={`${alert.base} ${alert.tone.info}`}>{t("note")}</div>
-        {result && result.status !== "ok" ? (
-          <WriteOutcome result={result} onDismiss={() => setResult(null)} />
-        ) : null}
+        {failure ? <WriteOutcome result={failure} onDismiss={() => write.reset()} /> : null}
         <div className="flex justify-end">
           <DialogClose className={buttonClass("ghost")}>{t("close")}</DialogClose>
         </div>
