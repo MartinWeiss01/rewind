@@ -83,5 +83,6 @@
   "trendEmpty": "V tomto období není co zobrazit.",
   "emptyTitle": "V tomto období žádný poslech",
   "emptyBody": "Vyber delší období nebo naimportuj historii streamování.",
-  "importHistory": "Importovat historii"
+  "importHistory": "Importovat historii",
+  "changeSame": "Zhruba stejně jako v předchozím období"
 }

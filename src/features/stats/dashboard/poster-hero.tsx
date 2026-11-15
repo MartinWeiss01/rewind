@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useFormatter, useTranslations } from "next-intl";
 import { useState } from "react";
+import { match } from "ts-pattern";
 import { Cover } from "@/components/ui/cover";
 import { buttonClass } from "@/components/ui/styles";
 import type { Overview } from "../engine";
@@ -48,15 +49,17 @@ export function PosterHero({
   const hours = Math.round(overview.minutes / 60);
   const go = (next: number) => setIndex((next + tracks.length) % tracks.length);
 
-  const change =
-    overview.minutesChange === null
-      ? t("noComparison")
-      : t(overview.minutesChange >= 0 ? "changeUp" : "changeDown", {
-          percent: format.number(Math.abs(overview.minutesChange), {
-            style: "percent",
-            maximumFractionDigits: 0,
-          }),
-        });
+  const change = match(overview.minutesChange)
+    .with(null, () => t("noComparison"))
+    .when(
+      (value) => Math.abs(value) < 0.005,
+      () => t("changeSame"),
+    )
+    .otherwise((value) =>
+      t(value > 0 ? "changeUp" : "changeDown", {
+        percent: format.number(Math.abs(value), { style: "percent", maximumFractionDigits: 0 }),
+      }),
+    );
 
   const kpis = [
     { key: "plays", value: overview.plays },
@@ -81,7 +84,7 @@ export function PosterHero({
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute bottom-[14%] -left-[1%] -rotate-[11deg] whitespace-nowrap font-display font-extrabold text-[clamp(90px,13vw,200px)] text-transparent leading-[0.95] tracking-[-0.03em] opacity-90 [-webkit-text-stroke:2px_var(--ink)]"
+        className="pointer-events-none absolute bottom-[14%] -left-[1%] -rotate-[11deg] whitespace-nowrap font-display font-extrabold text-[clamp(90px,13vw,200px)] text-transparent leading-[0.95] tracking-[-0.03em] opacity-20 [-webkit-text-stroke:2px_var(--ink)]"
       >
         {t("hoursBig", { hours })}
       </div>

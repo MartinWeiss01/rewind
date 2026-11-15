@@ -83,5 +83,6 @@
   "trendEmpty": "No listening to chart in this period.",
   "emptyTitle": "No listening in this period",
   "emptyBody": "Pick a longer range or import your streaming history.",
-  "importHistory": "Import history"
+  "importHistory": "Import history",
+  "changeSame": "About the same as the period before"
 }
