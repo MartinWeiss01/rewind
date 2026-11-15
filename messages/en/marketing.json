@@ -5,5 +5,48 @@
   "loginCancelled": "Sign-in was cancelled. You can keep exploring the demo.",
   "loginForbidden": "This Spotify account isn’t on the app’s invite list yet. The demo works without one.",
   "loginFailed": "Sign-in with Spotify didn’t work. Try again in a moment.",
-  "loginUnavailable": "Spotify sign-in isn’t set up on this deployment. The demo is fully available."
+  "loginUnavailable": "Spotify sign-in isn’t set up on this deployment. The demo is fully available.",
+  "featuresTitle": "What’s on the tape",
+  "sideA": "Side A",
+  "features": {
+    "tools": {
+      "title": "Playlist tools",
+      "text": "Find duplicates, merge, sort and split playlists. Preview every change and undo it.",
+      "tag": "Safe by default"
+    },
+    "ai": {
+      "title": "AI suggestions",
+      "text": "Describe a mood or pick a playlist; get tracks you have not worn out, with a reason for each.",
+      "tag": "Gemini"
+    },
+    "demo": {
+      "title": "Open demo",
+      "text": "Every tool runs on a fictional library in a private sandbox. Nothing touches a real account.",
+      "tag": "No login"
+    }
+  },
+  "previewEyebrow": "Side B · the preview",
+  "previewTitle": "Every screen works in the demo.",
+  "previewText": "The demo is a fictional listener with a dozen playlists and real tool flows. Edit, dedupe, merge and generate — it all runs against a private sandbox that resets when you leave.",
+  "openDemo": "Open the demo",
+  "previewLabel": "Playlist tools preview",
+  "statPlaylists": "Playlists",
+  "statDuplicates": "Duplicates",
+  "statSuggestions": "Suggestions",
+  "dupeExact": "Exact",
+  "dupeLikely": "Likely",
+  "dupeReview": "Review",
+  "dupeInPlaylists": "in 3 playlists",
+  "dupeSameSong": "same song",
+  "dupeVersions": "2 versions",
+  "whyInviteTitle": "Why invite-only",
+  "whyInviteText": "Spotify limits personal developer apps to a handful of approved accounts. Everyone else gets the full demo.",
+  "yourDataTitle": "Your data",
+  "yourDataText": "Tokens stay on the server, encrypted. Disconnect any time and everything Rewind stored about you is deleted.",
+  "openSourceTitle": "Open source",
+  "openSourceText": "Next.js, TypeScript, Supabase. Read the code and the architecture notes on GitHub.",
+  "viewOnGithub": "View on GitHub",
+  "disclaimer": "Rewind is an independent project, not affiliated with or endorsed by Spotify.",
+  "attribution": "Music data provided by Spotify",
+  "privacy": "Privacy"
 }
