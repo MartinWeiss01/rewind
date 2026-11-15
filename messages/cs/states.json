@@ -1,0 +1,9 @@
+{
+  "loading": "Načítání",
+  "errorTitle": "Něco se pokazilo",
+  "errorBody": "Obrazovku se nepodařilo načíst. Tvoje data jsou v bezpečí.",
+  "retry": "Zkusit znovu",
+  "notFoundTitle": "Tady nic není",
+  "notFoundBody": "Tahle stránka neexistuje nebo se přesunula.",
+  "backHome": "Zpět na začátek"
+}

@@ -1,0 +1,22 @@
+{
+  "dashboard": {
+    "eyebrow": "Your listening",
+    "title": "Dashboard"
+  },
+  "history": {
+    "eyebrow": "Every play, synced and imported",
+    "title": "History"
+  },
+  "playlists": {
+    "eyebrow": "Your library",
+    "title": "Playlists"
+  },
+  "discover": {
+    "eyebrow": "Suggestions",
+    "title": "Discover"
+  },
+  "settings": {
+    "eyebrow": "Account and app",
+    "title": "Settings"
+  }
+}
