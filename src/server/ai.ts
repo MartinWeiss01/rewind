@@ -14,12 +14,13 @@ export type AiProvider = (typeof AiProvider)[keyof typeof AiProvider];
 /**
  * The model each provider uses. Part of the code, not the environment, so a change is
  * reviewed and versioned like any other.
- * - google: gemini-3.6-flash is stable, cheap and knows enough about music for
- *   suggestions; gemini-3.5-flash-lite is cheaper if quality holds up.
+ * - google: gemini-4-hydrogen, Google's fast and efficient Gemini 4 model, available on
+ *   the free tier (checked against Google's model and pricing pages on 2026-11-15).
+ *   gemini-3.8-flash is the stable fallback if it misbehaves.
  * - anthropic: claude-sonnet-5-5; claude-haiku-5-5 is the cheaper option.
  */
 export const aiModels = {
-  google: "gemini-3.6-flash",
+  google: "gemini-4-hydrogen",
   anthropic: "claude-sonnet-5-5",
 } as const satisfies Record<AiProvider, string>;
 
