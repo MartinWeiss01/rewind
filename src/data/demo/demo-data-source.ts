@@ -367,6 +367,59 @@ export function createDemoDataSource({
       });
     },
 
+    async listGenerations(limit) {
+      return state.generations
+        .map((g) => ({ ...g, createdAt: new Date(g.createdAt) }))
+        .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+        .slice(0, limit);
+    },
+    async saveGeneration(input) {
+      const generation = {
+        ...input,
+        id: `demo-generation-${state.generations.length + 1}-${state.revision}`,
+        createdAt: now.toISOString(),
+        trackIds: [...input.trackIds],
+        unmatched: [...input.unmatched],
+      };
+      await write((draft) => {
+        draft.generations.push(generation);
+      });
+      return { ...generation, createdAt: new Date(generation.createdAt) };
+    },
+
+    async getDataSummary() {
+      // The generated listener is not "stored"; only the visitor's own additions count.
+      return {
+        plays: state.importedPlays.length,
+        imports: state.imports.length,
+        snapshots: state.snapshots.length,
+        generations: state.generations.length,
+      };
+    },
+    async exportData() {
+      return {
+        mode: DataMode.Demo,
+        rules: state.rules,
+        imports: state.imports,
+        importedPlays: state.importedPlays,
+        snapshots: state.snapshots,
+        generations: state.generations,
+        playlistChanges: {
+          items: state.playlistItems,
+          details: state.playlistDetails,
+          created: state.createdPlaylists,
+        },
+      };
+    },
+    async deleteAllData() {
+      await write((draft) => {
+        draft.importedPlays = [];
+        draft.imports = [];
+        draft.snapshots = [];
+        draft.generations = [];
+      });
+    },
+
     async listSnapshots(playlistId): Promise<readonly PlaylistSnapshot[]> {
       return state.snapshots
         .filter((s) => s.playlistId === playlistId)
