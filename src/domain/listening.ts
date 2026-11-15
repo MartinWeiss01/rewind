@@ -9,6 +9,7 @@ export type PlaySource = (typeof PlaySource)[keyof typeof PlaySource];
 /** One listen of one track. */
 export type Play = {
   trackId: string;
+  /** When playback started. */
   playedAt: Date;
   msPlayed: number;
   source: PlaySource;
