@@ -16,7 +16,12 @@ const track = (id: string, name: string, ...artists: string[]): Track => ({
   id,
   name,
   artists: artists.map((artist, i) => ({ id: `${id}-artist-${i}`, name: artist })),
-  album: { id: `${id}-album`, name: "Album", cover: { kind: "generated", seed: 1 } },
+  album: {
+    id: `${id}-album`,
+    name: "Album",
+    cover: { kind: "generated", seed: 1 },
+    releaseDate: null,
+  },
   durationMs: 200_000,
   isrc: null,
   explicit: false,
