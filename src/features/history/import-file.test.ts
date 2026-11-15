@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  compactHistoryEntries,
   ImportFileError,
   MAX_IMPORT_FILE_BYTES,
   precheckHistoryFile,
@@ -65,6 +66,28 @@ describe("addTotals", () => {
       skipped: 4,
       firstPlayedAt: "2026-01-01T00:00:00.000Z",
       lastPlayedAt: "2026-03-01T00:00:00.000Z",
+    });
+  });
+});
+
+describe("compactHistoryEntries", () => {
+  it("keeps only the fields the import uses", () => {
+    const [compact] = compactHistoryEntries([
+      {
+        ts: "2026-01-01T10:00:00Z",
+        ms_played: 1000,
+        spotify_track_uri: "spotify:track:x",
+        ip_addr: "203.0.113.9",
+        platform: "invented",
+      },
+    ]);
+    expect(compact).toEqual({
+      ts: "2026-01-01T10:00:00Z",
+      ms_played: 1000,
+      spotify_track_uri: "spotify:track:x",
+      master_metadata_track_name: null,
+      master_metadata_album_artist_name: null,
+      master_metadata_album_album_name: null,
     });
   });
 });

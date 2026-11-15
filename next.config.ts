@@ -5,9 +5,9 @@ const nextConfig: NextConfig = {
   typedRoutes: true,
   experimental: {
     serverActions: {
-      // History import sends one Extended Streaming History file per action call; Spotify's
-      // files are around 10–15 MB. Keep in step with MAX_IMPORT_FILE_BYTES (30 MB) plus overhead.
-      bodySizeLimit: "31mb",
+      // History import sends compact chunks (IMPORT_CHUNK_SIZE entries, ~1–2 MB); stays
+      // below the 4.5 MB request limit of serverless hosting.
+      bodySizeLimit: "4mb",
     },
   },
 };

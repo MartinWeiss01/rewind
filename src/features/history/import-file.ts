@@ -41,3 +41,37 @@ export function readHistoryFile(name: string, text: string): ReadHistoryFileResu
   if (!Array.isArray(content)) return { ok: false, error: ImportFileError.NotHistory };
   return { ok: true, entries: content };
 }
+
+/** Entries per server action call; keeps every request well under hosting body limits. */
+export const IMPORT_CHUNK_SIZE = 8000;
+
+/** The only export fields Rewind reads; everything else never leaves the browser. */
+export type CompactHistoryEntry = {
+  ts: string;
+  ms_played: number;
+  spotify_track_uri: string | null;
+  master_metadata_track_name: string | null;
+  master_metadata_album_artist_name: string | null;
+  master_metadata_album_album_name: string | null;
+};
+
+const text = (value: unknown) => (typeof value === "string" ? value.slice(0, 300) : null);
+
+/**
+ * Reduces raw export entries to the fields the import uses, dropping IP address,
+ * platform, country and the rest before anything is uploaded. Malformed rows are kept
+ * as-is in shape so the server can count them as skipped.
+ */
+export function compactHistoryEntries(entries: readonly unknown[]): CompactHistoryEntry[] {
+  return entries.map((raw) => {
+    const entry = typeof raw === "object" && raw !== null ? (raw as Record<string, unknown>) : {};
+    return {
+      ts: typeof entry.ts === "string" ? entry.ts : "",
+      ms_played: typeof entry.ms_played === "number" ? entry.ms_played : -1,
+      spotify_track_uri: text(entry.spotify_track_uri),
+      master_metadata_track_name: text(entry.master_metadata_track_name),
+      master_metadata_album_artist_name: text(entry.master_metadata_album_artist_name),
+      master_metadata_album_album_name: text(entry.master_metadata_album_album_name),
+    };
+  });
+}

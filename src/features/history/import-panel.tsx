@@ -17,12 +17,15 @@ import { match } from "ts-pattern";
 import { ScreenHeader } from "@/components/feedback/screen-header";
 import { alert, buttonClass, card, chipClass, heading } from "@/components/ui/styles";
 import { blob, num } from "@/features/stats/ui";
-import { importHistoryFile, importSampleHistory } from "./actions";
+import { importHistoryChunk, importSampleHistory } from "./actions";
 import {
+  compactHistoryEntries,
+  IMPORT_CHUNK_SIZE,
   ImportFileError,
   MAX_IMPORT_FILE_BYTES,
   MAX_IMPORT_FILES,
   precheckHistoryFile,
+  readHistoryFile,
 } from "./import-file";
 import { addTotals, emptyTotals, type ImportResult, type ImportTotals } from "./import-result";
 
@@ -141,9 +144,20 @@ export function ImportPanel({
         send: async () => {
           const early = precheckHistoryFile(file.name, file.size);
           if (early) return { ok: false, error: early };
-          const data = new FormData();
-          data.set("file", file);
-          return importHistoryFile(data);
+          const read = readHistoryFile(file.name, await file.text());
+          if (!read.ok) return read;
+          const entries = compactHistoryEntries(read.entries);
+          let merged = emptyTotals;
+          for (let start = 0; start < entries.length; start += IMPORT_CHUNK_SIZE) {
+            const result = await importHistoryChunk({
+              fileName: file.name,
+              entries: entries.slice(start, start + IMPORT_CHUNK_SIZE),
+            });
+            if (!result.ok) return result;
+            merged = addTotals(merged, result.totals);
+          }
+          // Chunks of one file count as one file.
+          return { ok: true, totals: { ...merged, files: 1 } } satisfies ImportResult;
         },
       })),
     );
