@@ -1,12 +1,24 @@
 import type { Route } from "next";
+import { FeatureFlag } from "@/server/feature-flags";
 
 export type NavKey = "dashboard" | "history" | "playlists" | "discover" | "settings";
-export type NavItem = { key: NavKey; href: Route; icon: string };
+/** `flag`: the item only shows when that feature flag is on. */
+export type NavItem = { key: NavKey; href: Route; icon: string; flag?: FeatureFlag };
 
 /** Dock entries in order; `icon` is an SVG path drawn with a 24px stroke icon. */
 export const navItems: readonly NavItem[] = [
-  { key: "dashboard", href: "/app", icon: "M4 13h6V4H4zM14 20h6v-9h-6zM14 4v4h6V4zM4 20h6v-3H4z" },
-  { key: "history", href: "/app/history", icon: "M12 7v5l3 2M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5" },
+  {
+    key: "dashboard",
+    href: "/app",
+    flag: FeatureFlag.Stats,
+    icon: "M4 13h6V4H4zM14 20h6v-9h-6zM14 4v4h6V4zM4 20h6v-3H4z",
+  },
+  {
+    key: "history",
+    href: "/app/history",
+    flag: FeatureFlag.Stats,
+    icon: "M12 7v5l3 2M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5",
+  },
   { key: "playlists", href: "/app/playlists", icon: "M4 6h12M4 12h12M4 18h7M18 15v6M15 18h6" },
   {
     key: "discover",
