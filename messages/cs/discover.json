@@ -1,0 +1,150 @@
+{
+  "eyebrow": "AI doporučení",
+  "title": "Co si pustit dál?",
+  "intro": "Doporučení vychází z tvého poslouchání a než je uvidíš, spárujeme je se skutečnými skladbami.",
+  "modes": {
+    "label": "Režim doporučení",
+    "vibe": {
+      "number": "01",
+      "title": "Popiš náladu",
+      "text": "Volný text: nálada, chvíle, mix žánrů."
+    },
+    "playlist": {
+      "number": "02",
+      "title": "Podle playlistu",
+      "text": "Najde skladby, které sedí k existujícímu playlistu."
+    }
+  },
+  "form": {
+    "label": "Požadavek",
+    "vibeLabel": "Popiš náladu",
+    "vibePlaceholder": "Deštivý večer, klidné indie, trochu jazzu, nic moc smutného",
+    "vibeTooShort": "Napiš aspoň 3 znaky.",
+    "examplesLabel": "Zkus:",
+    "example1": "Nedělní ranní káva",
+    "example2": "Noční programování, bez zpěvu",
+    "example3": "Výlet autem, svižné indie",
+    "example4": "Něco jako můj top interpret, ale víc do jazzu",
+    "playlistLabel": "Podle playlistu",
+    "playlistPlaceholder": "Vyber playlist",
+    "playlistHint": "Použije jeho interprety a to, co posloucháš nejvíc.",
+    "playlistTracks": "{count, plural, one {# skladba} few {# skladby} other {# skladeb}}",
+    "noPlaylists": "Zatím nemáš žádný playlist, od kterého by se dalo začít.",
+    "seededFrom": "Vychází z:",
+    "seedMore": "+ {count} dalších · posledních 6 měsíců",
+    "seedLoading": "Čtu playlist…",
+    "seedFailed": "Tenhle playlist se nepodařilo načíst. Vyber jiný.",
+    "countLabel": "Kolik",
+    "countValue": "{count} skladeb",
+    "maxPlaysLabel": "Vynechat skladby přehrané víc než",
+    "maxPlaysHint": "Krát. Nech prázdné, pokud chceš všechny skladby.",
+    "decrease": "Snížit",
+    "increase": "Zvýšit",
+    "newArtistsLabel": "Jen interpreti, které jsem neslyšel(a)",
+    "submit": "Doporučit {count} skladeb",
+    "noteDemo": "Demo používá předem připravené odpovědi. Nic z toho, co napíšeš, se neposílá AI modelu.",
+    "noteDemoLive": "V tomhle demu je zapnutá živá AI: tvůj text se pošle AI modelu.",
+    "noteLive": "Každé spuštění se jednou zeptá AI modelu a použije krátké shrnutí tvých posledních 6 měsíců."
+  },
+  "progress": {
+    "title": "Pracuju na tom…",
+    "done": "Hotovo",
+    "profile": "Hudební profil sestaven z {plays, plural, one {# přehrání} few {# přehrání} other {# přehrání}}",
+    "profilePending": "Sestavuju tvůj hudební profil",
+    "ask": "Model navrhl {count} kandidátů",
+    "askDemo": "Vybráno {count} předem připravených kandidátů",
+    "askPending": "Ptám se modelu na kandidáty",
+    "match": "Páruju doporučení se skladbami",
+    "finish": "Používám tvoje filtry a ukládám"
+  },
+  "results": {
+    "heading": "{count, plural, one {# skladba} few {# skladby} other {# skladeb}} pro {title}",
+    "summary": "Spárováno {matched} z {asked} · odebrané skladby se neuloží",
+    "filtered": "{count, plural, one {# shodu vyřadily} few {# shody vyřadily} other {# shod vyřadily}} tvoje filtry.",
+    "reopened": "Dřívější běh. Zdůvodnění se u dřívějších běhů neukládají.",
+    "regenerate": "Vygenerovat znovu",
+    "addToPlaylist": "Přidat do playlistu…",
+    "noEditable": "Žádné playlisty, které můžeš upravovat",
+    "saveAsNew": "Uložit jako nový playlist",
+    "closestMatch": "Nejbližší shoda",
+    "remove": "Odebrat {title}",
+    "open": "Otevřít {title} ve Spotify",
+    "demoNotice": "Tohle jsou předem připravená doporučení z demo katalogu. Uložení vytvoří playlist v tvé demo relaci.",
+    "unmatchedSummary": "{count, plural, one {# doporučení se nepodařilo spárovat} few {# doporučení se nepodařilo spárovat} other {# doporučení se nepodařilo spárovat}}",
+    "unmatchedHint": "nenašla se jako skladby, takže byla vyřazena",
+    "emptyTitle": "Nic neprošlo",
+    "emptyBody": "Žádné doporučení se nespárovalo se skladbou, která projde tvými filtry. Uvolni filtry nebo zkus jiný požadavek.",
+    "allRemovedTitle": "Seznam je prázdný",
+    "allRemovedBody": "Odebral(a) jsi všechna doporučení. Vygeneruj nová.",
+    "saved": "Uloženo jako „{name}“.",
+    "added": "{count, plural, one {Přidána # skladba} few {Přidány # skladby} other {Přidáno # skladeb}} do „{name}“.",
+    "writeFailed": "To se nepovedlo. Zkus to znovu.",
+    "saveDialog": {
+      "title": "Uložit jako nový playlist",
+      "description": "Vytvoří soukromý playlist {count, plural, one {s # skladbou} few {s # skladbami} other {s # skladbami}} z tohoto seznamu.",
+      "nameLabel": "Název",
+      "cancel": "Zrušit",
+      "confirm": "Uložit playlist",
+      "close": "Zavřít"
+    }
+  },
+  "errors": {
+    "timeout": {
+      "title": "Model neodpověděl",
+      "body": "Poskytovateli AI vypršel čas. Nic se neuložilo, zkus to znovu."
+    },
+    "provider": {
+      "title": "Poskytovatel AI vrátil chybu",
+      "body": "Na straně poskytovatele se něco pokazilo. Nic se neuložilo, zkus to za chvíli znovu."
+    },
+    "notConfigured": {
+      "title": "AI není nastavená",
+      "body": "Server nemá platný API klíč pro poskytovatele AI. Doplň ho do prostředí a zkus to znovu."
+    },
+    "emptyAnswer": {
+      "title": "Žádná doporučení nepřišla",
+      "body": "Model k tomuhle požadavku nic nenavrhl. Zkus ho popsat jinak."
+    },
+    "invalid": {
+      "title": "Zkontroluj požadavek",
+      "body": "Něco v požadavku nebylo platné. Uprav ho a zkus to znovu."
+    },
+    "playlistMissing": {
+      "title": "Playlist není k dispozici",
+      "body": "Ten playlist je prázdný nebo už neexistuje. Vyber jiný."
+    },
+    "forbidden": {
+      "title": "Není k dispozici",
+      "body": "Tvůj účet k této funkci nemá přístup."
+    },
+    "unknown": {
+      "title": "Něco se pokazilo",
+      "body": "Tenhle běh se nepodařilo dokončit. Zkus to znovu."
+    },
+    "retry": "Zkusit znovu"
+  },
+  "earlier": {
+    "title": "Dřívější doporučení",
+    "empty": "Tady se objeví tvoje běhy doporučení, abys je mohl(a) znovu otevřít.",
+    "meta": "{count, plural, one {# skladba} few {# skladby} other {# skladeb}}",
+    "metaUnmatched": "{count, plural, one {# skladba} few {# skladby} other {# skladeb}} · {unmatched} nespárováno",
+    "loadFailed": "Tenhle běh se nepodařilo otevřít. Zkus to znovu."
+  },
+  "titles": {
+    "vibe": "„{prompt}“",
+    "playlist": "Podle {name}"
+  },
+  "demoReasons": {
+    "unplayed": "{artist} posloucháš hodně, ale tahle skladba ti zatím nehrála.",
+    "deepCut": "Skladba od {artist}, kterou jsi pustil(a) jen {plays, plural, one {jednou} few {# krát} other {# krát}}.",
+    "familiar": "Další od {artist}, blízko skladbám, které si pouštíš nejčastěji.",
+    "neighbor": "Sedí k {genre} části tvého poslouchání, od interpreta, kterého pouštíš méně.",
+    "genres": {
+      "indie": "indie",
+      "synthwave": "synthwave",
+      "hiphop": "hip-hopové",
+      "jazz": "jazzové",
+      "folk": "folkové"
+    }
+  }
+}

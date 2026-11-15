@@ -1,0 +1,150 @@
+{
+  "eyebrow": "AI suggestions",
+  "title": "What should play next?",
+  "intro": "Suggestions come from your own listening and are matched to real tracks before you see them.",
+  "modes": {
+    "label": "Suggestion mode",
+    "vibe": {
+      "number": "01",
+      "title": "Describe a vibe",
+      "text": "Free text: a mood, a moment, a mix of genres."
+    },
+    "playlist": {
+      "number": "02",
+      "title": "Based on a playlist",
+      "text": "Finds tracks that fit an existing playlist."
+    }
+  },
+  "form": {
+    "label": "Request",
+    "vibeLabel": "Describe the vibe",
+    "vibePlaceholder": "Rainy evening, mellow indie, a bit of jazz, nothing too sad",
+    "vibeTooShort": "Write at least 3 characters.",
+    "examplesLabel": "Try:",
+    "example1": "Sunday morning coffee",
+    "example2": "Late night coding, no vocals",
+    "example3": "Road trip, upbeat indie",
+    "example4": "Something like my top artist but jazzier",
+    "playlistLabel": "Based on playlist",
+    "playlistPlaceholder": "Choose a playlist",
+    "playlistHint": "Uses its artists and what you play most.",
+    "playlistTracks": "{count, plural, one {# track} other {# tracks}}",
+    "noPlaylists": "You don't have any playlists to start from yet.",
+    "seededFrom": "Seeded from:",
+    "seedMore": "+ {count} more · last 6 months",
+    "seedLoading": "Reading the playlist…",
+    "seedFailed": "Couldn't read this playlist. Pick another one.",
+    "countLabel": "How many",
+    "countValue": "{count} tracks",
+    "maxPlaysLabel": "Skip tracks I've played more than",
+    "maxPlaysHint": "Times. Leave empty to keep every track.",
+    "decrease": "Decrease",
+    "increase": "Increase",
+    "newArtistsLabel": "Only artists I haven't heard",
+    "submit": "Suggest {count} tracks",
+    "noteDemo": "Demo uses pre-generated answers. Nothing you type is sent to an AI model.",
+    "noteDemoLive": "Live AI is on in this demo: your text is sent to the AI model.",
+    "noteLive": "Each run asks the AI model once, using a short summary of your last 6 months."
+  },
+  "progress": {
+    "title": "Working on it…",
+    "done": "Done",
+    "profile": "Built your taste profile from {plays, plural, one {# play} other {# plays}}",
+    "profilePending": "Building your taste profile",
+    "ask": "Asked the model for {count} candidates",
+    "askDemo": "Picked {count} pre-generated candidates",
+    "askPending": "Asking the model for candidates",
+    "match": "Matching suggestions to tracks",
+    "finish": "Applying your filters and saving"
+  },
+  "results": {
+    "heading": "{count, plural, one {# track} other {# tracks}} for {title}",
+    "summary": "Matched {matched} of {asked} · removed tracks don't get saved",
+    "filtered": "{count, plural, one {# match was} other {# matches were}} left out by your filters.",
+    "reopened": "An earlier run. Reasons aren't kept for earlier runs.",
+    "regenerate": "Regenerate",
+    "addToPlaylist": "Add to playlist…",
+    "noEditable": "No playlists you can edit",
+    "saveAsNew": "Save as new playlist",
+    "closestMatch": "Closest match",
+    "remove": "Remove {title}",
+    "open": "Open {title} in Spotify",
+    "demoNotice": "These are pre-generated suggestions from the demo catalog. Saving creates a playlist in your demo session.",
+    "unmatchedSummary": "{count, plural, one {# suggestion couldn't be matched} other {# suggestions couldn't be matched}}",
+    "unmatchedHint": "not found as tracks, so they were dropped",
+    "emptyTitle": "Nothing made it through",
+    "emptyBody": "No suggestion matched a track that passes your filters. Loosen the filters or try a different request.",
+    "allRemovedTitle": "List is empty",
+    "allRemovedBody": "You removed every suggestion. Regenerate to get new ones.",
+    "saved": "Saved as “{name}”.",
+    "added": "Added {count, plural, one {# track} other {# tracks}} to “{name}”.",
+    "writeFailed": "That didn't work. Try again.",
+    "saveDialog": {
+      "title": "Save as new playlist",
+      "description": "Creates a private playlist with the {count, plural, one {# track} other {# tracks}} in this list.",
+      "nameLabel": "Name",
+      "cancel": "Cancel",
+      "confirm": "Save playlist",
+      "close": "Close"
+    }
+  },
+  "errors": {
+    "timeout": {
+      "title": "The model didn't answer",
+      "body": "The AI provider timed out. Nothing was saved; try again."
+    },
+    "provider": {
+      "title": "The AI provider returned an error",
+      "body": "Something went wrong on the provider's side. Nothing was saved; try again in a moment."
+    },
+    "notConfigured": {
+      "title": "AI isn't set up",
+      "body": "The server has no valid API key for the AI provider. Add it to the environment, then try again."
+    },
+    "emptyAnswer": {
+      "title": "No suggestions came back",
+      "body": "The model had nothing to suggest for this request. Try describing it differently."
+    },
+    "invalid": {
+      "title": "Check your request",
+      "body": "Something in the request wasn't valid. Adjust it and try again."
+    },
+    "playlistMissing": {
+      "title": "Playlist not available",
+      "body": "That playlist is empty or no longer exists. Pick another one."
+    },
+    "forbidden": {
+      "title": "Not available",
+      "body": "Your account doesn't have access to this feature."
+    },
+    "unknown": {
+      "title": "Something went wrong",
+      "body": "We couldn't finish this run. Try again."
+    },
+    "retry": "Try again"
+  },
+  "earlier": {
+    "title": "Earlier suggestions",
+    "empty": "Your suggestion runs show up here, so you can open them again.",
+    "meta": "{count, plural, one {# track} other {# tracks}}",
+    "metaUnmatched": "{count, plural, one {# track} other {# tracks}} · {unmatched} unmatched",
+    "loadFailed": "Couldn't open this run. Try again."
+  },
+  "titles": {
+    "vibe": "“{prompt}”",
+    "playlist": "Based on {name}"
+  },
+  "demoReasons": {
+    "unplayed": "You play {artist} a lot, but this one hasn't come up yet.",
+    "deepCut": "A {artist} song you've only played {plays, plural, one {once} other {# times}}.",
+    "familiar": "Another one from {artist}, close to the songs you replay most.",
+    "neighbor": "Fits the {genre} side of your listening, from an artist you play less often.",
+    "genres": {
+      "indie": "indie",
+      "synthwave": "synthwave",
+      "hiphop": "hip-hop",
+      "jazz": "jazz",
+      "folk": "folk"
+    }
+  }
+}
