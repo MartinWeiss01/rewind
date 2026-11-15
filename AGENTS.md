@@ -35,6 +35,7 @@ English for code, comments, docs, commit messages, PRs and UI copy.
 ## Engineering rules
 
 - TypeScript strict. `type` over `interface` unless an `interface` is technically required (say why in a comment). No `any` without a comment explaining why.
+- No TypeScript `enum`: use a const object or array with `as const` and derive the type from it (`(typeof X)[keyof typeof X]`, `(typeof xs)[number]`); Zod's `z.enum` over such an array is fine. Biome enforces this.
 - Branching logic over discriminated values uses `ts-pattern` (`match(...).with(...).exhaustive()`) instead of `if`/`else` chains or `switch`. Simple guards and early returns stay plain.
 - Zod v4 at every boundary: env, route handlers, server actions, URL params, external API responses, LLM output, file imports.
 - Our own domain types everywhere; raw Spotify API shapes are mapped and validated at the boundary and never leave it.
@@ -43,7 +44,7 @@ English for code, comments, docs, commit messages, PRs and UI copy.
 - Every data-driven component ships loading (skeleton), empty and error (with retry) states.
 - Routes follow the App Router file conventions in [ADR 0003](docs/adr/0003-app-router-conventions.md): route groups, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`.
 - Every UI string goes through next-intl ([ADR 0002](docs/adr/0002-internationalization-next-intl.md)) with English and Czech messages; no hardcoded copy.
-- Gated features are checked server-side per [ADR 0004](docs/adr/0004-feature-access-by-account.md); public pages never advertise them.
+- Gated features use feature flags checked server-side per [ADR 0004](docs/adr/0004-feature-flags.md); public pages never advertise them.
 - Dependencies: exact versions, lockfile committed, no new library for a problem the existing stack already covers.
 - Check current official docs before writing config or calling a library or external API. When unsure about Spotify API behaviour, verify and state what was verified; do not guess.
 
