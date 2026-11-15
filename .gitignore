@@ -1,0 +1,54 @@
+# Local-only material (owner context, references, data samples). Never committed.
+/.local/
+
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Next.js / build output
+.next/
+out/
+build/
+dist/
+*.tsbuildinfo
+next-env.d.ts
+
+# Environment (only .env.example is tracked)
+.env
+.env.*
+!.env.example
+
+# Supabase local state
+supabase/.branches/
+supabase/.temp/
+
+# Testing
+coverage/
+playwright-report/
+test-results/
+blob-report/
+playwright/.cache/
+
+# Vercel
+.vercel/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Editors / OS
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+*.swp
+
+# Agent tool state (shared settings in .claude/settings.json stay tracked)
+.claude/settings.local.json
+CLAUDE.local.md
+
+# Personal data exports, wherever they end up
+Streaming_History_*.json
+my_spotify_data*/
