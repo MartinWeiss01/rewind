@@ -1,6 +1,7 @@
 // Downloads Spotify's official Web API OpenAPI document, strips the
 // `x-spotify-policy` annotations (they point at a file outside the document)
-// and fixes one invalid schema line, so Orval can validate it.
+// fixes one invalid schema line, so Orval can validate it, and marks fields the
+// live API returns as null although the document says otherwise.
 // Output: node_modules/.cache/spotify-openapi.yaml (input for orval.config.ts).
 import { mkdir, writeFile } from "node:fs/promises";
 
@@ -37,6 +38,14 @@ for (let i = 0; i < lines.length; i++) {
     continue;
   }
   kept.push(line);
+  // A playlist without a cover comes back with `images: null`, not an empty list.
+  if (
+    line.trim() === "type: array" &&
+    previous.trim() === "images:" &&
+    lines.slice(i + 1, i + 6).some((l) => l.includes("Images for the playlist."))
+  ) {
+    kept.push(`${" ".repeat(indent)}nullable: true`);
+  }
 }
 
 await mkdir(new URL(".", target), { recursive: true });

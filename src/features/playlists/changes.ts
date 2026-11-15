@@ -34,6 +34,8 @@ export const WriteError = {
   Invalid: "invalid",
   NotFound: "notFound",
   ReadOnly: "readOnly",
+  /** The playlist holds items Rewind can't show; rewriting or deleting it would lose them. */
+  HiddenItems: "hiddenItems",
   /** The playlist changed since the screen loaded. */
   Stale: "stale",
   Failed: "failed",

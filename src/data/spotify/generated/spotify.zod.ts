@@ -824,7 +824,7 @@ export const SearchResponse = zod.object({
                   width: zod.int().nullable().describe("The image width in pixels.\n"),
                 }),
               )
-              .optional()
+              .nullish()
               .describe(
                 "Images for the playlist. The array may be empty or contain up to three images. The images are returned by size in descending order. See [Working with Playlists](/documentation/web-api/concepts/playlists). _**Note**: If returned, the source URL for the image (`url`) is temporary and will expire in less than a day._\n",
               ),
@@ -1373,7 +1373,7 @@ export const GetPlaylistResponse = zod.object({
         width: zod.int().nullable().describe("The image width in pixels.\n"),
       }),
     )
-    .optional()
+    .nullish()
     .describe(
       "Images for the playlist. The array may be empty or contain up to three images. The images are returned by size in descending order. See [Working with Playlists](/documentation/web-api/concepts/playlists). _**Note**: If returned, the source URL for the image (`url`) is temporary and will expire in less than a day._\n",
     ),
@@ -2728,7 +2728,7 @@ export const GetAListOfCurrentUsersPlaylistsResponse = zod
                 width: zod.int().nullable().describe("The image width in pixels.\n"),
               }),
             )
-            .optional()
+            .nullish()
             .describe(
               "Images for the playlist. The array may be empty or contain up to three images. The images are returned by size in descending order. See [Working with Playlists](/documentation/web-api/concepts/playlists). _**Note**: If returned, the source URL for the image (`url`) is temporary and will expire in less than a day._\n",
             ),
@@ -2885,7 +2885,7 @@ export const CreatePlaylistResponse = zod.object({
         width: zod.int().nullable().describe("The image width in pixels.\n"),
       }),
     )
-    .optional()
+    .nullish()
     .describe(
       "Images for the playlist. The array may be empty or contain up to three images. The images are returned by size in descending order. See [Working with Playlists](/documentation/web-api/concepts/playlists). _**Note**: If returned, the source URL for the image (`url`) is temporary and will expire in less than a day._\n",
     ),

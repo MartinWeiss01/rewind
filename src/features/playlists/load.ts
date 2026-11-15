@@ -5,6 +5,8 @@ import { FeatureFlag } from "@/server/feature-flags";
 import type { RequestContext } from "@/server/request-context";
 import { duplicateCount } from "./duplicates";
 
+const libraryBudgetMs = 5000;
+
 /** A library card: the summary plus what needs the items, when they can be read. */
 export type LibraryEntry = PlaylistSummary & {
   durationMs: number | null;
@@ -17,11 +19,24 @@ export type LibraryEntry = PlaylistSummary & {
  */
 export async function loadLibrary({ source }: RequestContext): Promise<LibraryEntry[]> {
   const summaries = await source.listPlaylists();
-  // Each detail costs Spotify requests (one per 50 items), so only readable playlists
-  // are loaded, a few at a time, to stay inside the rate limit.
-  const details = await mapWithConcurrency(summaries, 3, (s) =>
-    s.editable ? source.getPlaylist(s.id) : Promise.resolve(null),
-  );
+  // Each detail costs Spotify requests (one per 50 items) and Spotify's rate limit is
+  // tight, so only readable playlists are loaded, two at a time, within a time budget.
+  // After the budget or the first failure, only details already known to be current
+  // are used; the other cards show without duration and duplicates and fill in on
+  // later visits.
+  const startedAt = Date.now();
+  let fetching = true;
+  const details = await mapWithConcurrency(summaries, 2, async (s) => {
+    if (!s.editable) return null;
+    if (Date.now() - startedAt > libraryBudgetMs) fetching = false;
+    try {
+      return await source.getPlaylist(s.id, { cachedOnly: !fetching });
+    } catch (error) {
+      fetching = false;
+      console.warn(`Library stats stopped at playlist ${s.id}:`, String(error));
+      return null;
+    }
+  });
   return summaries.map((summary, index) => {
     const items = details[index]?.items ?? null;
     return {

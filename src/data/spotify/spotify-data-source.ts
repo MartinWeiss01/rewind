@@ -22,7 +22,6 @@ import {
   CreatePlaylistResponse,
   GetAListOfCurrentUsersPlaylistsResponse,
   GetPlaylistResponse,
-  GetPlaylistsItemsResponse,
   GetTrackResponse,
   ReorderOrReplacePlaylistsItemsResponse,
   SearchResponse,
@@ -30,6 +29,38 @@ import {
 } from "./generated/spotify.zod";
 import { mapTrack, pickImage, trackUri } from "./mapping";
 import { chunk, loadTracks, saveImportedTrackNames, saveTracks } from "./track-store";
+
+/**
+ * Playlist items are checked one by one in `playlistItems`: local files come back with
+ * null ids and names Spotify's schema says are always set, and one of them would
+ * otherwise fail the whole page.
+ */
+const playlistItemsPage = z.object({
+  next: z.string().nullable(),
+  items: z.array(z.object({ added_at: z.string().nullish(), item: z.unknown() })),
+});
+
+/** A playlist without its embedded first page of items, which `playlistItems` reads. */
+const playlistResponse = GetPlaylistResponse.omit({ items: true }).extend({
+  items: z.object({ total: z.int() }).optional(),
+});
+
+/**
+ * Playlist details by user and playlist, reused while the playlist's snapshot id is
+ * unchanged (Spotify issues a new one on every change). Saves the item requests that
+ * otherwise run into Spotify's rate limit on the library screen.
+ */
+const detailCache = new Map<string, PlaylistDetail>();
+const detailCacheSize = 300;
+
+function rememberDetail(key: string, detail: PlaylistDetail) {
+  detailCache.delete(key);
+  detailCache.set(key, detail);
+  if (detailCache.size > detailCacheSize) {
+    const oldest = detailCache.keys().next().value;
+    if (oldest !== undefined) detailCache.delete(oldest);
+  }
+}
 
 const pageSize = 1000;
 const playRowSchema = z.object({
@@ -107,13 +138,16 @@ export function createSpotifyDataSource({ db, user, accessToken }: Context): Mus
     };
   };
 
-  const playlistItems = async (id: string): Promise<PlaylistItem[] | null> => {
+  const playlistItems = async (
+    id: string,
+  ): Promise<{ items: PlaylistItem[]; hidden: number } | null> => {
     const items: PlaylistItem[] = [];
+    let hidden = 0;
     const tracks: Track[] = [];
     for (let offset = 0; ; offset += 50) {
-      let page: z.infer<typeof GetPlaylistsItemsResponse>;
+      let page: z.infer<typeof playlistItemsPage>;
       try {
-        page = await call(`/playlists/${id}/items`, GetPlaylistsItemsResponse, {
+        page = await call(`/playlists/${id}/items`, playlistItemsPage, {
           query: { limit: 50, offset },
         });
       } catch (error) {
@@ -125,7 +159,10 @@ export function createSpotifyDataSource({ db, user, accessToken }: Context): Mus
       page.items.forEach((entry, index) => {
         const parsed = GetTrackResponse.safeParse(entry.item);
         const track = parsed.success ? mapTrack(parsed.data) : null;
-        if (!track) return;
+        if (!track) {
+          hidden += 1;
+          return;
+        }
         tracks.push(track);
         items.push({
           key: `${track.id}#${offset + index}`,
@@ -136,7 +173,7 @@ export function createSpotifyDataSource({ db, user, accessToken }: Context): Mus
       if (!page.next) break;
     }
     await saveTracks(db, tracks);
-    return items;
+    return { items, hidden };
   };
 
   const writeItems = async (id: string, trackIds: readonly string[], replace: boolean) => {
@@ -160,6 +197,9 @@ export function createSpotifyDataSource({ db, user, accessToken }: Context): Mus
       });
     }
   };
+
+  /** Snapshot ids from this request's `listPlaylists`, to reuse cached details without a request. */
+  const listedSnapshots = new Map<string, string>();
 
   const count = async (
     table: "rewind_plays" | "rewind_imports" | "rewind_playlist_snapshots" | "rewind_generations",
@@ -361,21 +401,29 @@ export function createSpotifyDataSource({ db, user, accessToken }: Context): Mus
 
     async listPlaylists() {
       const playlists: PlaylistSummary[] = [];
+      listedSnapshots.clear();
       for (let offset = 0; ; offset += 50) {
         const page = await call("/me/playlists", GetAListOfCurrentUsersPlaylistsResponse, {
           query: { limit: 50, offset },
         });
         for (const item of page.items) {
           const summary = summaryFrom(item);
-          if (summary) playlists.push(summary);
+          if (!summary) continue;
+          playlists.push(summary);
+          listedSnapshots.set(summary.id, summary.snapshotId);
         }
         if (!page.next) return playlists;
       }
     },
-    async getPlaylist(id): Promise<PlaylistDetail | null> {
-      let playlist: z.infer<typeof GetPlaylistResponse>;
+    async getPlaylist(id, options): Promise<PlaylistDetail | null> {
+      const cacheKey = `${userId}:${id}`;
+      const cached = detailCache.get(cacheKey);
+      // Listed in this request with the same snapshot: nothing changed, no request needed.
+      if (cached?.snapshotId && listedSnapshots.get(id) === cached.snapshotId) return cached;
+      if (options?.cachedOnly) return null;
+      let playlist: z.infer<typeof playlistResponse>;
       try {
-        playlist = await call(`/playlists/${encodeURIComponent(id)}`, GetPlaylistResponse);
+        playlist = await call(`/playlists/${encodeURIComponent(id)}`, playlistResponse);
       } catch (error) {
         if (error instanceof SpotifyRequestError && (error.status === 404 || error.status === 403))
           return null;
@@ -383,8 +431,25 @@ export function createSpotifyDataSource({ db, user, accessToken }: Context): Mus
       }
       const summary = summaryFrom(playlist);
       if (!summary) return null;
-      const items = await playlistItems(summary.id);
-      return { ...summary, items, trackCount: items?.length ?? summary.trackCount };
+      if (cached?.snapshotId && cached.snapshotId === summary.snapshotId) {
+        const detail = {
+          ...cached,
+          ...summary,
+          items: cached.items,
+          trackCount: cached.trackCount,
+        };
+        rememberDetail(cacheKey, detail);
+        return detail;
+      }
+      const read = await playlistItems(summary.id);
+      const detail: PlaylistDetail = {
+        ...summary,
+        items: read?.items ?? null,
+        hiddenItems: read?.hidden ?? 0,
+        trackCount: read ? read.items.length + read.hidden : summary.trackCount,
+      };
+      if (summary.snapshotId) rememberDetail(cacheKey, detail);
+      return detail;
     },
     async searchTracks(query) {
       const q = query.trim();

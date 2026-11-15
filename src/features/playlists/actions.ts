@@ -92,6 +92,7 @@ export async function applyEditAction(input: unknown): Promise<WriteResult> {
   const current = await editable(context, playlistId);
   if (typeof current === "string") return fail(current);
   if (current.playlist.snapshotId !== basedOn) return fail(WriteError.Stale);
+  if (current.playlist.hiddenItems > 0) return fail(WriteError.HiddenItems);
   if (!isSubsetOf(parsed.data.trackIds, current.ids)) return fail(WriteError.Invalid);
 
   const count =
@@ -151,6 +152,7 @@ export async function restoreSnapshotAction(input: unknown): Promise<WriteResult
 
   const current = await editable(context, playlistId);
   if (typeof current === "string") return fail(current);
+  if (current.playlist.hiddenItems > 0) return fail(WriteError.HiddenItems);
   const snapshot = (await context.source.listSnapshots(playlistId)).find(
     (s) => s.id === snapshotId,
   );
@@ -258,6 +260,8 @@ export async function mergeAction(input: unknown): Promise<WriteResult> {
 
   const sources = await readSources(context, sourceIds);
   if (typeof sources === "string") return fail(sources);
+  if (deleteSources && sources.some((s) => s.editable && s.hiddenItems > 0))
+    return fail(WriteError.HiddenItems);
 
   let resultId: string;
   let snapshotId: string | null = null;

@@ -25,6 +25,11 @@ export type PlaylistItem = {
 export type PlaylistDetail = PlaylistSummary & {
   /** Null when Spotify does not return items (playlists owned by others). */
   items: readonly PlaylistItem[] | null;
+  /**
+   * Items Rewind can't show (local files, removed tracks). Rewriting the playlist from
+   * `items` would delete them, so writes that replace or delete it are refused.
+   */
+  hiddenItems: number;
 };
 
 /** A saved copy of a playlist's track order before a bulk change, for undo. */

@@ -138,6 +138,7 @@ export function createDemoDataSource({
         snapshotId: "",
         externalUrl: null,
         items: [],
+        hiddenItems: 0,
       });
     if (!base) return null;
 

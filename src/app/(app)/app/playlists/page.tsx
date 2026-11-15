@@ -53,7 +53,7 @@ export default async function Page({
                 name: p.name,
                 trackCount: p.trackCount,
                 editable: p.editable,
-                readable: p.durationMs !== null,
+                readable: p.editable,
               }))}
             />
             <NewPlaylistDialog isDemo={isDemo} />

@@ -99,7 +99,11 @@ export type MusicDataSource = {
   deleteImport(id: string): Promise<void>;
 
   listPlaylists(): Promise<readonly PlaylistSummary[]>;
-  getPlaylist(id: string): Promise<PlaylistDetail | null>;
+  /**
+   * A playlist with its items. With `cachedOnly`, answers only from what is already
+   * known to be current and returns null instead of making a request.
+   */
+  getPlaylist(id: string, options?: { cachedOnly?: boolean }): Promise<PlaylistDetail | null>;
   searchTracks(query: string): Promise<readonly Track[]>;
   getTracks(ids: readonly string[]): Promise<readonly Track[]>;
 
