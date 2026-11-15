@@ -1,0 +1,88 @@
+@import "tailwindcss";
+
+/* Color scheme comes from ui-sdk's createColorScheme on <html data-color-scheme>. */
+:root,
+[data-color-scheme="system"] {
+  color-scheme: light dark;
+}
+[data-color-scheme="light"] {
+  color-scheme: light;
+}
+[data-color-scheme="dark"] {
+  color-scheme: dark;
+}
+
+:root {
+  --bg: light-dark(#f3ecdf, #13110e);
+  --surface: light-dark(#fbf7f0, #1c1915);
+  --surface-2: light-dark(#f6f0e5, #24201a);
+  --ink: light-dark(#17140f, #f3ecdf);
+  --ink-2: light-dark(#3a352d, #dcd3c3);
+  --muted: light-dark(#615a4f, #a89f90);
+  --line: light-dark(#e2d8c7, #2f2a23);
+  --line-strong: light-dark(#cdbfa8, #453e33);
+  --on-ink: light-dark(#fbf7f0, #13110e);
+  --violet: light-dark(#6b4ee6, #a996ff);
+  --violet-soft: light-dark(#d9cfff, #3a2f6e);
+  --coral: light-dark(#e8664a, #ff957c);
+  --coral-soft: light-dark(#ffc9bb, #5a2a20);
+  --butter: #f2cf4a;
+  --butter-soft: light-dark(#fceba6, #4a3f14);
+  --mint: light-dark(#2f9e7e, #6fd6b5);
+  --mint-soft: light-dark(#bfebdc, #163f33);
+  --danger: light-dark(#b3261e, #ff8a7e);
+  --danger-soft: light-dark(#fbe1dc, #47201b);
+  --skel: light-dark(#e9e0d0, #26221c);
+  --skel-hi: light-dark(#f4eee3, #312c25);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-on-ink: var(--on-ink);
+  --color-violet: var(--violet);
+  --color-violet-soft: var(--violet-soft);
+  --color-coral: var(--coral);
+  --color-coral-soft: var(--coral-soft);
+  --color-butter: var(--butter);
+  --color-butter-soft: var(--butter-soft);
+  --color-mint: var(--mint);
+  --color-mint-soft: var(--mint-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-display: var(--font-bricolage), var(--font-inter), sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+}
+
+@theme {
+  --animate-shimmer: shimmer 1.4s ease-in-out infinite;
+  @keyframes shimmer {
+    0% {
+      background-position: 100% 0;
+    }
+    100% {
+      background-position: -100% 0;
+    }
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-bg font-sans text-ink antialiased;
+  }
+  :focus-visible {
+    outline: 2px solid var(--violet);
+    outline-offset: 2px;
+  }
+}
+
+@utility eyebrow {
+  @apply font-mono text-[11px] tracking-[0.12em] text-muted uppercase;
+}
