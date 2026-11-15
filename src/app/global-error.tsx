@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@ui-sdk/react/button";
-import messages from "../../messages/en.json";
+import messages from "../../messages/en";
 import "./globals.css";
 
 /**

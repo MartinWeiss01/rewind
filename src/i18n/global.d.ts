@@ -1,4 +1,4 @@
-import type messages from "../../messages/en.json";
+import type { Messages } from "../../messages/en";
 import type { Locale } from "./locale";
 
 declare module "next-intl" {
@@ -7,6 +7,6 @@ declare module "next-intl" {
   // biome-ignore lint/style/useConsistentTypeDefinitions: declaration merging needs an interface
   interface AppConfig {
     Locale: Locale;
-    Messages: typeof messages;
+    Messages: Messages;
   }
 }

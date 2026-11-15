@@ -1,0 +1,9 @@
+{
+  "loading": "Loading",
+  "errorTitle": "Something went wrong",
+  "errorBody": "We couldn't load this screen. Your data is safe.",
+  "retry": "Try again",
+  "notFoundTitle": "Nothing here",
+  "notFoundBody": "This page doesn't exist or has moved.",
+  "backHome": "Back to start"
+}
