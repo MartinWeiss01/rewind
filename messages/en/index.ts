@@ -5,6 +5,8 @@ import history from "./history.json";
 import marketing from "./marketing.json";
 import nav from "./nav.json";
 import placeholder from "./placeholder.json";
+import playlists from "./playlists.json";
+import playlistTools from "./playlistTools.json";
 import recap from "./recap.json";
 import screens from "./screens.json";
 import settings from "./settings.json";
@@ -25,6 +27,8 @@ const messages = {
   dashboard,
   history,
   recap,
+  playlists,
+  playlistTools,
 };
 
 export type Messages = typeof messages;

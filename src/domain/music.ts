@@ -4,12 +4,14 @@ export type Cover = { kind: "image"; url: string } | { kind: "generated"; seed: 
 export type ArtistRef = { id: string; name: string };
 export type Artist = ArtistRef & { image: Cover };
 
-export type AlbumRef = { id: string; name: string; cover: Cover };
-export type Album = AlbumRef & {
-  artists: readonly ArtistRef[];
+export type AlbumRef = {
+  id: string;
+  name: string;
+  cover: Cover;
   /** ISO date, possibly only a year ("2019") or year-month, as Spotify reports it. */
   releaseDate: string | null;
 };
+export type Album = AlbumRef & { artists: readonly ArtistRef[] };
 
 export type Track = {
   id: string;

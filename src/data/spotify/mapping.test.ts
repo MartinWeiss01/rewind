@@ -39,7 +39,7 @@ describe("spotify mapping", () => {
     expect(mapTrack(track)).toMatchObject({
       id: "t1",
       isrc: "XXTEST0000001",
-      album: { id: "al1" },
+      album: { id: "al1", releaseDate: "2020" },
     });
     expect(mapTrack({ ...track, is_local: true })).toBeNull();
   });

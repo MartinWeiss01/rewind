@@ -36,8 +36,9 @@ export function mapTrack(track: SpotifyTrack): Track | null {
           id: album.id,
           name: album.name,
           cover: pickImage(album.images) ?? fallbackCover(album.id),
+          releaseDate: album.release_date || null,
         }
-      : { id: `unknown-${track.id}`, name: "", cover: fallbackCover(track.id) },
+      : { id: `unknown-${track.id}`, name: "", cover: fallbackCover(track.id), releaseDate: null },
     durationMs: track.duration_ms ?? 0,
     isrc: track.external_ids?.isrc ?? null,
     explicit: track.explicit ?? false,

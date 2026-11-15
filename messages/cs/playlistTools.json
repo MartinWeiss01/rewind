@@ -1,0 +1,200 @@
+{
+  "menu": {
+    "tools": "Nástroje",
+    "history": "Historie a zpět",
+    "duplicates": {
+      "label": "Odebrat duplicity",
+      "hint": "Najde přesné i podobné shody, nejdřív náhled"
+    },
+    "merge": {
+      "label": "Sloučit do tohoto playlistu",
+      "hint": "Přidá skladby z jiných playlistů"
+    },
+    "sort": {
+      "label": "Seřadit",
+      "hint": "Podle data přidání, interpreta, vydání nebo tvých přehrání"
+    },
+    "split": {
+      "label": "Rozdělit",
+      "hint": "Do nových playlistů podle interpreta nebo roku"
+    }
+  },
+  "outcome": {
+    "error": {
+      "forbidden": "Tvůj účet zatím nemůže měnit playlisty.",
+      "invalid": "Tahle změna k playlistu nesedí. Načti stránku znovu a zkus to.",
+      "notFound": "Ten playlist nebo snímek už neexistuje.",
+      "readOnly": "Tento playlist je jen pro čtení.",
+      "stale": "Playlist se od otevření změnil. Načti stránku znovu, ať vidíš aktuální verzi.",
+      "failed": "Změna neprošla. Nic se nezměnilo, zkus to znovu."
+    },
+    "partialTitle": "Prošla jen část změny",
+    "partialItems": "Playlist může obsahovat jen část změny. Nic se neztratilo: předtím se uložil snímek.",
+    "partialSources": "Sloučení proběhlo, ale smazáno bylo jen {done} z {total} zdrojových playlistů.",
+    "partialPlaylists": "Před chybou vzniklo {done} z {total} playlistů. Původní playlist se nezměnil.",
+    "restore": "Obnovit snímek",
+    "restoring": "Obnovuji…",
+    "restored": "Snímek je obnovený.",
+    "restoreFailed": "Obnovení nevyšlo. Zkus to znovu v Historii a zpět.",
+    "leave": "Nechat být",
+    "undo": "Vrátit",
+    "undone": "Vráceno. Předchozí seznam skladeb je zpět.",
+    "dismiss": "Zavřít"
+  },
+  "create": {
+    "open": "Nový playlist",
+    "title": "Nový playlist",
+    "description": "Založ prázdný playlist a přidej do něj skladby.",
+    "name": "Název",
+    "namePlaceholder": "např. Deštivé dojíždění",
+    "descriptionLabel": "Popis",
+    "optional": "(nepovinné)",
+    "public": "Veřejný na mém profilu",
+    "demoChip": "Demo",
+    "demoNote": "Vytvoří se jen v této relaci.",
+    "cancel": "Zrušit",
+    "submit": "Vytvořit",
+    "creating": "Vytvářím…"
+  },
+  "merge": {
+    "open": "Sloučit playlisty",
+    "title": "Sloučit playlisty",
+    "description": "Přidej skladby z jednoho či více playlistů do jiného, nebo do nového playlistu.",
+    "sources": "Přidat skladby z",
+    "sourcesPlaceholder": "Vyber playlisty…",
+    "sourcesHint": "Vyber jeden nebo víc playlistů, jejichž skladby jdou přečíst.",
+    "removeSource": "Odebrat {name}",
+    "noSources": "Žádné další playlisty ke sloučení.",
+    "into": "Do",
+    "newPlaylist": "Nový playlist",
+    "newName": "Název nového playlistu",
+    "skipExisting": "Přeskočit skladby, které už v cíli jsou",
+    "deleteSources": "Potom smazat zdrojové playlisty",
+    "previewError": {
+      "forbidden": "Tvůj účet zatím nemůže měnit playlisty.",
+      "invalid": "Vyber aspoň jeden zdrojový playlist.",
+      "notFound": "Jeden z playlistů už neexistuje.",
+      "readOnly": "Skladby jednoho z těchto playlistů nejdou přečíst.",
+      "stale": "Playlisty se změnily. Načti stránku znovu a zkus to.",
+      "failed": "Náhled se nenačetl. Zkus to znovu."
+    },
+    "added": "skladeb přibude",
+    "skipped": "už tam jsou, přeskočeno",
+    "after": "skladeb po sloučení",
+    "cancel": "Zrušit",
+    "submit": "{count, plural, =0 {Sloučit} one {Sloučit # skladbu} few {Sloučit # skladby} other {Sloučit # skladeb}}",
+    "merging": "Slučuji…",
+    "confirmTitle": "Smazat {count, plural, one {zdrojový playlist} few {# zdrojové playlisty} other {# zdrojových playlistů}}?",
+    "confirmBody": "Po sloučení se smaže: {names}. Playlisty, které jen sleduješ, zůstanou. Smazaný playlist tu obnovit nejde.",
+    "confirm": "Sloučit a smazat",
+    "done": "{count, plural, one {Přidána # skladba} few {Přidány # skladby} other {Přidáno # skladeb}} do tohoto playlistu."
+  },
+  "duplicates": {
+    "title": "Odebrat duplicity",
+    "strictness": "Přísnost shody",
+    "level": {
+      "exact": "Přesná",
+      "recording": "Stejná nahrávka",
+      "titleAllArtists": "Název + interpreti",
+      "titleSharedArtist": "Název + interpret",
+      "title": "Stejný název"
+    },
+    "hint": {
+      "exact": "Jen stejná skladba ze Spotify dvakrát.",
+      "recording": "Stejný ISRC: stejná nahrávka vydaná na různých albech.",
+      "titleAllArtists": "Stejný název i interpreti. Poznámky jako „Remastered“, „Live“ nebo „feat.“ se ignorují.",
+      "titleSharedArtist": "Stejný název a aspoň jeden společný interpret. Poznámky jako „Remastered“ se ignorují.",
+      "title": "Jen stejný název. Volné: zkontroluj každou skupinu."
+    },
+    "reason": {
+      "exact": "Přesná",
+      "recording": "Stejná nahrávka (ISRC)",
+      "titleAllArtists": "Stejný název + interpreti",
+      "titleSharedArtist": "Stejný název + interpret",
+      "title": "Stejný název"
+    },
+    "emptyTitle": "Při této přísnosti žádné duplicity",
+    "emptyBody": "Zkus volnější shodu, ať zachytíš remastery a jiná vydání.",
+    "groups": "{count, plural, one {# skupina} few {# skupiny} other {# skupin}}",
+    "willRemove": "{count, plural, one {odebere se # skladba} few {odeberou se # skladby} other {odebere se # skladeb}}",
+    "keepOldest": "V každé skupině nechat nejstarší",
+    "keepLabel": "Kterou „{title}“ nechat",
+    "addedOn": "přidáno {date}",
+    "plays": "{count, plural, one {# přehrání} few {# přehrání} other {# přehrání}}",
+    "keep": "Nechat",
+    "remove": "Odebrat",
+    "snapshotNote": "Nejdřív se uloží snímek. Změnu můžeš kdykoli vrátit v Historii a zpět.",
+    "cancel": "Zrušit",
+    "submit": "{count, plural, =0 {Odebrat} one {Odebrat # skladbu} few {Odebrat # skladby} other {Odebrat # skladeb}}",
+    "removing": "Odebírám…",
+    "done": "{count, plural, one {Odebrána # duplicita} few {Odebrány # duplicity} other {Odebráno # duplicit}}."
+  },
+  "sort": {
+    "title": "Seřadit playlist",
+    "by": "Řadit podle",
+    "key": {
+      "added": "Data přidání",
+      "artist": "Interpreta",
+      "release": "Data vydání",
+      "plays": "Tvých přehrání"
+    },
+    "order": "Pořadí",
+    "desc": {
+      "added": "Nejnovější první",
+      "artist": "A–Z",
+      "release": "Nejnovější první",
+      "plays": "Nejvíc první"
+    },
+    "asc": {
+      "added": "Nejstarší první",
+      "artist": "Z–A",
+      "release": "Nejstarší první",
+      "plays": "Nejmíň první"
+    },
+    "before": "Předtím",
+    "after": "Potom",
+    "cancel": "Zrušit",
+    "submit": "Použít pořadí",
+    "applying": "Řadím…",
+    "alreadySorted": "Už je v tomto pořadí",
+    "done": "Playlist je seřazený."
+  },
+  "split": {
+    "title": "Rozdělit playlist",
+    "by": "Rozdělit podle",
+    "byArtist": "Interpreta",
+    "byYear": "Roku vydání",
+    "minSize": "Nejmenší skupina",
+    "decrease": "Méně skladeb",
+    "increase": "Více skladeb",
+    "minSizeHint": "Skupiny s menším počtem skladeb půjdou do „Ostatní“.",
+    "creates": "{count, plural, one {Vznikne # nový playlist} few {Vzniknou # nové playlisty} other {Vznikne # nových playlistů}} · původní zůstane, jak je",
+    "newName": "{name} · {group}",
+    "newDescription": "Rozděleno z {name} v Rewindu.",
+    "other": "Ostatní",
+    "tracks": "{count, plural, one {# skladba} few {# skladby} other {# skladeb}}",
+    "cancel": "Zrušit",
+    "submit": "{count, plural, one {Vytvořit # playlist} few {Vytvořit # playlisty} other {Vytvořit # playlistů}}",
+    "creating": "Vytvářím…",
+    "done": "{count, plural, one {Vznikl # playlist} few {Vznikly # playlisty} other {Vzniklo # playlistů}}. Najdeš je v Playlistech."
+  },
+  "history": {
+    "title": "Historie a zpět",
+    "description": "Před každou hromadnou změnou se uloží snímek. Obnovení nahradí aktuální seznam skladeb.",
+    "emptyTitle": "Zatím žádné snímky",
+    "emptyBody": "Hromadné změny jako odebrání duplicit nebo řazení sem nejdřív uloží snímek.",
+    "kind": {
+      "edit": "{count, plural, =0 {Změněno pořadí} one {Odebrána # skladba} few {Odebrány # skladby} other {Odebráno # skladeb}}",
+      "removeDuplicates": "{count, plural, one {Odebrána # duplicita} few {Odebrány # duplicity} other {Odebráno # duplicit}}",
+      "sort": "{count, plural, one {Seřazena # skladba} few {Seřazeny # skladby} other {Seřazeno # skladeb}}",
+      "merge": "{count, plural, one {Přisloučena # skladba} few {Přisloučeny # skladby} other {Přisloučeno # skladeb}}",
+      "restore": "Obnoven snímek"
+    },
+    "meta": "{date} · předtím {count, plural, one {# skladba} few {# skladby} other {# skladeb}}",
+    "restore": "Obnovit",
+    "restoring": "Obnovuji…",
+    "note": "Obnovení taky uloží snímek, takže jde vrátit.",
+    "close": "Zavřít",
+    "done": "Obnoven snímek z {date}."
+  }
+}

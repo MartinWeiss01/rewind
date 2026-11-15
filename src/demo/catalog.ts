@@ -81,7 +81,12 @@ export function buildCatalog(persona: Persona): Catalog {
           artists: featured
             ? [ref, { id: `demo-artist-${pad(featuredIndex + 1)}`, name: featured.name }]
             : [ref],
-          album: { id: album.id, name: album.name, cover: album.cover },
+          album: {
+            id: album.id,
+            name: album.name,
+            cover: album.cover,
+            releaseDate: album.releaseDate,
+          },
           durationMs: random.int(150, 330) * 1000,
           isrc: `XXDEM${String(isrcCounter++).padStart(7, "0")}`,
           explicit: source.genre === "hiphop" && random.chance(0.5),

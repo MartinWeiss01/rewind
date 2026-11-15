@@ -8,7 +8,13 @@ const coverSchema = z.discriminatedUnion("kind", [
   z.object({ kind: z.literal("generated"), seed: z.number() }),
 ]);
 const artistsSchema = z.array(z.object({ id: z.string(), name: z.string() }));
-const albumSchema = z.object({ id: z.string(), name: z.string(), cover: coverSchema });
+const albumSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  cover: coverSchema,
+  // Rows cached before release dates were stored have none.
+  releaseDate: z.string().nullable().default(null),
+});
 
 type TrackRow = {
   id: string;
@@ -71,7 +77,12 @@ export async function saveTracks(db: Db, tracks: readonly Track[]): Promise<void
         id: t.id,
         name: t.name,
         artists: t.artists.map((a) => ({ id: a.id, name: a.name })),
-        album: { id: t.album.id, name: t.album.name, cover: { ...t.album.cover } },
+        album: {
+          id: t.album.id,
+          name: t.album.name,
+          cover: { ...t.album.cover },
+          releaseDate: t.album.releaseDate,
+        },
         duration_ms: t.durationMs,
         isrc: t.isrc,
         explicit: t.explicit,

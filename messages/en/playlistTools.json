@@ -1,0 +1,200 @@
+{
+  "menu": {
+    "tools": "Tools",
+    "history": "History & undo",
+    "duplicates": {
+      "label": "Remove duplicates",
+      "hint": "Find exact and near matches, preview first"
+    },
+    "merge": {
+      "label": "Merge into this playlist",
+      "hint": "Add the tracks of other playlists"
+    },
+    "sort": {
+      "label": "Sort",
+      "hint": "By date added, artist, release date or your plays"
+    },
+    "split": {
+      "label": "Split",
+      "hint": "Into new playlists by artist or by year"
+    }
+  },
+  "outcome": {
+    "error": {
+      "forbidden": "Your account can’t change playlists yet.",
+      "invalid": "That change doesn’t fit this playlist. Reload and try again.",
+      "notFound": "That playlist or snapshot no longer exists.",
+      "readOnly": "This playlist is read-only.",
+      "stale": "The playlist changed since you opened it. Reload to see the latest version.",
+      "failed": "The change didn’t go through. Nothing was changed; try again."
+    },
+    "partialTitle": "Only part of the change went through",
+    "partialItems": "The playlist may hold part of the change. Nothing is lost: a snapshot from before was saved.",
+    "partialSources": "The merge worked, but only {done} of {total} source playlists were deleted.",
+    "partialPlaylists": "Created {done} of {total} playlists before an error. The original playlist is unchanged.",
+    "restore": "Restore snapshot",
+    "restoring": "Restoring…",
+    "restored": "Restored the snapshot.",
+    "restoreFailed": "Restoring didn’t work. Try again from History & undo.",
+    "leave": "Leave as is",
+    "undo": "Undo",
+    "undone": "Undone. The previous track list is back.",
+    "dismiss": "Dismiss"
+  },
+  "create": {
+    "open": "New playlist",
+    "title": "New playlist",
+    "description": "Start an empty playlist and add tracks to it.",
+    "name": "Name",
+    "namePlaceholder": "e.g. Rainy commute",
+    "descriptionLabel": "Description",
+    "optional": "(optional)",
+    "public": "Public on my profile",
+    "demoChip": "Demo",
+    "demoNote": "Created in this session only.",
+    "cancel": "Cancel",
+    "submit": "Create",
+    "creating": "Creating…"
+  },
+  "merge": {
+    "open": "Merge playlists",
+    "title": "Merge playlists",
+    "description": "Add the tracks of one or more playlists to another one, or to a new playlist.",
+    "sources": "Add tracks from",
+    "sourcesPlaceholder": "Choose playlists…",
+    "sourcesHint": "Pick one or more playlists whose tracks can be read.",
+    "removeSource": "Remove {name}",
+    "noSources": "No other playlists to merge.",
+    "into": "Into",
+    "newPlaylist": "A new playlist",
+    "newName": "Name of the new playlist",
+    "skipExisting": "Skip tracks that are already in the target",
+    "deleteSources": "Delete source playlists afterwards",
+    "previewError": {
+      "forbidden": "Your account can’t change playlists yet.",
+      "invalid": "Choose at least one source playlist.",
+      "notFound": "One of the playlists no longer exists.",
+      "readOnly": "The tracks of one of these playlists can’t be read.",
+      "stale": "The playlists changed. Reload and try again.",
+      "failed": "The preview didn’t load. Try again."
+    },
+    "added": "tracks added",
+    "skipped": "already there, skipped",
+    "after": "tracks after merge",
+    "cancel": "Cancel",
+    "submit": "{count, plural, =0 {Merge} one {Merge # track} other {Merge # tracks}}",
+    "merging": "Merging…",
+    "confirmTitle": "Delete {count, plural, one {the source playlist} other {# source playlists}}?",
+    "confirmBody": "After merging, {names} will be deleted. Playlists you only follow are kept. A deleted playlist can’t be restored here.",
+    "confirm": "Merge and delete",
+    "done": "Merged {count, plural, one {# track} other {# tracks}} into this playlist."
+  },
+  "duplicates": {
+    "title": "Remove duplicates",
+    "strictness": "Match strictness",
+    "level": {
+      "exact": "Exact",
+      "recording": "Same recording",
+      "titleAllArtists": "Title + artists",
+      "titleSharedArtist": "Title + an artist",
+      "title": "Same title"
+    },
+    "hint": {
+      "exact": "Only the same Spotify track twice.",
+      "recording": "Same ISRC: the same recording released on different albums.",
+      "titleAllArtists": "Same title and the same artists. Notes like “Remastered”, “Live” or “feat.” are ignored.",
+      "titleSharedArtist": "Same title and at least one shared artist. Notes like “Remastered” are ignored.",
+      "title": "Same title only. Loose: check every group."
+    },
+    "reason": {
+      "exact": "Exact",
+      "recording": "Same recording (ISRC)",
+      "titleAllArtists": "Same title + artists",
+      "titleSharedArtist": "Same title + an artist",
+      "title": "Same title"
+    },
+    "emptyTitle": "No duplicates at this strictness",
+    "emptyBody": "Try a looser match to catch remasters and alternate releases.",
+    "groups": "{count, plural, one {# group} other {# groups}}",
+    "willRemove": "{count, plural, one {# track will be removed} other {# tracks will be removed}}",
+    "keepOldest": "Keep the oldest in every group",
+    "keepLabel": "Which “{title}” to keep",
+    "addedOn": "added {date}",
+    "plays": "{count, plural, one {# play} other {# plays}}",
+    "keep": "Keep",
+    "remove": "Remove",
+    "snapshotNote": "A snapshot is saved first. You can undo this from History & undo at any time.",
+    "cancel": "Cancel",
+    "submit": "{count, plural, =0 {Remove} one {Remove # track} other {Remove # tracks}}",
+    "removing": "Removing…",
+    "done": "Removed {count, plural, one {# duplicate} other {# duplicates}}."
+  },
+  "sort": {
+    "title": "Sort playlist",
+    "by": "Sort by",
+    "key": {
+      "added": "Date added",
+      "artist": "Artist",
+      "release": "Release date",
+      "plays": "Your plays"
+    },
+    "order": "Order",
+    "desc": {
+      "added": "Newest first",
+      "artist": "A–Z",
+      "release": "Newest first",
+      "plays": "Most first"
+    },
+    "asc": {
+      "added": "Oldest first",
+      "artist": "Z–A",
+      "release": "Oldest first",
+      "plays": "Least first"
+    },
+    "before": "Before",
+    "after": "After",
+    "cancel": "Cancel",
+    "submit": "Apply order",
+    "applying": "Applying…",
+    "alreadySorted": "Already in this order",
+    "done": "Sorted the playlist."
+  },
+  "split": {
+    "title": "Split playlist",
+    "by": "Split by",
+    "byArtist": "Artist",
+    "byYear": "Release year",
+    "minSize": "Smallest group",
+    "decrease": "Fewer tracks",
+    "increase": "More tracks",
+    "minSizeHint": "Groups with fewer tracks go into “Other”.",
+    "creates": "{count, plural, one {Creates # new playlist} other {Creates # new playlists}} · the original stays as is",
+    "newName": "{name} · {group}",
+    "newDescription": "Split from {name} with Rewind.",
+    "other": "Other",
+    "tracks": "{count, plural, one {# track} other {# tracks}}",
+    "cancel": "Cancel",
+    "submit": "{count, plural, one {Create # playlist} other {Create # playlists}}",
+    "creating": "Creating…",
+    "done": "Created {count, plural, one {# playlist} other {# playlists}}. Find them in Playlists."
+  },
+  "history": {
+    "title": "History & undo",
+    "description": "A snapshot is stored before every bulk change. Restoring replaces the current track list.",
+    "emptyTitle": "No snapshots yet",
+    "emptyBody": "Bulk changes like removing duplicates or sorting save one here first.",
+    "kind": {
+      "edit": "{count, plural, =0 {Changed the order} one {Removed # track} other {Removed # tracks}}",
+      "removeDuplicates": "Removed {count, plural, one {# duplicate} other {# duplicates}}",
+      "sort": "Sorted {count, plural, one {# track} other {# tracks}}",
+      "merge": "Merged in {count, plural, one {# track} other {# tracks}}",
+      "restore": "Restored a snapshot"
+    },
+    "meta": "{date} · {count, plural, one {# track} other {# tracks}} before",
+    "restore": "Restore",
+    "restoring": "Restoring…",
+    "note": "Restoring saves a snapshot too, so a restore can be undone.",
+    "close": "Close",
+    "done": "Restored the snapshot from {date}."
+  }
+}
