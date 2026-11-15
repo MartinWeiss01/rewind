@@ -56,6 +56,26 @@ export type ImportRecord = {
   added: number;
 };
 
+/** A saved AI suggestion run, shown under "Earlier suggestions". */
+export type Generation = {
+  id: string;
+  createdAt: Date;
+  title: string;
+  /** What was asked, in the user's words or as "Based on <playlist>". */
+  request: string;
+  trackIds: readonly string[];
+  /** "Title — Artist" lines the model suggested that matched no track. */
+  unmatched: readonly string[];
+};
+
+/** Counts shown under "Your data" in settings. */
+export type DataSummary = {
+  plays: number;
+  imports: number;
+  snapshots: number;
+  generations: number;
+};
+
 /**
  * Everything the UI reads or changes, independent of where it comes from.
  * Resolved server-side per request: DemoDataSource or SpotifyDataSource.
@@ -90,6 +110,15 @@ export type MusicDataSource = {
   addPlaylistItems(id: string, trackIds: readonly string[]): Promise<void>;
   /** Unfollows (Spotify's equivalent of deleting your own playlist). */
   removePlaylist(id: string): Promise<void>;
+
+  listGenerations(limit: number): Promise<readonly Generation[]>;
+  saveGeneration(input: Omit<Generation, "id" | "createdAt">): Promise<Generation>;
+
+  getDataSummary(): Promise<DataSummary>;
+  /** Everything Rewind stores about the user, as plain JSON-serialisable data. */
+  exportData(): Promise<unknown>;
+  /** Deletes plays, imports, snapshots and generations; keeps the login. */
+  deleteAllData(): Promise<void>;
 
   listSnapshots(playlistId: string): Promise<readonly PlaylistSnapshot[]>;
   saveSnapshot(

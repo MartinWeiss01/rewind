@@ -45,6 +45,16 @@ export const demoSessionStateSchema = z.object({
       added: z.number().int(),
     }),
   ),
+  generations: z.array(
+    z.object({
+      id: z.string(),
+      createdAt: z.iso.datetime(),
+      title: z.string(),
+      request: z.string(),
+      trackIds: z.array(z.string()),
+      unmatched: z.array(z.string()),
+    }),
+  ),
   /** Bumped on every write, used as the demo playlists' snapshot marker. */
   revision: z.number().int(),
 });
@@ -59,6 +69,7 @@ export const emptyDemoSessionState = (timeZone: string): DemoSessionState => ({
   snapshots: [],
   importedPlays: [],
   imports: [],
+  generations: [],
   revision: 0,
 });
 
