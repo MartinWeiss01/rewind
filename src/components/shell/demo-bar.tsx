@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import { SpotifyLoginLink } from "@/components/auth/spotify-login-link";
 import { buttonClass } from "@/components/ui/styles";
 
 export async function DemoBar() {
@@ -9,10 +10,9 @@ export async function DemoBar() {
         {t("demo")}
       </span>
       <span>{t("demoNotice")}</span>
-      {/* Sign-in is a route handler that redirects to Spotify, so a full navigation. */}
-      <a href="/api/auth/spotify/login" className={buttonClass("primary", "sm")}>
+      <SpotifyLoginLink className={buttonClass("primary", "sm")}>
         {t("useMySpotify")}
-      </a>
+      </SpotifyLoginLink>
     </div>
   );
 }

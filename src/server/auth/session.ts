@@ -5,6 +5,8 @@ import type { SpotifyConfig } from "@/server/env";
 
 export const sessionCookie = "rewind_session";
 export const oauthStateCookie = "rewind_oauth_state";
+/** The browser's time zone, carried through sign-in to set up a new account. */
+export const oauthTimeZoneCookie = "rewind_oauth_tz";
 export const sessionMaxAgeSeconds = 30 * 24 * 60 * 60;
 
 export const sessionCookieOptions = {

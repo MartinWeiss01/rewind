@@ -93,6 +93,7 @@ export function generatePlaylists(persona: Persona, catalog: Catalog, now: Date)
       snapshotId: `demo-${id}-0`,
       externalUrl: null,
       items: readOnly ? null : items,
+      hiddenItems: 0,
     };
   });
 }

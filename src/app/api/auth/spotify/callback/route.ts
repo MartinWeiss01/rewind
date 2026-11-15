@@ -7,9 +7,11 @@ import { mapProfile } from "@/data/spotify/mapping";
 import { exchangeCode } from "@/data/spotify/oauth";
 import { syncRecentlyPlayed } from "@/data/spotify/sync";
 import { adminDb } from "@/data/supabase/client";
+import { listeningRulesSchema } from "@/domain/listening";
 import {
   createSession,
   oauthStateCookie,
+  oauthTimeZoneCookie,
   saveTokens,
   sessionCookie,
   sessionCookieOptions,
@@ -30,7 +32,11 @@ export async function GET(request: NextRequest) {
 
   const cookieStore = await cookies();
   const expectedState = cookieStore.get(oauthStateCookie)?.value;
+  const timeZone = listeningRulesSchema.shape.timeZone.safeParse(
+    cookieStore.get(oauthTimeZoneCookie)?.value,
+  );
   cookieStore.delete({ name: oauthStateCookie, path: "/api/auth/spotify" });
+  cookieStore.delete({ name: oauthTimeZoneCookie, path: "/api/auth/spotify" });
 
   const params = callbackSchema.safeParse(Object.fromEntries(request.nextUrl.searchParams));
   if (!params.success) return back("failed");
@@ -57,9 +63,17 @@ export async function GET(request: NextRequest) {
         },
         { onConflict: "spotify_user_id" },
       )
-      .select("id, last_sync_cursor_ms")
+      .select("id, last_sync_cursor_ms, time_zone")
       .single();
     if (error || !user) throw new Error(`Could not save user: ${error?.message}`);
+    // Accounts start on UTC; a sign-in from a browser moves them to its time zone.
+    if (user.time_zone === "UTC" && timeZone.success && timeZone.data !== "UTC") {
+      const { error: zoneError } = await db
+        .from("rewind_users")
+        .update({ time_zone: timeZone.data })
+        .eq("id", user.id);
+      if (zoneError) console.error("Could not set the time zone", zoneError.message);
+    }
     await saveTokens(db, config, user.id, tokens, true);
     const token = await createSession(db, user.id);
     cookieStore.set(sessionCookie, token, {

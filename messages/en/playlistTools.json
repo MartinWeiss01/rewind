@@ -25,6 +25,7 @@
       "invalid": "That change doesn’t fit this playlist. Reload and try again.",
       "notFound": "That playlist or snapshot no longer exists.",
       "readOnly": "This playlist is read-only.",
+      "hiddenItems": "The playlist has local files or unavailable tracks Rewind can’t see. This change would delete them, so nothing was changed.",
       "stale": "The playlist changed since you opened it. Reload to see the latest version.",
       "failed": "The change didn’t go through. Nothing was changed; try again."
     },
@@ -75,6 +76,7 @@
       "invalid": "Choose at least one source playlist.",
       "notFound": "One of the playlists no longer exists.",
       "readOnly": "The tracks of one of these playlists can’t be read.",
+      "hiddenItems": "A source playlist has local files or unavailable tracks. Deleting it would lose them; keep the sources or merge without deleting.",
       "stale": "The playlists changed. Reload and try again.",
       "failed": "The preview didn’t load. Try again."
     },

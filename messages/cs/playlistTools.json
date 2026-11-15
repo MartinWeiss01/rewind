@@ -25,6 +25,7 @@
       "invalid": "Tahle změna k playlistu nesedí. Načti stránku znovu a zkus to.",
       "notFound": "Ten playlist nebo snímek už neexistuje.",
       "readOnly": "Tento playlist je jen pro čtení.",
+      "hiddenItems": "Playlist obsahuje lokální soubory nebo nedostupné skladby, které Rewind nevidí. Tahle změna by je smazala, proto se nic nezměnilo.",
       "stale": "Playlist se od otevření změnil. Načti stránku znovu, ať vidíš aktuální verzi.",
       "failed": "Změna neprošla. Nic se nezměnilo, zkus to znovu."
     },
@@ -75,6 +76,7 @@
       "invalid": "Vyber aspoň jeden zdrojový playlist.",
       "notFound": "Jeden z playlistů už neexistuje.",
       "readOnly": "Skladby jednoho z těchto playlistů nejdou přečíst.",
+      "hiddenItems": "Zdrojový playlist obsahuje lokální soubory nebo nedostupné skladby. Smazáním by se ztratily; zdroje ponech, nebo slouč bez mazání.",
       "stale": "Playlisty se změnily. Načti stránku znovu a zkus to.",
       "failed": "Náhled se nenačetl. Zkus to znovu."
     },

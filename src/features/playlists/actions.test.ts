@@ -109,6 +109,33 @@ describe("playlist actions", () => {
     ).toEqual({ status: "error", error: "readOnly" });
   });
 
+  it("refuses to rewrite a playlist with items it can't show", async () => {
+    const { playlist, ids } = await current();
+    const demo = context.source;
+    const replace = vi.fn();
+    context.source = {
+      ...demo,
+      getPlaylist: async (id) => {
+        const found = await demo.getPlaylist(id);
+        return found && { ...found, hiddenItems: 2 };
+      },
+      replacePlaylistItems: replace,
+    };
+    expect(
+      await applyEditAction({
+        playlistId: PLAYLIST,
+        basedOn: playlist.snapshotId,
+        trackIds: ids.slice(1),
+        kind: "removeDuplicates",
+      }),
+    ).toEqual({ status: "error", error: "hiddenItems" });
+    expect(await restoreSnapshotAction({ playlistId: PLAYLIST, snapshotId: "any" })).toEqual({
+      status: "error",
+      error: "hiddenItems",
+    });
+    expect(replace).not.toHaveBeenCalled();
+  });
+
   it("reports a partial failure with the snapshot to restore", async () => {
     const { playlist, ids } = await current();
     context.source = {
