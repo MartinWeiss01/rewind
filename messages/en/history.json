@@ -1,0 +1,109 @@
+{
+  "synced": "Synced {when}",
+  "plays": "Plays",
+  "filters": "Filter plays",
+  "search": "Search plays",
+  "searchPlaceholder": "Search track, artist or album",
+  "from": "From",
+  "to": "To",
+  "sourceLabel": "Source",
+  "sourceFilter": {
+    "all": "All",
+    "synced": "Synced",
+    "imported": "Imported"
+  },
+  "showSkips": "Show skips",
+  "tableCaption": "Your plays, newest first unless sorted otherwise",
+  "columns": {
+    "played": "Played",
+    "track": "Track",
+    "album": "Album",
+    "listened": "Listened",
+    "source": "Source",
+    "actions": "Actions"
+  },
+  "skip": "Skip",
+  "source": {
+    "synced": "Synced",
+    "imported": "Imported"
+  },
+  "openInSpotify": "Open {track} in Spotify",
+  "showing": "{first}–{last} of {total, plural, one {# play} other {# plays}}",
+  "pagination": "Pages of plays",
+  "previous": "Previous",
+  "next": "Next",
+  "emptyTitle": "No plays yet",
+  "emptyBody": "Import your Extended Streaming History to see every play here.",
+  "noMatchTitle": "No plays match these filters",
+  "noMatchBody": "Try a wider date range or clear the search.",
+  "clearFilters": "Clear filters",
+  "import": {
+    "open": "Import history",
+    "title": "Import Extended Streaming History",
+    "howTo": "Request it in Spotify → Account → Privacy settings. You’ll get a ZIP with <file>Streaming_History_Audio_*.json</file> files.",
+    "close": "Close import",
+    "dropTitle": "Drop JSON files here or choose files",
+    "dropHint": "Several files at once are fine. Re-importing the same file never creates duplicates.",
+    "choose": "Choose files",
+    "demoChip": "Demo",
+    "demoHint": "Try it with our sample export. It is imported into your demo session only.",
+    "useSample": "Use sample file",
+    "overall": "Import progress",
+    "waiting": "Waiting",
+    "importing": "Importing…",
+    "fileDone": "Done · {count, plural, one {# play added} other {# plays added}}",
+    "keepOpen": "Files are imported one at a time. Keep this page open until it finishes.",
+    "cancel": "Cancel",
+    "summary": {
+      "files": "Files read",
+      "added": "Plays added",
+      "duplicates": "Already known",
+      "duplicatesHint": "skipped as duplicates",
+      "skipped": "Not imported",
+      "skippedHint": "podcasts, local files, unknown rows"
+    },
+    "noNewPlays": "nothing new",
+    "someFailed": "{count, plural, one {One file} other {# files}} couldn’t be imported: {names}",
+    "notes": "Podcast episodes and local files have no track ID and were skipped. Short plays count as skips (change the threshold in Settings).",
+    "seeStats": "See updated stats",
+    "importMore": "Import more",
+    "chooseAgain": "Choose files again",
+    "errors": {
+      "zip": {
+        "short": "ZIP archive",
+        "title": "{name} isn’t a JSON export",
+        "body": "Unzip it first and upload the <file>Streaming_History_Audio_*.json</file> files inside."
+      },
+      "notJson": {
+        "short": "Not JSON",
+        "title": "{name} isn’t a JSON file",
+        "body": "Upload the <file>Streaming_History_Audio_*.json</file> files from your Spotify export."
+      },
+      "notHistory": {
+        "short": "Not streaming history",
+        "title": "{name} isn’t an Extended Streaming History file",
+        "body": "Files from the basic “Account data” export don’t contain enough detail. Request the Extended Streaming History and upload its <file>Streaming_History_Audio_*.json</file> files."
+      },
+      "tooLarge": {
+        "short": "Too large",
+        "title": "{name} is too large",
+        "body": "Each file can be up to 30 MB. Spotify’s <file>Streaming_History_Audio_*.json</file> files are usually much smaller."
+      },
+      "empty": {
+        "short": "Empty file",
+        "title": "{name} is empty",
+        "body": "Choose one of the <file>Streaming_History_Audio_*.json</file> files from your export."
+      },
+      "tooMany": {
+        "short": "Too many files",
+        "title": "Too many files at once",
+        "body": "Import up to 20 <file>Streaming_History_Audio_*.json</file> files at a time."
+      },
+      "failed": {
+        "short": "Failed",
+        "title": "{name} couldn’t be imported",
+        "body": "Something went wrong on our side. Your data is safe; try the <file>file</file> again."
+      }
+    }
+  }
+}
