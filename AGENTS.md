@@ -41,12 +41,15 @@ English for code, comments, docs, commit messages, PRs and UI copy.
 - Server Components by default; client components only where interactivity needs them.
 - UI components are mode-agnostic: data comes through the `MusicDataSource` abstraction resolved server-side per request.
 - Every data-driven component ships loading (skeleton), empty and error (with retry) states.
+- Routes follow the App Router file conventions in [ADR 0003](docs/adr/0003-app-router-conventions.md): route groups, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`.
+- Every UI string goes through next-intl ([ADR 0002](docs/adr/0002-internationalization-next-intl.md)) with English and Czech messages; no hardcoded copy.
+- Gated features are checked server-side per [ADR 0004](docs/adr/0004-feature-access-by-account.md); public pages never advertise them.
 - Dependencies: exact versions, lockfile committed, no new library for a problem the existing stack already covers.
 - Check current official docs before writing config or calling a library or external API. When unsure about Spotify API behaviour, verify and state what was verified; do not guess.
 
 ## Stack
 
-Next.js (App Router), TypeScript, Tailwind CSS, ui-sdk, ts-pattern, Zod v4, TanStack Query, TanStack Table, Recharts, Supabase, Vercel AI SDK, Vitest, Playwright, Biome. Package manager: pnpm.
+Next.js (App Router), TypeScript, Tailwind CSS, ui-sdk, next-intl, ts-pattern, Zod v4, TanStack Query, TanStack Table, Recharts, Supabase, Vercel AI SDK, Vitest, Playwright, Biome. Package manager: pnpm.
 
 AI runs through the Vercel AI SDK with the provider and model chosen by env; Google (Gemini API key) is the default and must always work.
 
@@ -77,6 +80,8 @@ Summary; full rules in [`docs/contributing/git-workflow.md`](docs/contributing/g
 | Build or change a UI component | ui-sdk docs in `node_modules/@ui-sdk/react/docs/` (see Stack) |
 | Call a Spotify endpoint | the official Web API reference; record the endpoint in the Spotify integration doc once it exists |
 | Add a library outside ui-sdk | [`docs/adr/0001-libraries-outside-ui-sdk.md`](docs/adr/0001-libraries-outside-ui-sdk.md) |
+| Add a route or screen | [`docs/adr/0003-app-router-conventions.md`](docs/adr/0003-app-router-conventions.md) |
+| Add UI copy | [`docs/adr/0002-internationalization-next-intl.md`](docs/adr/0002-internationalization-next-intl.md) |
 | Add an environment variable | `.env.example` and the env schema |
 
 ## Owner's vault
