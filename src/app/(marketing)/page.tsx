@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { match } from "ts-pattern";
 import { z } from "zod";
+import { SpotifyLoginLink } from "@/components/auth/spotify-login-link";
 import { Cover } from "@/components/ui/cover";
 import { alert, buttonClass, card, cardFlat, chipClass, heading } from "@/components/ui/styles";
 
@@ -78,9 +79,9 @@ export default async function LandingPage({ searchParams }: PageProps<"/">) {
           <Link href="/app" className={buttonClass("primary", "lg")}>
             {t("common.tryDemo")}
           </Link>
-          <a href="/api/auth/spotify/login" className={buttonClass("secondary", "lg")}>
+          <SpotifyLoginLink className={buttonClass("secondary", "lg")}>
             {t("shell.useMySpotify")}
-          </a>
+          </SpotifyLoginLink>
         </div>
         <span className="text-muted text-sm">{t("common.demoNote")}</span>
       </section>

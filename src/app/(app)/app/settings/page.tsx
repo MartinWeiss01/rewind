@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getFormatter, getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
+import { SpotifyLoginLink } from "@/components/auth/spotify-login-link";
 import { ScreenHeader } from "@/components/feedback/screen-header";
 import { LocaleSwitch } from "@/components/preferences/locale-switch";
 import { ThemeSwitch } from "@/components/preferences/theme-switch";
@@ -100,9 +101,9 @@ export default async function SettingsPage() {
                     {t("endDemo")}
                   </button>
                 </form>
-                <a href="/api/auth/spotify/login" className={buttonClass("primary", "sm")}>
+                <SpotifyLoginLink className={buttonClass("primary", "sm")}>
                   {t("useMySpotify")}
-                </a>
+                </SpotifyLoginLink>
               </>
             ) : (
               <>
