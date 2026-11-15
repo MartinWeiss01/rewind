@@ -4,6 +4,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 import { AppPreferences } from "@/components/preferences/app-preferences";
+import { QueryProvider } from "@/components/providers/query-provider";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin", "latin-ext"], variable: "--font-inter" });
@@ -35,7 +36,9 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           >
             {t("skipToContent")}
           </a>
-          <NextIntlClientProvider>{children}</NextIntlClientProvider>
+          <NextIntlClientProvider>
+            <QueryProvider>{children}</QueryProvider>
+          </NextIntlClientProvider>
         </AppPreferences>
       </body>
     </html>

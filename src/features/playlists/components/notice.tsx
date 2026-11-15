@@ -2,16 +2,17 @@
 
 import { Button } from "@ui-sdk/react/button";
 import { useTranslations } from "next-intl";
-import { createContext, type ReactNode, use, useState, useTransition } from "react";
+import { createContext, type ReactNode, use, useState } from "react";
 import { buttonClass } from "@/components/ui/styles";
 import { restoreSnapshotAction } from "../actions";
-import type { WriteResult } from "../changes";
+import { thrownWriteFailure, type WriteFailure } from "../changes";
+import { usePlaylistWrite } from "./use-playlist-write";
 import { WriteOutcome } from "./write-outcome";
 
 /** A finished write to report: a success line with an optional undo, or a failure. */
 export type Notice =
   | { kind: "done"; message: string; playlistId: string; snapshotId: string | null }
-  | { kind: "failed"; result: Exclude<WriteResult, { status: "ok" }> };
+  | { kind: "failed"; result: WriteFailure };
 
 const NoticeContext = createContext<(notice: Notice | null) => void>(() => {});
 
@@ -38,7 +39,7 @@ function NoticeBar({
   onChange: (notice: Notice | null) => void;
 }) {
   const t = useTranslations("playlistTools.outcome");
-  const [pending, startTransition] = useTransition();
+  const undo = usePlaylistWrite(restoreSnapshotAction);
   // The live region stays mounted so screen readers announce new messages.
   return (
     <div role="status" className="empty:hidden">
@@ -52,21 +53,25 @@ function NoticeBar({
             {notice.snapshotId ? (
               <Button
                 className={buttonClass("ghost", "sm", "text-on-ink! hover:bg-white/10")}
-                disabled={pending}
+                disabled={undo.isPending}
                 onClick={() => {
                   const { playlistId, snapshotId } = notice;
                   if (!snapshotId) return;
-                  startTransition(async () => {
-                    const result = await restoreSnapshotAction({ playlistId, snapshotId });
-                    onChange(
-                      result.status === "ok"
-                        ? { kind: "done", message: t("undone"), playlistId, snapshotId: null }
-                        : { kind: "failed", result },
-                    );
-                  });
+                  undo.mutate(
+                    { playlistId, snapshotId },
+                    {
+                      onSuccess: (result) =>
+                        onChange(
+                          result.status === "ok"
+                            ? { kind: "done", message: t("undone"), playlistId, snapshotId: null }
+                            : { kind: "failed", result },
+                        ),
+                      onError: () => onChange({ kind: "failed", result: thrownWriteFailure }),
+                    },
+                  );
                 }}
               >
-                {pending ? t("restoring") : t("undo")}
+                {undo.isPending ? t("restoring") : t("undo")}
               </Button>
             ) : null}
             <Button

@@ -1,5 +1,6 @@
 "use client";
 
+import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query";
 import { Button } from "@ui-sdk/react/button";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -8,13 +9,18 @@ import { match } from "ts-pattern";
 import { Skeleton } from "@/components/feedback/skeleton";
 import { StatePanel } from "@/components/feedback/state-panel";
 import { buttonClass, card, cardFlat, chipClass, heading } from "@/components/ui/styles";
+import { queryKeys } from "@/lib/query-keys";
 import { finishRun, matchCandidates, openGeneration, requestCandidates } from "../actions";
 import {
   candidateLabel,
-  type DiscoverError,
+  DiscoverError,
+  DiscoverFailure,
   type DiscoverRequest,
+  discoverErrorOf,
   matchBatchSize,
+  retryUnexpected,
   type Suggestion,
+  unwrapResult,
 } from "../types";
 import {
   type FormState,
@@ -41,18 +47,21 @@ const Step = {
 } as const;
 type Step = (typeof Step)[keyof typeof Step];
 
-type Phase =
-  | { kind: "idle" }
-  | {
-      kind: "running";
-      step: Step;
-      profilePlays: number | null;
-      asked: number | null;
-      live: boolean;
-      matched: number;
-    }
-  | { kind: "error"; error: DiscoverError; retry: () => void }
-  | { kind: "results"; run: RunView };
+type RunProgress = {
+  step: Step;
+  profilePlays: number | null;
+  asked: number | null;
+  live: boolean;
+  matched: number;
+};
+
+const startProgress: RunProgress = {
+  step: Step.Ask,
+  profilePlays: null,
+  asked: null,
+  live: true,
+  matched: 0,
+};
 
 export function DiscoverScreen({
   playlists,
@@ -70,119 +79,128 @@ export function DiscoverScreen({
   const t = useTranslations("discover");
   const router = useRouter();
   const [form, setForm] = useState<FormState>(initialFormState);
-  const [phase, setPhase] = useState<Phase>({ kind: "idle" });
-  const [lastRequest, setLastRequest] = useState<DiscoverRequest | null>(null);
-  const [openingId, setOpeningId] = useState<string | null>(null);
-  const [openFailed, setOpenFailed] = useState(false);
+  const [progress, setProgress] = useState<RunProgress>(startProgress);
+  /** The earlier run picked from "Earlier suggestions"; null shows the latest new run. */
+  const [openId, setOpenId] = useState<string | null>(null);
+  /** Suggestions the listener removed from the run on screen. */
+  const [removed, setRemoved] = useState<ReadonlySet<string>>(new Set());
   const runId = useRef(0);
-  const busy = phase.kind === "running" || openingId !== null;
 
-  const run = async (request: DiscoverRequest) => {
-    const id = ++runId.current;
-    const stale = () => id !== runId.current;
-    const failWith = (error: DiscoverError) => {
-      if (!stale()) setPhase({ kind: "error", error, retry: () => void run(request) });
-    };
-    setLastRequest(request);
-    setPhase({
-      kind: "running",
-      step: Step.Ask,
-      profilePlays: null,
-      asked: null,
-      live: true,
-      matched: 0,
-    });
-    try {
-      const first = await requestCandidates(request);
-      if (stale()) return;
-      if (!first.ok) return failWith(first.error);
-      const { candidates, profilePlays, live } = first.data;
-      const base = { kind: "running", profilePlays, asked: candidates.length, live } as const;
-      setPhase({ ...base, step: Step.Match, matched: 0 });
+  // The whole pipeline is one mutation: its steps run in sequence and report progress
+  // through local state; a failed step throws its reason (see `unwrapResult`).
+  const pipeline = useMutation({
+    mutationFn: async (request: DiscoverRequest): Promise<RunView> => {
+      const id = ++runId.current;
+      // A newer run replaces this one; stop before saving anything for it.
+      const check = () => {
+        if (id !== runId.current) throw new DiscoverFailure(DiscoverError.Unknown);
+      };
+      const first = unwrapResult(await requestCandidates(request));
+      check();
+      const { candidates, profilePlays, live } = first;
+      const base = { profilePlays, asked: candidates.length, live };
+      setProgress({ ...base, step: Step.Match, matched: 0 });
 
       const matches: (Suggestion | null)[] = [];
       for (let start = 0; start < candidates.length; start += matchBatchSize) {
         const batch = candidates.slice(start, start + matchBatchSize);
-        const result = await matchCandidates({ candidates: batch });
-        if (stale()) return;
-        if (!result.ok) return failWith(result.error);
-        matches.push(...result.data);
-        setPhase({ ...base, step: Step.Match, matched: matches.length });
+        matches.push(...unwrapResult(await matchCandidates({ candidates: batch })));
+        check();
+        setProgress({ ...base, step: Step.Match, matched: matches.length });
       }
 
-      setPhase({ ...base, step: Step.Finish, matched: matches.length });
+      setProgress({ ...base, step: Step.Finish, matched: matches.length });
       const matched = matches.flatMap((m) =>
         m ? [{ trackId: m.track.id, reason: m.reason, closestMatch: m.closestMatch }] : [],
       );
       const unmatched = candidates.flatMap((c, i) => (matches[i] ? [] : [candidateLabel(c)]));
-      const finished = await finishRun({ request, matched, unmatched });
-      if (stale()) return;
-      if (!finished.ok) return failWith(finished.error);
-      setPhase({
-        kind: "results",
-        run: {
-          title: finished.data.title,
-          suggestions: finished.data.suggestions,
-          unmatched: finished.data.unmatched,
-          matched: matched.length,
-          asked: finished.data.asked,
-          filteredOut: finished.data.filteredOut,
-          initialCount: finished.data.suggestions.length,
-          reopened: false,
-          pregenerated: !live,
-        },
-      });
-      // Refreshes "Earlier suggestions" with the run that was just saved.
-      router.refresh();
-    } catch (error) {
-      console.error(error);
-      failWith("unknown");
-    }
+      const finished = unwrapResult(await finishRun({ request, matched, unmatched }));
+      return {
+        title: finished.title,
+        suggestions: finished.suggestions,
+        unmatched: finished.unmatched,
+        matched: matched.length,
+        asked: finished.asked,
+        filteredOut: finished.filteredOut,
+        initialCount: finished.suggestions.length,
+        reopened: false,
+        pregenerated: !live,
+      };
+    },
+    // Refreshes "Earlier suggestions" with the run that was just saved.
+    onSuccess: () => router.refresh(),
+    onError: (error) => {
+      if (!(error instanceof DiscoverFailure)) console.error(error);
+    },
+  });
+
+  // A saved run doesn't change, so reopening it is a cached read.
+  const earlierRun = useQuery({
+    queryKey: queryKeys.discover.generation(openId ?? ""),
+    queryFn: async (): Promise<RunView> => {
+      const run = unwrapResult(await openGeneration(openId));
+      return {
+        title: run.title,
+        suggestions: run.suggestions,
+        unmatched: run.unmatched,
+        matched: null,
+        asked: null,
+        filteredOut: 0,
+        initialCount: run.suggestions.length,
+        reopened: true,
+        pregenerated: false,
+      };
+    },
+    enabled: openId !== null,
+    retry: retryUnexpected,
+    // Switching between earlier runs keeps the previous one on screen while the next loads.
+    placeholderData: keepPreviousData,
+  });
+
+  const openingId = openId !== null && earlierRun.isFetching ? openId : null;
+  const openFailed = openId !== null && earlierRun.isError;
+  const busy = pipeline.isPending || openingId !== null;
+  const lastRequest = pipeline.variables ?? null;
+
+  const run = (request: DiscoverRequest) => {
+    setOpenId(null);
+    setRemoved(new Set());
+    setProgress(startProgress);
+    pipeline.mutate(request);
   };
 
   const submit = () => {
     const request = toRequest(form);
-    if (request) void run(request);
+    if (request) run(request);
   };
 
-  const reopen = async (id: string) => {
-    runId.current += 1;
-    setOpeningId(id);
-    setOpenFailed(false);
-    const result = await openGeneration(id).catch(() => null);
-    setOpeningId(null);
-    if (!result?.ok) {
-      setOpenFailed(true);
-      return;
-    }
-    setPhase({
-      kind: "results",
-      run: {
-        title: result.data.title,
-        suggestions: result.data.suggestions,
-        unmatched: result.data.unmatched,
-        matched: null,
-        asked: null,
-        filteredOut: 0,
-        initialCount: result.data.suggestions.length,
-        reopened: true,
-        pregenerated: false,
-      },
-    });
+  const reopen = (id: string) => {
+    setRemoved(new Set());
+    if (id === openId) void earlierRun.refetch();
+    else setOpenId(id);
   };
 
-  const remove = (trackId: string) =>
-    setPhase((current) =>
-      current.kind === "results"
-        ? {
-            kind: "results",
-            run: {
-              ...current.run,
-              suggestions: current.run.suggestions.filter((s) => s.track.id !== trackId),
-            },
-          }
-        : current,
-    );
+  const remove = (trackId: string) => setRemoved((current) => new Set(current).add(trackId));
+
+  const withoutRemoved = (view: RunView): RunView => ({
+    ...view,
+    suggestions: view.suggestions.filter((s) => !removed.has(s.track.id)),
+  });
+
+  // Until an earlier run has loaded, the latest new run (or its progress) stays on screen.
+  const reopened = openId !== null ? earlierRun.data : undefined;
+  const results = (view: RunView) => (
+    <RunResults
+      // A new run starts with fresh notices and dialog state.
+      key={`${view.title}-${view.initialCount}-${view.reopened}`}
+      run={withoutRemoved(view)}
+      onRemove={remove}
+      onRegenerate={() => lastRequest && run(lastRequest)}
+      canRegenerate={lastRequest !== null && !view.reopened}
+      canWrite={canWrite}
+      editablePlaylists={editablePlaylists}
+    />
+  );
 
   return (
     <>
@@ -195,34 +213,32 @@ export function DiscoverScreen({
         note={note}
       />
 
-      {match(phase)
-        .with({ kind: "idle" }, () => null)
-        .with({ kind: "running" }, (running) => <Progress phase={running} />)
-        .with({ kind: "error" }, ({ error, retry }) => (
-          <StatePanel
-            tone="error"
-            title={t(`errors.${error}.title`)}
-            body={t(`errors.${error}.body`)}
-            action={
-              <Button type="button" onClick={retry} className={buttonClass("primary", "sm")}>
-                {t("errors.retry")}
-              </Button>
-            }
-          />
-        ))
-        .with({ kind: "results" }, ({ run: view }) => (
-          <RunResults
-            // A new run starts with fresh notices and dialog state.
-            key={`${view.title}-${view.initialCount}-${view.reopened}`}
-            run={view}
-            onRemove={remove}
-            onRegenerate={() => lastRequest && void run(lastRequest)}
-            canRegenerate={lastRequest !== null && !view.reopened}
-            canWrite={canWrite}
-            editablePlaylists={editablePlaylists}
-          />
-        ))
-        .exhaustive()}
+      {reopened
+        ? results(reopened)
+        : match(pipeline)
+            .with({ status: "idle" }, () => null)
+            .with({ status: "pending" }, () => <Progress phase={progress} />)
+            .with({ status: "error" }, ({ error }) => {
+              const reason = discoverErrorOf(error);
+              return (
+                <StatePanel
+                  tone="error"
+                  title={t(`errors.${reason}.title`)}
+                  body={t(`errors.${reason}.body`)}
+                  action={
+                    <Button
+                      type="button"
+                      onClick={() => lastRequest && run(lastRequest)}
+                      className={buttonClass("primary", "sm")}
+                    >
+                      {t("errors.retry")}
+                    </Button>
+                  }
+                />
+              );
+            })
+            .with({ status: "success" }, ({ data }) => results(data))
+            .exhaustive()}
 
       <section aria-labelledby="discover-earlier" className="flex flex-col gap-2.5">
         <h2 id="discover-earlier" className={heading.h3}>
@@ -243,7 +259,7 @@ export function DiscoverScreen({
                   type="button"
                   disabled={busy}
                   aria-busy={openingId === item.id}
-                  onClick={() => void reopen(item.id)}
+                  onClick={() => reopen(item.id)}
                   className={`${cardFlat} flex w-full cursor-pointer flex-col gap-1.5 text-left text-ink disabled:cursor-wait aria-busy:opacity-60`}
                 >
                   <span className="eyebrow">{item.when}</span>
@@ -266,7 +282,7 @@ export function DiscoverScreen({
   );
 }
 
-function Progress({ phase }: { phase: Extract<Phase, { kind: "running" }> }) {
+function Progress({ phase }: { phase: RunProgress }) {
   const t = useTranslations("discover.progress");
   const asked = phase.asked;
   const done = <span className={chipClass("mint")}>{t("done")}</span>;

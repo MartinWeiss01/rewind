@@ -38,6 +38,7 @@
   "save": "Save",
   "saved": "Saved",
   "saveFailed": "Couldn’t save. Try again.",
+  "actionFailed": "That didn’t work. Try again.",
   "data": "Your data",
   "demoDataNote": "Nothing about you is stored in the demo. Your edits live in this browser session and disappear when it ends.",
   "playsStored": "Plays stored",

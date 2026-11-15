@@ -40,6 +40,7 @@ English for code, comments, docs, commit messages, PRs and UI copy.
 - Zod v4 at every boundary: env, route handlers, server actions, URL params, external API responses, LLM output, file imports.
 - Our own domain types everywhere; raw Spotify API shapes are mapped and validated at the boundary and never leave it.
 - Server Components by default; client components only where interactivity needs them.
+- Client-side async calls (server actions or fetches from client components) go through TanStack Query (`useMutation` for writes, `useQuery` for reads); Server Components load data on the server.
 - UI components are mode-agnostic: data comes through the `MusicDataSource` abstraction resolved server-side per request.
 - Every data-driven component ships loading (skeleton), empty and error (with retry) states.
 - Routes follow the App Router file conventions in [ADR 0003](docs/adr/0003-app-router-conventions.md): route groups, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`.

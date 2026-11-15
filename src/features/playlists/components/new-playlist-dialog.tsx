@@ -16,10 +16,10 @@ import { Switch, SwitchThumb } from "@ui-sdk/react/switch";
 import { Textarea } from "@ui-sdk/react/textarea";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { type FormEvent, useState, useTransition } from "react";
+import { type FormEvent, useState } from "react";
 import { alert, buttonClass, chipClass } from "@/components/ui/styles";
 import { createPlaylistAction } from "../actions";
-import type { WriteResult } from "../changes";
+import { writeFailure } from "../changes";
 import {
   dialogBackdrop,
   dialogContent,
@@ -30,6 +30,7 @@ import {
   switchThumb,
   textarea,
 } from "./ui";
+import { usePlaylistWrite } from "./use-playlist-write";
 import { WriteOutcome } from "./write-outcome";
 
 /** "New playlist" button and its dialog. Opens the created playlist on success. */
@@ -46,23 +47,25 @@ export function NewPlaylistDialog({
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [isPublic, setIsPublic] = useState(false);
-  const [result, setResult] = useState<WriteResult | null>(null);
-  const [pending, startTransition] = useTransition();
+  const write = usePlaylistWrite(createPlaylistAction);
+  const failure = writeFailure(write);
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    startTransition(async () => {
-      const outcome = await createPlaylistAction({ name, description, isPublic });
-      setResult(outcome);
-      if (outcome.status === "ok") {
-        setOpen(false);
-        setName("");
-        setDescription("");
-        setIsPublic(false);
-        setResult(null);
-        router.push(`/app/playlists/${encodeURIComponent(outcome.playlistId)}`);
-      }
-    });
+    write.mutate(
+      { name, description, isPublic },
+      {
+        onSuccess: (outcome) => {
+          if (outcome.status !== "ok") return;
+          setOpen(false);
+          setName("");
+          setDescription("");
+          setIsPublic(false);
+          write.reset();
+          router.push(`/app/playlists/${encodeURIComponent(outcome.playlistId)}`);
+        },
+      },
+    );
   };
 
   return (
@@ -70,7 +73,7 @@ export function NewPlaylistDialog({
       open={open}
       onOpenChange={(next) => {
         setOpen(next);
-        if (!next) setResult(null);
+        if (!next) write.reset();
       }}
     >
       <DialogTrigger className={buttonClass(variant)}>
@@ -132,11 +135,11 @@ export function NewPlaylistDialog({
               {t("demoNote")}
             </div>
           ) : null}
-          {result && result.status !== "ok" ? <WriteOutcome result={result} /> : null}
+          {failure ? <WriteOutcome result={failure} /> : null}
           <div className="flex justify-end gap-2">
             <DialogClose className={buttonClass("ghost")}>{t("cancel")}</DialogClose>
-            <Button type="submit" className={buttonClass("primary")} disabled={pending}>
-              {pending ? t("creating") : t("submit")}
+            <Button type="submit" className={buttonClass("primary")} disabled={write.isPending}>
+              {write.isPending ? t("creating") : t("submit")}
             </Button>
           </div>
         </form>

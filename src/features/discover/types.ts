@@ -75,3 +75,30 @@ export const DiscoverError = {
 export type DiscoverError = (typeof DiscoverError)[keyof typeof DiscoverError];
 
 export type ActionResult<T> = { ok: true; data: T } | { ok: false; error: DiscoverError };
+
+/**
+ * A step the server refused or that failed in a known way, thrown on the client so
+ * the query or mutation calling it lands in its error state with the reason.
+ */
+export class DiscoverFailure extends Error {
+  readonly code: DiscoverError;
+  constructor(code: DiscoverError) {
+    super(code);
+    this.name = "DiscoverFailure";
+    this.code = code;
+  }
+}
+
+/** The data of a successful result; throws a `DiscoverFailure` otherwise. */
+export function unwrapResult<T>(result: ActionResult<T>): T {
+  if (!result.ok) throw new DiscoverFailure(result.error);
+  return result.data;
+}
+
+/** The reason to show for an error a discover query or mutation ended with. */
+export const discoverErrorOf = (error: unknown): DiscoverError =>
+  error instanceof DiscoverFailure ? error.code : DiscoverError.Unknown;
+
+/** Retry an unexpected failure once; a refusal from the server would only repeat itself. */
+export const retryUnexpected = (failureCount: number, error: unknown) =>
+  !(error instanceof DiscoverFailure) && failureCount < 1;

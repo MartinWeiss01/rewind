@@ -36,6 +36,8 @@ export function PeriodPicker({
   const t = useTranslations("recap");
   const router = useRouter();
   const id = useId();
+  // Changing the period is URL navigation, not a client data call, so it stays a transition
+  // (not TanStack Query): the Server Component reloads and loading.tsx covers the wait.
   const [pending, startTransition] = useTransition();
   const [value, setValue] = useState<RecapPreset | null>(
     period.kind === "preset" ? period.preset : null,

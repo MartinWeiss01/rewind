@@ -1,5 +1,6 @@
 "use client";
 
+import { useMutation } from "@tanstack/react-query";
 import { Button } from "@ui-sdk/react/button";
 import { Collapsible, CollapsiblePanel, CollapsibleTrigger } from "@ui-sdk/react/collapsible";
 import {
@@ -27,19 +28,17 @@ import {
   precheckHistoryFile,
   readHistoryFile,
 } from "./import-file";
+import {
+  type FileFailure,
+  type FileState,
+  type ImportErrorCode,
+  type ImportOutcome,
+  importPhase,
+} from "./import-phase";
 import { addTotals, emptyTotals, type ImportResult, type ImportTotals } from "./import-result";
 
-type ErrorCode = ImportFileError | "forbidden" | "tooMany";
-type FileState =
-  | { name: string; state: "waiting" | "importing" }
-  | { name: string; state: "done"; added: number }
-  | { name: string; state: "failed"; error: ErrorCode };
-
-type Phase =
-  | { kind: "idle" }
-  | { kind: "importing"; files: FileState[] }
-  | { kind: "done"; totals: ImportTotals; failed: { name: string; error: ErrorCode }[] }
-  | { kind: "error"; name: string; error: ErrorCode };
+type ErrorCode = ImportErrorCode;
+type Job = { name: string; send: () => Promise<ImportResult> };
 
 const errorKey = (error: ErrorCode) =>
   match(error)
@@ -97,48 +96,64 @@ export function ImportPanel({
   const format = useFormatter();
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const [phase, setPhase] = useState<Phase>({ kind: "idle" });
   const [files, setFiles] = useState<File[]>([]);
+  const [progress, setProgress] = useState<FileState[]>([]);
+  const [rejected, setRejected] = useState<FileFailure | null>(null);
   const cancelled = useRef(false);
 
-  async function run(jobs: { name: string; send: () => Promise<ImportResult> }[]) {
-    cancelled.current = false;
-    const states: FileState[] = jobs.map((job) => ({ name: job.name, state: "waiting" }));
-    setPhase({ kind: "importing", files: [...states] });
-    let totals = emptyTotals;
-    const failed: { name: string; error: ErrorCode }[] = [];
-    for (const [i, job] of jobs.entries()) {
-      if (cancelled.current) break;
-      states[i] = { name: job.name, state: "importing" };
-      setPhase({ kind: "importing", files: [...states] });
-      let result: ImportResult;
-      try {
-        result = await job.send();
-      } catch {
-        result = { ok: false, error: ImportFileError.Failed };
+  // One mutation per run; it sends the files one after another and reports
+  // per-file progress through local state. A file that fails doesn't stop the run.
+  const importer = useMutation({
+    mutationFn: async (jobs: Job[]): Promise<ImportOutcome> => {
+      cancelled.current = false;
+      const states: FileState[] = jobs.map((job) => ({ name: job.name, state: "waiting" }));
+      setProgress([...states]);
+      let totals = emptyTotals;
+      const failed: FileFailure[] = [];
+      for (const [i, job] of jobs.entries()) {
+        if (cancelled.current) break;
+        states[i] = { name: job.name, state: "importing" };
+        setProgress([...states]);
+        let result: ImportResult;
+        try {
+          result = await job.send();
+        } catch {
+          result = { ok: false, error: ImportFileError.Failed };
+        }
+        if (result.ok) {
+          totals = addTotals(totals, result.totals);
+          states[i] = { name: job.name, state: "done", added: result.totals.added };
+        } else {
+          failed.push({ name: job.name, error: result.error });
+          states[i] = { name: job.name, state: "failed", error: result.error };
+        }
+        setProgress([...states]);
       }
-      if (result.ok) {
-        totals = addTotals(totals, result.totals);
-        states[i] = { name: job.name, state: "done", added: result.totals.added };
-      } else {
-        failed.push({ name: job.name, error: result.error });
-        states[i] = { name: job.name, state: "failed", error: result.error };
-      }
-      setPhase({ kind: "importing", files: [...states] });
-    }
-    setFiles([]);
-    const firstFailure = failed[0];
-    if (totals.files === 0 && firstFailure) {
-      setPhase({ kind: "error", ...firstFailure });
-    } else {
-      setPhase({ kind: "done", totals, failed });
-    }
-    router.refresh();
-  }
+      return { totals, failed };
+    },
+    onSettled: () => {
+      setFiles([]);
+      // Stats, history and settings are Server Components; refresh them with the new plays.
+      router.refresh();
+    },
+  });
+
+  const phase = importPhase({
+    status: importer.status,
+    progress,
+    outcome: importer.data,
+    rejected,
+    firstFile: importer.variables?.[0]?.name ?? "",
+  });
+
+  const run = (jobs: Job[]) => {
+    setRejected(null);
+    importer.mutate(jobs);
+  };
 
   function startFiles(chosen: File[]) {
     if (chosen.length === 0) return;
-    void run(
+    run(
       chosen.map((file) => ({
         name: file.name,
         send: async () => {
@@ -165,7 +180,8 @@ export function ImportPanel({
 
   const reset = () => {
     setFiles([]);
-    setPhase({ kind: "idle" });
+    setRejected(null);
+    importer.reset();
   };
 
   const dateRange = (totals: ImportTotals) =>
@@ -230,12 +246,7 @@ export function ImportPanel({
                 }}
                 onReject={(rejected) => {
                   const first = rejected[0];
-                  if (first)
-                    setPhase({
-                      kind: "error",
-                      name: first.file.name,
-                      error: rejectionError(first),
-                    });
+                  if (first) setRejected({ name: first.file.name, error: rejectionError(first) });
                 }}
                 announcement={() => null}
               >

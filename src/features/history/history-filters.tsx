@@ -28,6 +28,8 @@ export function HistoryFilters({ filters }: { filters: Filters }) {
   const t = useTranslations("history");
   const router = useRouter();
   const id = useId();
+  // Filtering is URL navigation, not a client data call, so it stays a transition
+  // (not TanStack Query): the Server Component reloads and loading.tsx covers the wait.
   const [pending, startTransition] = useTransition();
   const [search, setSearch] = useState(filters.q);
   const [source, setSource] = useState<SourceFilter>(filters.source);

@@ -15,7 +15,7 @@ import { type ReactNode, useState } from "react";
 import { match } from "ts-pattern";
 import { Cover } from "@/components/ui/cover";
 import { buttonClass } from "@/components/ui/styles";
-import { dateFromKey, hourLabel, weekdayLabel } from "@/features/stats/labels";
+import { hourLabel, weekdayLabel } from "@/features/stats/labels";
 import { num } from "@/features/stats/ui";
 import { ExportDialog } from "./export-dialog";
 import { listenerKind } from "./listener";
@@ -54,22 +54,28 @@ function Arrow({ forward }: { forward: boolean }) {
 }
 
 /** The recap as a deck of slides; arrow keys page it, reduced motion pages without animating. */
-export function RecapDeck({ data, periodLabel }: { data: RecapData; periodLabel: string }) {
+/**
+ * Dates shown in the slides, formatted on the server: Node and browsers ship different
+ * ICU data, so formatting them here would break hydration.
+ */
+export type RecapDates = { firstFind: string | null; longestStreak: string | null };
+
+export function RecapDeck({
+  data,
+  dates,
+  periodLabel,
+}: {
+  data: RecapData;
+  dates: RecapDates;
+  periodLabel: string;
+}) {
   const t = useTranslations("recap");
   const format = useFormatter();
   const [page, setPage] = useState(1);
-  const tz = data.timeZone;
   const topTrack = data.topTracks[0] ?? null;
   const kind = listenerKind(data.nightShare, data.peakHour);
   const percent = (value: number) =>
     format.number(value, { style: "percent", maximumFractionDigits: 0 });
-  const dayRange = (start: string, end: string) =>
-    format.dateTimeRange(dateFromKey(start), dateFromKey(end), {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-      timeZone: "UTC",
-    });
 
   const body = (slide: Slide): ReactNode =>
     match(slide)
@@ -162,11 +168,7 @@ export function RecapDeck({ data, periodLabel }: { data: RecapData; periodLabel:
             {data.firstFind
               ? t("firstFind", {
                   name: data.firstFind.name,
-                  date: format.dateTime(new Date(data.firstFind.firstPlayedAt), {
-                    month: "short",
-                    day: "numeric",
-                    timeZone: tz,
-                  }),
+                  date: dates.firstFind ?? "",
                 })
               : t("noFirstFind")}
           </p>
@@ -181,7 +183,7 @@ export function RecapDeck({ data, periodLabel }: { data: RecapData; periodLabel:
           {data.longestStreak ? (
             <p className="m-0 max-w-[320px] text-muted">
               {t("streakText", {
-                range: dayRange(data.longestStreak.start, data.longestStreak.end),
+                range: dates.longestStreak ?? "",
               })}
             </p>
           ) : null}

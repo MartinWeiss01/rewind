@@ -1,5 +1,6 @@
 "use client";
 
+import { useMutation } from "@tanstack/react-query";
 import { Button } from "@ui-sdk/react/button";
 import { Field, FieldLabel } from "@ui-sdk/react/field";
 import {
@@ -38,7 +39,12 @@ export function RulesForm({
   const t = useTranslations("settings");
   const [skip, setSkip] = useState<number | null>(skipSeconds);
   const [zone, setZone] = useState<string | null>(timeZone);
-  const [status, setStatus] = useState<"idle" | "saved" | "error">("idle");
+  const save = useMutation({
+    mutationFn: async (input: { skipSeconds: number; timeZone: string }) => {
+      const result = await saveListeningRules(input);
+      if (!result.ok) throw new Error(result.error);
+    },
+  });
 
   return (
     <div className="flex flex-col gap-5">
@@ -101,21 +107,12 @@ export function RulesForm({
       <div className="flex items-center gap-3">
         <Button
           className={buttonClass("primary", "sm")}
-          onClick={async () => {
-            const result = await saveListeningRules({
-              skipSeconds: skip ?? 0,
-              timeZone: zone ?? timeZone,
-            });
-            setStatus(result.ok ? "saved" : "error");
-          }}
+          onClick={() => save.mutateAsync({ skipSeconds: skip ?? 0, timeZone: zone ?? timeZone })}
         >
           {t("save")}
         </Button>
-        <span
-          role="status"
-          className={status === "error" ? "text-danger text-sm" : "text-muted text-sm"}
-        >
-          {status === "saved" ? t("saved") : status === "error" ? t("saveFailed") : ""}
+        <span role="status" className={save.isError ? "text-danger text-sm" : "text-muted text-sm"}>
+          {save.isSuccess ? t("saved") : save.isError ? t("saveFailed") : ""}
         </span>
       </div>
     </div>

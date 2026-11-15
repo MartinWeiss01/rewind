@@ -2,13 +2,11 @@
 
 import { Button } from "@ui-sdk/react/button";
 import { useTranslations } from "next-intl";
-import { useState, useTransition } from "react";
 import { match } from "ts-pattern";
 import { alert, buttonClass } from "@/components/ui/styles";
 import { restoreSnapshotAction } from "../actions";
-import { PartialStage, type WriteResult } from "../changes";
-
-type Failure = Exclude<WriteResult, { status: "ok" }>;
+import { type WriteFailure as Failure, PartialStage } from "../changes";
+import { usePlaylistWrite } from "./use-playlist-write";
 
 /**
  * Shows why a write failed. A partial failure explains what went through and,
@@ -16,8 +14,9 @@ type Failure = Exclude<WriteResult, { status: "ok" }>;
  */
 export function WriteOutcome({ result, onDismiss }: { result: Failure; onDismiss?: () => void }) {
   const t = useTranslations("playlistTools.outcome");
-  const [restoring, startRestore] = useTransition();
-  const [restored, setRestored] = useState<WriteResult | null>(null);
+  const restore = usePlaylistWrite(restoreSnapshotAction);
+  const restoredOk = restore.data?.status === "ok";
+  const restoreFailed = restore.isError || (restore.data !== undefined && !restoredOk);
 
   if (result.status === "error") {
     return (
@@ -42,25 +41,19 @@ export function WriteOutcome({ result, onDismiss }: { result: Failure; onDismiss
     <div role="alert" className={`${alert.base} ${alert.tone.danger} flex-col`}>
       <b>{t("partialTitle")}</b>
       <span>{body}</span>
-      {restored?.status === "ok" ? (
+      {restoredOk ? (
         <span role="status">{t("restored")}</span>
-      ) : restored ? (
+      ) : restoreFailed ? (
         <span>{t("restoreFailed")}</span>
       ) : null}
       <div className="flex flex-wrap gap-2">
-        {snapshotId && restored?.status !== "ok" ? (
+        {snapshotId && !restoredOk ? (
           <Button
             className={buttonClass("primary", "sm")}
-            disabled={restoring}
-            onClick={() =>
-              startRestore(async () => {
-                setRestored(
-                  await restoreSnapshotAction({ playlistId: result.playlistId, snapshotId }),
-                );
-              })
-            }
+            disabled={restore.isPending}
+            onClick={() => restore.mutate({ playlistId: result.playlistId, snapshotId })}
           >
-            {restoring ? t("restoring") : t("restore")}
+            {restore.isPending ? t("restoring") : t("restore")}
           </Button>
         ) : null}
         {onDismiss ? (

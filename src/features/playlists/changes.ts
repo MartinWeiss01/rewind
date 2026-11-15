@@ -74,6 +74,24 @@ export type WriteResult =
       total: number | null;
     };
 
+/** A write that did not fully go through. */
+export type WriteFailure = Exclude<WriteResult, { status: "ok" }>;
+
+/** How a write that threw (lost connection, server crash) is reported: nothing is known to have changed. */
+export const thrownWriteFailure: WriteFailure = { status: "error", error: WriteError.Failed };
+
+/**
+ * The failure to show for a write mutation: its non-ok result, or a plain failure
+ * when the call itself threw. Null while idle, pending or after success.
+ */
+export function writeFailure(state: {
+  data: WriteResult | undefined;
+  isError: boolean;
+}): WriteFailure | null {
+  if (state.isError) return thrownWriteFailure;
+  return state.data && state.data.status !== "ok" ? state.data : null;
+}
+
 /** True when `next` only drops or reorders items of `current` (as a multiset). */
 export function isSubsetOf(next: readonly string[], current: readonly string[]): boolean {
   const remaining = new Map<string, number>();

@@ -14,16 +14,17 @@ import {
   SegmentedControlItem,
 } from "@ui-sdk/react/segmented-control";
 import { useFormatter, useTranslations } from "next-intl";
-import { useId, useMemo, useState, useTransition } from "react";
+import { useId, useMemo, useState } from "react";
 import { match } from "ts-pattern";
 import { segmentedIndicator, segmentedItem, segmentedRoot } from "@/components/ui/segmented";
 import { buttonClass } from "@/components/ui/styles";
 import type { PlaylistItem } from "@/domain/playlists";
 import { applyEditAction } from "../actions";
-import { ChangeKind, type WriteResult } from "../changes";
+import { ChangeKind, writeFailure } from "../changes";
 import { SortDirection, SortKey, sortDirectionSchema, sortItems, sortKeySchema } from "../tools";
 import { useNotice } from "./notice";
 import { dialogBackdrop, dialogContent, dialogTitle, fieldLabel } from "./ui";
+import { usePlaylistWrite } from "./use-playlist-write";
 import { WriteOutcome } from "./write-outcome";
 
 const PREVIEW = 6;
@@ -52,8 +53,8 @@ export function SortDialog({
   const directionLabel = useId();
   const [key, setKey] = useState<SortKey>(SortKey.Added);
   const [direction, setDirection] = useState<SortDirection>(SortDirection.Desc);
-  const [result, setResult] = useState<WriteResult | null>(null);
-  const [pending, startTransition] = useTransition();
+  const write = usePlaylistWrite(applyEditAction);
+  const failure = writeFailure(write);
 
   const playMap = useMemo(() => new Map(Object.entries(plays ?? {})), [plays]);
   const sorted = useMemo(
@@ -74,21 +75,17 @@ export function SortDialog({
       .exhaustive();
 
   const apply = () => {
-    startTransition(async () => {
-      const outcome = await applyEditAction({
-        playlistId,
-        basedOn,
-        trackIds: sorted.map((i) => i.track.id),
-        kind: ChangeKind.Sort,
-      });
-      if (outcome.status === "ok") {
-        onOpenChange(false);
-        setResult(null);
-        notify({ kind: "done", message: t("done"), playlistId, snapshotId: outcome.snapshotId });
-      } else {
-        setResult(outcome);
-      }
-    });
+    write.mutate(
+      { playlistId, basedOn, trackIds: sorted.map((i) => i.track.id), kind: ChangeKind.Sort },
+      {
+        onSuccess: (outcome) => {
+          if (outcome.status !== "ok") return;
+          onOpenChange(false);
+          write.reset();
+          notify({ kind: "done", message: t("done"), playlistId, snapshotId: outcome.snapshotId });
+        },
+      },
+    );
   };
 
   const list = (rows: readonly PlaylistItem[], label: string, withDetail: boolean) => (
@@ -116,7 +113,7 @@ export function SortDialog({
       open={open}
       onOpenChange={(next) => {
         onOpenChange(next);
-        if (!next) setResult(null);
+        if (!next) write.reset();
       }}
     >
       <DialogBackdrop className={dialogBackdrop} />
@@ -171,17 +168,15 @@ export function SortDialog({
           {list(items, t("before"), false)}
           {list(sorted, t("after"), true)}
         </div>
-        {result && result.status !== "ok" ? (
-          <WriteOutcome result={result} onDismiss={() => setResult(null)} />
-        ) : null}
+        {failure ? <WriteOutcome result={failure} onDismiss={() => write.reset()} /> : null}
         <div className="flex justify-end gap-2">
           <DialogClose className={buttonClass("ghost")}>{t("cancel")}</DialogClose>
           <Button
             className={buttonClass("primary")}
-            disabled={unchanged || pending}
+            disabled={unchanged || write.isPending}
             onClick={apply}
           >
-            {pending ? t("applying") : unchanged ? t("alreadySorted") : t("submit")}
+            {write.isPending ? t("applying") : unchanged ? t("alreadySorted") : t("submit")}
           </Button>
         </div>
       </DialogContent>
