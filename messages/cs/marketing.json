@@ -5,5 +5,48 @@
   "loginCancelled": "Přihlášení bylo zrušeno. Demo můžeš dál prozkoumávat.",
   "loginForbidden": "Tento Spotify účet zatím není na seznamu pozvaných. Demo funguje i bez něj.",
   "loginFailed": "Přihlášení přes Spotify se nepovedlo. Zkus to za chvíli znovu.",
-  "loginUnavailable": "Přihlášení přes Spotify tu není nastavené. Demo je plně dostupné."
+  "loginUnavailable": "Přihlášení přes Spotify tu není nastavené. Demo je plně dostupné.",
+  "featuresTitle": "Co je na kazetě",
+  "sideA": "Strana A",
+  "features": {
+    "tools": {
+      "title": "Nástroje na playlisty",
+      "text": "Najdi duplicity, spoj, seřaď a rozděl playlisty. Každou změnu uvidíš předem a jde vrátit.",
+      "tag": "Bezpečně"
+    },
+    "ai": {
+      "title": "AI doporučení",
+      "text": "Popiš náladu nebo vyber playlist a dostaneš skladby, které ještě nemáš ohrané, i s důvodem.",
+      "tag": "Gemini"
+    },
+    "demo": {
+      "title": "Otevřené demo",
+      "text": "Všechny nástroje běží nad smyšlenou knihovnou v soukromém sandboxu. Na skutečný účet nesáhnou.",
+      "tag": "Bez přihlášení"
+    }
+  },
+  "previewEyebrow": "Strana B · ukázka",
+  "previewTitle": "V demu funguje každá obrazovka.",
+  "previewText": "Demo je smyšlený posluchač s tuctem playlistů a skutečnými nástroji. Upravuj, odstraňuj duplicity, spojuj a generuj — vše běží v soukromém sandboxu, který se po odchodu zahodí.",
+  "openDemo": "Otevřít demo",
+  "previewLabel": "Ukázka nástrojů na playlisty",
+  "statPlaylists": "Playlisty",
+  "statDuplicates": "Duplicity",
+  "statSuggestions": "Doporučení",
+  "dupeExact": "Shoda",
+  "dupeLikely": "Pravděpodobně",
+  "dupeReview": "Ke kontrole",
+  "dupeInPlaylists": "ve 3 playlistech",
+  "dupeSameSong": "stejná skladba",
+  "dupeVersions": "2 verze",
+  "whyInviteTitle": "Proč jen na pozvánku",
+  "whyInviteText": "Spotify omezuje osobní vývojářské aplikace na pár schválených účtů. Všichni ostatní mají plné demo.",
+  "yourDataTitle": "Tvoje data",
+  "yourDataText": "Tokeny zůstávají šifrované na serveru. Kdykoli se odpojíš, smaže se všechno, co o tobě Rewind uložil.",
+  "openSourceTitle": "Open source",
+  "openSourceText": "Next.js, TypeScript, Supabase. Kód i poznámky k architektuře najdeš na GitHubu.",
+  "viewOnGithub": "Zobrazit na GitHubu",
+  "disclaimer": "Rewind je nezávislý projekt, není spojený se Spotify ani jím podporovaný.",
+  "attribution": "Hudební data poskytuje Spotify",
+  "privacy": "Soukromí"
 }
