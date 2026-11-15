@@ -52,3 +52,6 @@ CLAUDE.local.md
 # Personal data exports, wherever they end up
 Streaming_History_*.json
 my_spotify_data*/
+
+# Agent worktrees
+.claude/worktrees/
