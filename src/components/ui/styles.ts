@@ -21,9 +21,9 @@ export const buttonClass = (
 ) => `${button.base} ${button.size[size]} ${button.variant[variant]} ${extra}`;
 
 export const card =
-  "relative min-w-0 overflow-hidden rounded-3xl border border-line bg-surface p-[22px] shadow-[0_1px_0_rgba(23,20,15,.04),0_24px_48px_-24px_rgba(60,40,10,.22)]";
+  "relative min-w-0 overflow-clip rounded-3xl border border-line bg-surface p-[22px] shadow-[0_1px_0_rgba(23,20,15,.04),0_24px_48px_-24px_rgba(60,40,10,.22)]";
 export const cardFlat =
-  "relative min-w-0 overflow-hidden rounded-3xl border border-line bg-surface p-[22px]";
+  "relative min-w-0 overflow-clip rounded-3xl border border-line bg-surface p-[22px]";
 
 export const chip = {
   base: "inline-flex h-7 items-center gap-1.5 rounded-full border px-3 font-semibold text-ink-2 text-xs",
