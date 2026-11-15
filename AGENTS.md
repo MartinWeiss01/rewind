@@ -35,20 +35,26 @@ English for code, comments, docs, commit messages, PRs and UI copy.
 ## Engineering rules
 
 - TypeScript strict. `type` over `interface` unless an `interface` is technically required (say why in a comment). No `any` without a comment explaining why.
+- No TypeScript `enum`: use a const object or array with `as const` and derive the type from it (`(typeof X)[keyof typeof X]`, `(typeof xs)[number]`); Zod's `z.enum` over such an array is fine. Biome enforces this.
 - Branching logic over discriminated values uses `ts-pattern` (`match(...).with(...).exhaustive()`) instead of `if`/`else` chains or `switch`. Simple guards and early returns stay plain.
 - Zod v4 at every boundary: env, route handlers, server actions, URL params, external API responses, LLM output, file imports.
 - Our own domain types everywhere; raw Spotify API shapes are mapped and validated at the boundary and never leave it.
 - Server Components by default; client components only where interactivity needs them.
 - UI components are mode-agnostic: data comes through the `MusicDataSource` abstraction resolved server-side per request.
 - Every data-driven component ships loading (skeleton), empty and error (with retry) states.
+- Routes follow the App Router file conventions in [ADR 0003](docs/adr/0003-app-router-conventions.md): route groups, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`.
+- Every UI string goes through next-intl ([ADR 0002](docs/adr/0002-internationalization-next-intl.md)) with English and Czech messages; no hardcoded copy.
+- Gated features use feature flags checked server-side per [ADR 0004](docs/adr/0004-feature-flags.md); public pages never advertise them.
 - Dependencies: exact versions, lockfile committed, no new library for a problem the existing stack already covers.
 - Check current official docs before writing config or calling a library or external API. When unsure about Spotify API behaviour, verify and state what was verified; do not guess.
 
 ## Stack
 
-Next.js (App Router), TypeScript, Tailwind CSS, ui-sdk, ts-pattern, Zod v4, TanStack Query, Supabase, Vercel AI SDK, Recharts, Vitest, Playwright, Biome. Package manager: pnpm.
+Next.js (App Router), TypeScript, Tailwind CSS, ui-sdk, next-intl, ts-pattern, Zod v4, TanStack Query, TanStack Table, Recharts, Supabase, Vercel AI SDK, Vitest, Playwright, Biome. Package manager: pnpm.
 
-**ui-sdk** (`@ui-sdk/react`, `@ui-sdk/core`) is the base for every interactive element. Before using it, follow the `ui-sdk` skill if installed and read `node_modules/@ui-sdk/react/docs/llms.txt`; to build a new component also search `node_modules/@ui-sdk/react/docs/core.md` by heading and read `rendering.md` next to it. The shipped docs win over memory. If ui-sdk has no fitting component or behavior, stop and tell the owner what you would use instead, what it is built on and why, before adding it.
+AI runs through the Vercel AI SDK with the provider and model chosen by env; Google (Gemini API key) is the default and must always work.
+
+**ui-sdk** (`@ui-sdk/react`, `@ui-sdk/core`) is the base for every interactive element. Before using it, follow the `ui-sdk` skill if installed and read `node_modules/@ui-sdk/react/docs/llms.txt`; to build a new component also search `node_modules/@ui-sdk/react/docs/core.md` by heading and read `rendering.md` next to it. The shipped docs win over memory. If ui-sdk has no fitting component or behavior, stop and tell the owner what you would use instead, what it is built on and why, before adding it. Accepted exceptions (tables, charts, skeletons) are listed in [ADR 0001](docs/adr/0001-libraries-outside-ui-sdk.md).
 
 ## Ask the owner first
 
@@ -74,6 +80,9 @@ Summary; full rules in [`docs/contributing/git-workflow.md`](docs/contributing/g
 | Commit, branch, open or merge a PR | [`docs/contributing/git-workflow.md`](docs/contributing/git-workflow.md) |
 | Build or change a UI component | ui-sdk docs in `node_modules/@ui-sdk/react/docs/` (see Stack) |
 | Call a Spotify endpoint | the official Web API reference; record the endpoint in the Spotify integration doc once it exists |
+| Add a library outside ui-sdk | [`docs/adr/0001-libraries-outside-ui-sdk.md`](docs/adr/0001-libraries-outside-ui-sdk.md) |
+| Add a route or screen | [`docs/adr/0003-app-router-conventions.md`](docs/adr/0003-app-router-conventions.md) |
+| Add UI copy | [`docs/adr/0002-internationalization-next-intl.md`](docs/adr/0002-internationalization-next-intl.md) |
 | Add an environment variable | `.env.example` and the env schema |
 
 ## Owner's vault

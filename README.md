@@ -1,6 +1,6 @@
 # Rewind
 
-Listening statistics, playlist tools and AI-assisted suggestions for your Spotify library.
+Playlist tools and AI-assisted suggestions for your Spotify library.
 
 Explore everything without an account in **demo mode**, or log in with Spotify to see your own data.
 
@@ -8,7 +8,7 @@ Explore everything without an account in **demo mode**, or log in with Spotify t
 
 ## Stack
 
-Next.js · TypeScript · Tailwind CSS · ui-sdk · TanStack Query · Zod · Supabase · Vercel AI SDK
+Next.js · TypeScript · Tailwind CSS · ui-sdk · next-intl · TanStack Query · Zod · Supabase · Vercel AI SDK
 
 ## Contributing
 
