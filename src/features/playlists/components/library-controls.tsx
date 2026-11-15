@@ -29,6 +29,8 @@ export function LibraryControls({ params }: { params: LibraryParams }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  // Filtering is URL navigation, not a client data call, so it stays a transition
+  // (not TanStack Query): the Server Component reloads and loading.tsx covers the wait.
   const [, startTransition] = useTransition();
   const [state, setState] = useState(params);
   const [query, setQuery] = useState(params.q);

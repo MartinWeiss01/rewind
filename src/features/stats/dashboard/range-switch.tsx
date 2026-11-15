@@ -18,6 +18,8 @@ export function RangeSwitch({ range }: { range: TimeRange }) {
   const t = useTranslations("dashboard");
   const router = useRouter();
   const [value, setValue] = useState<TimeRange>(range);
+  // Changing the range is URL navigation, not a client data call, so it stays a transition
+  // (not TanStack Query): the Server Component reloads and loading.tsx covers the wait.
   const [pending, startTransition] = useTransition();
 
   return (
