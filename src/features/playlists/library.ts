@@ -59,7 +59,9 @@ export function filterLibrary<T extends PlaylistSummary>(
   return match(sort)
     .with(LibrarySort.Recent, () => filtered)
     .with(LibrarySort.Name, () =>
-      [...filtered].sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" })),
+      [...filtered].sort((a, b) =>
+        a.name.localeCompare(b.name, undefined, { sensitivity: "base" }),
+      ),
     )
     .with(LibrarySort.Size, () => [...filtered].sort((a, b) => b.trackCount - a.trackCount))
     .exhaustive();

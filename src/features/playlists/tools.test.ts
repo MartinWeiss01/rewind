@@ -38,7 +38,16 @@ const at = (iso: string | null) => (iso ? new Date(iso) : null);
 
 describe("planMerge", () => {
   it("skips tracks already in the target and repeated across sources", () => {
-    expect(planMerge(["a", "b"], [["b", "c"], ["c", "d"]], true)).toEqual({
+    expect(
+      planMerge(
+        ["a", "b"],
+        [
+          ["b", "c"],
+          ["c", "d"],
+        ],
+        true,
+      ),
+    ).toEqual({
       added: ["c", "d"],
       skipped: 2,
       total: 4,
@@ -197,7 +206,11 @@ describe("library", () => {
     snapshotId: "",
     externalUrl: null,
   });
-  const all = [playlist("Žluté ráno", true, 10), playlist("bravo", false, 30), playlist("Alpha", true, 20)];
+  const all = [
+    playlist("Žluté ráno", true, 10),
+    playlist("bravo", false, 30),
+    playlist("Alpha", true, 20),
+  ];
 
   it("parses search params with fallbacks", () => {
     expect(parseLibraryParams({ q: [" hi ", "x"], owner: "nope", sort: "size" })).toEqual({
@@ -210,20 +223,17 @@ describe("library", () => {
 
   it("filters by owner and accent-insensitive text, then sorts", () => {
     const names = (list: PlaylistSummary[]) => list.map((p) => p.name);
-    expect(names(filterLibrary(all, { q: "", owner: OwnerFilter.Mine, sort: LibrarySort.Name }))).toEqual([
-      "Alpha",
-      "Žluté ráno",
-    ]);
-    expect(names(filterLibrary(all, { q: "zlute", owner: OwnerFilter.All, sort: LibrarySort.Recent }))).toEqual([
-      "Žluté ráno",
-    ]);
-    expect(names(filterLibrary(all, { q: "", owner: OwnerFilter.Followed, sort: LibrarySort.Size }))).toEqual([
-      "bravo",
-    ]);
-    expect(names(filterLibrary(all, { q: "", owner: OwnerFilter.All, sort: LibrarySort.Size }))).toEqual([
-      "bravo",
-      "Alpha",
-      "Žluté ráno",
-    ]);
+    expect(
+      names(filterLibrary(all, { q: "", owner: OwnerFilter.Mine, sort: LibrarySort.Name })),
+    ).toEqual(["Alpha", "Žluté ráno"]);
+    expect(
+      names(filterLibrary(all, { q: "zlute", owner: OwnerFilter.All, sort: LibrarySort.Recent })),
+    ).toEqual(["Žluté ráno"]);
+    expect(
+      names(filterLibrary(all, { q: "", owner: OwnerFilter.Followed, sort: LibrarySort.Size })),
+    ).toEqual(["bravo"]);
+    expect(
+      names(filterLibrary(all, { q: "", owner: OwnerFilter.All, sort: LibrarySort.Size })),
+    ).toEqual(["bravo", "Alpha", "Žluté ráno"]);
   });
 });

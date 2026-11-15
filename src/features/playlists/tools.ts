@@ -87,7 +87,8 @@ export function sortItems<T extends Pick<PlaylistItem, "track" | "addedAt">>(
   const compare = match(key)
     .with(
       SortKey.Added,
-      () => (a: T, b: T) => compareNullable(a.addedAt?.getTime() ?? null, b.addedAt?.getTime() ?? null),
+      () => (a: T, b: T) =>
+        compareNullable(a.addedAt?.getTime() ?? null, b.addedAt?.getTime() ?? null),
     )
     .with(SortKey.Artist, () => (a: T, b: T) => {
       const byArtist = firstArtist(a.track).localeCompare(firstArtist(b.track), undefined, {
@@ -97,7 +98,10 @@ export function sortItems<T extends Pick<PlaylistItem, "track" | "addedAt">>(
       // Artists read A to Z for "desc" (the default), Z to A otherwise.
       return (byArtist || byName) * -sign;
     })
-    .with(SortKey.Release, () => (a: T, b: T) => compareNullable(releaseKey(a.track), releaseKey(b.track)))
+    .with(
+      SortKey.Release,
+      () => (a: T, b: T) => compareNullable(releaseKey(a.track), releaseKey(b.track)),
+    )
     .with(
       SortKey.Plays,
       () => (a: T, b: T) => compareNullable(plays.get(a.track.id) ?? 0, plays.get(b.track.id) ?? 0),
