@@ -1,5 +1,8 @@
 {
   "skipToContent": "Skip to content",
   "language": "Language",
-  "mainNavigation": "Main navigation"
+  "mainNavigation": "Main navigation",
+  "demo": "Demo",
+  "demoNotice": "You’re exploring a fictional listener. Changes reset when you leave.",
+  "useMySpotify": "Use my Spotify"
 }

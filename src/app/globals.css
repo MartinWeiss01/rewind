@@ -86,3 +86,37 @@
 @utility eyebrow {
   @apply font-mono text-[11px] tracking-[0.12em] text-muted uppercase;
 }
+
+/* Generated covers for demo data and missing artwork (seed % 8). */
+.cover-pattern-0 {
+  background:
+    radial-gradient(circle at 30% 70%, #f2cf4a 0 22%, transparent 23%),
+    linear-gradient(135deg, #6b4ee6, #2a1c6e);
+}
+.cover-pattern-1 {
+  background: repeating-linear-gradient(0deg, #e8664a 0 8px, #ffc9bb 8px 16px);
+}
+.cover-pattern-2 {
+  background: radial-gradient(
+    circle at 50% 50%,
+    #17140f 0 18%,
+    #f3ecdf 19% 30%,
+    #17140f 31% 42%,
+    #2f9e7e 43%
+  );
+}
+.cover-pattern-3 {
+  background: conic-gradient(from 90deg, #f2cf4a, #e8664a, #6b4ee6, #f2cf4a);
+}
+.cover-pattern-4 {
+  background: linear-gradient(180deg, #bfebdc 0 50%, #2f9e7e 50%);
+}
+.cover-pattern-5 {
+  background: radial-gradient(circle at 70% 30%, #ffc9bb 0 30%, transparent 31%), #3a352d;
+}
+.cover-pattern-6 {
+  background: repeating-linear-gradient(45deg, #d9cfff 0 10px, #6b4ee6 10px 20px);
+}
+.cover-pattern-7 {
+  background: linear-gradient(135deg, #f2cf4a 0 50%, #17140f 50%);
+}
