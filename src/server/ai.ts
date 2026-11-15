@@ -11,8 +11,14 @@ export const AiProvider = {
 } as const;
 export type AiProvider = (typeof AiProvider)[keyof typeof AiProvider];
 
-/** Used when `AI_MODEL` is empty. See `.env.example` for why these were picked. */
-export const defaultModels = {
+/**
+ * The model each provider uses. Part of the code, not the environment, so a change is
+ * reviewed and versioned like any other.
+ * - google: gemini-3.6-flash is stable, cheap and knows enough about music for
+ *   suggestions; gemini-3.5-flash-lite is cheaper if quality holds up.
+ * - anthropic: claude-sonnet-5-5; claude-haiku-5-5 is the cheaper option.
+ */
+export const aiModels = {
   google: "gemini-3.6-flash",
   anthropic: "claude-sonnet-5-5",
 } as const satisfies Record<AiProvider, string>;
@@ -27,7 +33,6 @@ export const aiEnvSchema = z.object({
     (value) => (typeof value === "string" ? emptyToUndefined(value.trim().toLowerCase()) : value),
     z.enum(AiProvider).default(AiProvider.Google),
   ),
-  AI_MODEL: optionalText,
   GOOGLE_GENERATIVE_AI_API_KEY: optionalText,
   ANTHROPIC_API_KEY: optionalText,
   DEMO_LIVE_AI: z.preprocess(
@@ -54,7 +59,7 @@ export function readAiConfig(env: Record<string, string | undefined>): AiConfig 
     .exhaustive();
   return {
     provider: parsed.AI_PROVIDER,
-    modelId: parsed.AI_MODEL ?? defaultModels[parsed.AI_PROVIDER],
+    modelId: aiModels[parsed.AI_PROVIDER],
     apiKey: apiKey ?? null,
     demoLiveAi: parsed.DEMO_LIVE_AI === "true",
   };
