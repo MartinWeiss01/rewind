@@ -1,35 +1,34 @@
 import { describe, expect, it } from "vitest";
-import { AiNotConfiguredError, AiProvider, defaultModels, languageModel, readAiConfig } from "./ai";
+import { AiNotConfiguredError, AiProvider, aiModels, languageModel, readAiConfig } from "./ai";
 
 describe("readAiConfig", () => {
   it("defaults to Google and its default model", () => {
     const config = readAiConfig({ GOOGLE_GENERATIVE_AI_API_KEY: "test-key" });
     expect(config).toEqual({
       provider: AiProvider.Google,
-      modelId: defaultModels.google,
+      modelId: aiModels.google,
       apiKey: "test-key",
       demoLiveAi: false,
     });
   });
 
   it("treats empty values as unset", () => {
-    const config = readAiConfig({ AI_PROVIDER: "", AI_MODEL: " ", DEMO_LIVE_AI: "" });
+    const config = readAiConfig({ AI_PROVIDER: "", DEMO_LIVE_AI: "" });
     expect(config.provider).toBe(AiProvider.Google);
-    expect(config.modelId).toBe(defaultModels.google);
+    expect(config.modelId).toBe(aiModels.google);
     expect(config.apiKey).toBeNull();
   });
 
-  it("reads the Anthropic provider, a custom model and live demo AI", () => {
+  it("reads the Anthropic provider and live demo AI", () => {
     const config = readAiConfig({
       AI_PROVIDER: "Anthropic",
-      AI_MODEL: "custom-model",
       ANTHROPIC_API_KEY: "test-anthropic-key",
       GOOGLE_GENERATIVE_AI_API_KEY: "unused",
       DEMO_LIVE_AI: "true",
     });
     expect(config).toEqual({
       provider: AiProvider.Anthropic,
-      modelId: "custom-model",
+      modelId: aiModels.anthropic,
       apiKey: "test-anthropic-key",
       demoLiveAi: true,
     });

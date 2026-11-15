@@ -52,7 +52,7 @@ English for code, comments, docs, commit messages, PRs and UI copy.
 
 Next.js (App Router), TypeScript, Tailwind CSS, ui-sdk, next-intl, ts-pattern, Zod v4, TanStack Query, TanStack Table, Recharts, Supabase, Vercel AI SDK, Vitest, Playwright, Biome. Package manager: pnpm.
 
-AI runs through the Vercel AI SDK with the provider and model chosen by env; Google (Gemini API key) is the default and must always work.
+AI runs through the Vercel AI SDK; the provider is chosen by env (`AI_PROVIDER`) and each provider's model is set in code (`src/server/ai.ts`); Google (Gemini API key) is the default and must always work.
 
 **ui-sdk** (`@ui-sdk/react`, `@ui-sdk/core`) is the base for every interactive element. Before using it, follow the `ui-sdk` skill if installed and read `node_modules/@ui-sdk/react/docs/llms.txt`; to build a new component also search `node_modules/@ui-sdk/react/docs/core.md` by heading and read `rendering.md` next to it. The shipped docs win over memory. If ui-sdk has no fitting component or behavior, stop and tell the owner what you would use instead, what it is built on and why, before adding it. Accepted exceptions (tables, charts, skeletons) are listed in [ADR 0001](docs/adr/0001-libraries-outside-ui-sdk.md).
 
