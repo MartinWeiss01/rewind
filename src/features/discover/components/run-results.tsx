@@ -1,5 +1,6 @@
 "use client";
 
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@ui-sdk/react/button";
 import { Collapsible, CollapsiblePanel, CollapsibleTrigger } from "@ui-sdk/react/collapsible";
 import {
@@ -18,8 +19,9 @@ import { useState } from "react";
 import { StatePanel } from "@/components/feedback/state-panel";
 import { Cover } from "@/components/ui/cover";
 import { alert, buttonClass, cardFlat, chipClass, heading } from "@/components/ui/styles";
+import { queryKeys } from "@/lib/query-keys";
 import { addToPlaylist, saveAsPlaylist } from "../actions";
-import type { Suggestion } from "../types";
+import { type Suggestion, unwrapResult } from "../types";
 
 export type RunView = {
   title: string;
@@ -60,35 +62,38 @@ export function RunResults({
   const [notice, setNotice] = useState<Notice>(null);
   const [saveOpen, setSaveOpen] = useState(false);
   const [name, setName] = useState(run.title.replace(/[“”„]/g, ""));
-  const [saving, setSaving] = useState(false);
   const trackIds = run.suggestions.map((s) => s.track.id);
   const empty = run.suggestions.length === 0;
-
-  const save = async () => {
-    setSaving(true);
-    try {
-      const result = await saveAsPlaylist({ name, trackIds });
-      if (result.ok) {
-        setNotice({ tone: "info", text: t("saved", { name: result.data.name }) });
-        setSaveOpen(false);
-      } else {
-        setNotice({ tone: "danger", text: t("writeFailed") });
-      }
-    } catch {
-      setNotice({ tone: "danger", text: t("writeFailed") });
-    } finally {
-      setSaving(false);
-    }
+  const queryClient = useQueryClient();
+  const failed = () => setNotice({ tone: "danger", text: t("writeFailed") });
+  // Both writes change playlists; drop any cached playlist reads.
+  const playlistsChanged = () => {
+    void queryClient.invalidateQueries({ queryKey: queryKeys.playlists.all });
   };
 
-  const add = async (playlistId: string) => {
-    const result = await addToPlaylist({ playlistId, trackIds }).catch(() => null);
-    setNotice(
-      result?.ok
-        ? { tone: "info", text: t("added", { count: trackIds.length, name: result.data.name }) }
-        : { tone: "danger", text: t("writeFailed") },
-    );
-  };
+  const save = useMutation({
+    mutationFn: async (input: { name: string; trackIds: string[] }) =>
+      unwrapResult(await saveAsPlaylist(input)),
+    onSuccess: (created) => {
+      setNotice({ tone: "info", text: t("saved", { name: created.name }) });
+      setSaveOpen(false);
+    },
+    onError: failed,
+    onSettled: playlistsChanged,
+  });
+
+  const add = useMutation({
+    mutationFn: async (playlistId: string) =>
+      unwrapResult(await addToPlaylist({ playlistId, trackIds })),
+    onSuccess: (playlist) =>
+      setNotice({
+        tone: "info",
+        text: t("added", { count: trackIds.length, name: playlist.name }),
+      }),
+    onError: failed,
+    onSettled: playlistsChanged,
+  });
+  const saving = save.isPending;
 
   return (
     <section aria-labelledby="discover-results" className="flex flex-col gap-3.5">
@@ -115,9 +120,8 @@ export function RunResults({
           {canWrite ? (
             <>
               <Menu
-                onAction={async (playlistId) => {
-                  await add(playlistId);
-                }}
+                // The returned promise keeps the chosen item pending; the notice reports a failure.
+                onAction={(playlistId) => add.mutateAsync(playlistId).catch(() => undefined)}
               >
                 <MenuTrigger disabled={empty} className={buttonClass("secondary", "sm")}>
                   {t("addToPlaylist")}
@@ -279,7 +283,7 @@ export function RunResults({
               className="flex flex-col gap-4"
               onSubmit={(event) => {
                 event.preventDefault();
-                if (name.trim() && !saving) void save();
+                if (name.trim() && !saving) save.mutate({ name, trackIds });
               }}
             >
               <Field className="flex flex-col gap-2">

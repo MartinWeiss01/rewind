@@ -1,5 +1,6 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@ui-sdk/react/button";
 import { Field, FieldDescription, FieldLabel } from "@ui-sdk/react/field";
 import {
@@ -28,11 +29,18 @@ import {
 import { Switch, SwitchThumb } from "@ui-sdk/react/switch";
 import { Textarea } from "@ui-sdk/react/textarea";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
 import { match } from "ts-pattern";
 import { buttonClass, card, chipClass } from "@/components/ui/styles";
+import { queryKeys } from "@/lib/query-keys";
 import { describePlaylistSeed } from "../actions";
-import { countBounds, DiscoverMode, type DiscoverRequest, maxPromptLength } from "../types";
+import {
+  countBounds,
+  DiscoverMode,
+  type DiscoverRequest,
+  maxPromptLength,
+  retryUnexpected,
+  unwrapResult,
+} from "../types";
 
 export type PlaylistOption = { id: string; name: string; trackCount: number };
 
@@ -100,26 +108,20 @@ export function RequestForm({
   const t = useTranslations("discover");
   const set = <K extends keyof FormState>(key: K, value: FormState[K]) =>
     onChange({ ...form, [key]: value });
-  const [seed, setSeed] = useState<SeedState>({ kind: "none" });
-
   const playlistId = form.mode === DiscoverMode.Playlist ? form.playlistId : null;
-  useEffect(() => {
-    if (!playlistId) {
-      setSeed({ kind: "none" });
-      return;
-    }
-    let current = true;
-    setSeed({ kind: "loading" });
-    describePlaylistSeed(playlistId)
-      .then((result) => {
-        if (!current) return;
-        setSeed(result.ok ? { kind: "ready", ...result.data } : { kind: "failed" });
-      })
-      .catch(() => current && setSeed({ kind: "failed" }));
-    return () => {
-      current = false;
-    };
-  }, [playlistId]);
+  const seedQuery = useQuery({
+    queryKey: queryKeys.discover.playlistSeed(playlistId ?? ""),
+    queryFn: async () => unwrapResult(await describePlaylistSeed(playlistId)),
+    enabled: playlistId !== null,
+    retry: retryUnexpected,
+  });
+  const seed: SeedState = !playlistId
+    ? { kind: "none" }
+    : seedQuery.isError
+      ? { kind: "failed" }
+      : seedQuery.data
+        ? { kind: "ready", ...seedQuery.data }
+        : { kind: "loading" };
 
   const request = toRequest(form);
   const examples = [t("form.example1"), t("form.example2"), t("form.example3"), t("form.example4")];
