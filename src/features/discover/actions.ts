@@ -1,5 +1,7 @@
 "use server";
 
+import { headers } from "next/headers";
+
 import { getLocale, getTranslations } from "next-intl/server";
 import { match } from "ts-pattern";
 import { z } from "zod";
@@ -8,7 +10,9 @@ import { buildCatalog, type Catalog } from "@/demo/catalog";
 import { persona } from "@/demo/persona";
 import { intervalFor, TimeRange } from "@/domain/time-range";
 import { readAiConfig } from "@/server/ai";
+import { sha256 } from "@/server/crypto";
 import { FeatureFlag } from "@/server/feature-flags";
+import { takeRateLimit } from "@/server/rate-limit";
 import { getRequestContext, type RequestContext } from "@/server/request-context";
 import { demoCandidates, genreHint } from "./demo-suggestions";
 import { filterSuggestions, matchCandidate, searchQuery } from "./matching";
@@ -124,6 +128,18 @@ export async function requestCandidates(input: unknown): Promise<ActionResult<Ca
     if (candidates.length === 0) return fail(DiscoverError.EmptyAnswer);
     return ok({ profilePlays: profile.plays, candidates, live });
   }
+
+  // Model calls cost money: 20 per Spotify user and 3 per demo visitor per day.
+  const day = 24 * 60 * 60 * 1000;
+  const allowed =
+    context.viewer.mode === "spotify"
+      ? await takeRateLimit(`ai:user:${context.viewer.spotifyUserId}`, 20, day)
+      : await takeRateLimit(
+          `ai:demo:${sha256((await headers()).get("x-forwarded-for") ?? "local")}`,
+          3,
+          day,
+        );
+  if (!allowed) return fail(DiscoverError.RateLimited);
 
   try {
     const { system, prompt } = buildPrompt({

@@ -121,7 +121,11 @@
       "title": "Something went wrong",
       "body": "We couldn't finish this run. Try again."
     },
-    "retry": "Try again"
+    "retry": "Try again",
+    "rateLimited": {
+      "title": "That’s enough for today",
+      "body": "You’ve used today’s AI suggestions. They come back tomorrow."
+    }
   },
   "earlier": {
     "title": "Earlier suggestions",

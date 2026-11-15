@@ -14,7 +14,7 @@ export type AiProvider = (typeof AiProvider)[keyof typeof AiProvider];
 /** Used when `AI_MODEL` is empty. See `.env.example` for why these were picked. */
 export const defaultModels = {
   google: "gemini-3.6-flash",
-  anthropic: "claude-opus-5-5",
+  anthropic: "claude-sonnet-5-5",
 } as const satisfies Record<AiProvider, string>;
 
 const emptyToUndefined = (value: unknown) =>

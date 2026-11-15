@@ -69,6 +69,7 @@ export const DiscoverError = {
   Invalid: "invalid",
   PlaylistMissing: "playlistMissing",
   Forbidden: "forbidden",
+  RateLimited: "rateLimited",
   Unknown: "unknown",
 } as const;
 export type DiscoverError = (typeof DiscoverError)[keyof typeof DiscoverError];

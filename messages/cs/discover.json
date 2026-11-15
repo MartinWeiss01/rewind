@@ -121,7 +121,11 @@
       "title": "Něco se pokazilo",
       "body": "Tenhle běh se nepodařilo dokončit. Zkus to znovu."
     },
-    "retry": "Zkusit znovu"
+    "retry": "Zkusit znovu",
+    "rateLimited": {
+      "title": "Pro dnešek stačí",
+      "body": "Dnešní AI doporučení jsou vyčerpaná. Zítra jsou zase k dispozici."
+    }
   },
   "earlier": {
     "title": "Dřívější doporučení",
