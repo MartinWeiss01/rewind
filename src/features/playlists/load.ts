@@ -17,7 +17,11 @@ export type LibraryEntry = PlaylistSummary & {
  */
 export async function loadLibrary({ source }: RequestContext): Promise<LibraryEntry[]> {
   const summaries = await source.listPlaylists();
-  const details = await Promise.all(summaries.map((s) => source.getPlaylist(s.id)));
+  // Each detail costs Spotify requests (one per 50 items), so only readable playlists
+  // are loaded, a few at a time, to stay inside the rate limit.
+  const details = await mapWithConcurrency(summaries, 3, (s) =>
+    s.editable ? source.getPlaylist(s.id) : Promise.resolve(null),
+  );
   return summaries.map((summary, index) => {
     const items = details[index]?.items ?? null;
     return {
@@ -42,4 +46,23 @@ export async function loadPlays(context: RequestContext): Promise<Map<string, nu
       t.plays,
     ]),
   );
+}
+
+/** Like Promise.all over `items`, with at most `limit` calls running at once. */
+async function mapWithConcurrency<T, R>(
+  items: readonly T[],
+  limit: number,
+  run: (item: T) => Promise<R>,
+): Promise<R[]> {
+  const results: R[] = new Array(items.length);
+  let next = 0;
+  const worker = async () => {
+    while (next < items.length) {
+      const index = next++;
+      const item = items[index];
+      if (item !== undefined) results[index] = await run(item);
+    }
+  };
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker));
+  return results;
 }
