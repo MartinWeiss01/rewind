@@ -38,6 +38,7 @@
   "save": "Uložit",
   "saved": "Uloženo",
   "saveFailed": "Nepodařilo se uložit. Zkus to znovu.",
+  "actionFailed": "To se nepovedlo. Zkus to znovu.",
   "data": "Tvoje data",
   "demoDataNote": "V demu se o tobě nic neukládá. Tvoje úpravy žijí jen v této relaci prohlížeče a po jejím konci zmizí.",
   "playsStored": "Uložená přehrání",

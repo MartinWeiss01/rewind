@@ -1,28 +1,34 @@
 "use client";
 
+import { useMutation } from "@tanstack/react-query";
 import { Button } from "@ui-sdk/react/button";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
 import { buttonClass } from "@/components/ui/styles";
 import { syncNow } from "../actions";
 
 export function SyncButton() {
   const t = useTranslations("settings");
-  const [message, setMessage] = useState("");
+  const sync = useMutation({
+    mutationFn: async () => {
+      const result = await syncNow();
+      if (!result.ok) throw new Error(result.error);
+      return Number(result.message ?? 0);
+    },
+  });
   return (
     <div className="flex items-center gap-3">
       <span role="status" className="text-muted text-sm">
-        {message}
+        {sync.isSuccess
+          ? t("syncAdded", { count: sync.data })
+          : sync.isError
+            ? t("syncFailed")
+            : ""}
       </span>
+      {/* Returning the mutation's promise keeps the button pending until it settles. */}
       <Button
         className={buttonClass("secondary", "sm")}
         pendingAnnouncement={t("syncing")}
-        onClick={async () => {
-          const result = await syncNow();
-          setMessage(
-            result.ok ? t("syncAdded", { count: Number(result.message ?? 0) }) : t("syncFailed"),
-          );
-        }}
+        onClick={() => sync.mutateAsync()}
       >
         {t("syncNow")}
       </Button>
