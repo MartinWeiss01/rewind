@@ -1,5 +1,9 @@
 {
   "eyebrow": "Pusť si to znovu",
   "title": "Hudební knihovna v pořádku.",
-  "lead": "Nástroje, které uklidí roky ukládání do playlistů, a AI doporučení podle toho, co opravdu posloucháš."
+  "lead": "Nástroje, které uklidí roky ukládání do playlistů, a AI doporučení podle toho, co opravdu posloucháš.",
+  "loginCancelled": "Přihlášení bylo zrušeno. Demo můžeš dál prozkoumávat.",
+  "loginForbidden": "Tento Spotify účet zatím není na seznamu pozvaných. Demo funguje i bez něj.",
+  "loginFailed": "Přihlášení přes Spotify se nepovedlo. Zkus to za chvíli znovu.",
+  "loginUnavailable": "Přihlášení přes Spotify tu není nastavené. Demo je plně dostupné."
 }

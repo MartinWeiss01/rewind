@@ -19,3 +19,11 @@ Spotify recommends the Authorization Code flow with a client secret for apps wit
 
 - Session and token code is ours to test, including refresh races and revoked access.
 - Moving to another Supabase account is: create a project, apply the migrations in order, set the env variables.
+
+## Implementation notes (2026-11-15)
+
+- Tables live in `public` with the `rewind_` prefix, so Rewind can share a Supabase project with other apps. RLS is enabled and forced on every table with no policies, and `anon` / `authenticated` have no privileges.
+- Every user-owned table has `user_id` with `on delete cascade`; disconnecting deletes the user row and everything goes with it. The only shared table is `rewind_tracks`, a cache of public catalog metadata (names, artists, album, length) that says nothing about who listened.
+- Spotify exposes only the last 50 plays. They are synced when the user opens the app (at most every 10 minutes, after the response) and by a daily cron; imports fill in older history and never overlap synced plays.
+- Imported tracks start with the names from the export and are enriched from the API in small batches, because Spotify removed batch track lookups.
+- Spotify request and response schemas are generated with Orval from Spotify's OpenAPI document (`pnpm spotify:generate`); fields Spotify marks deprecated are dropped before generation.

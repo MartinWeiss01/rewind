@@ -13,8 +13,11 @@
     "start": "next start --hostname 127.0.0.1",
     "lint": "biome check .",
     "format": "biome check --write .",
-    "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "typecheck": "next typegen && tsc --noEmit",
+    "test": "vitest run",
+    "spotify:generate": "node scripts/fetch-spotify-openapi.mjs && orval --config orval.config.ts && biome check --write src/data/spotify/generated",
+    "db:types": "supabase gen types typescript --db-url \"$DATABASE_URL\" --schema public | node scripts/filter-db-types.mjs > src/data/supabase/database.types.ts && biome check --write src/data/supabase/database.types.ts",
+    "db:push": "supabase db push --db-url \"$DATABASE_URL\""
   },
   "dependencies": {
     "@ai-sdk/anthropic": "4.0.104",

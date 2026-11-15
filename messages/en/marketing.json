@@ -1,5 +1,9 @@
 {
   "eyebrow": "Play it back",
   "title": "Your music library, tidied up.",
-  "lead": "Playlist tools that clean up years of saving, and AI suggestions built from what you actually play."
+  "lead": "Playlist tools that clean up years of saving, and AI suggestions built from what you actually play.",
+  "loginCancelled": "Sign-in was cancelled. You can keep exploring the demo.",
+  "loginForbidden": "This Spotify account isn’t on the app’s invite list yet. The demo works without one.",
+  "loginFailed": "Sign-in with Spotify didn’t work. Try again in a moment.",
+  "loginUnavailable": "Spotify sign-in isn’t set up on this deployment. The demo is fully available."
 }
