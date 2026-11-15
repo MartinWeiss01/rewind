@@ -4,6 +4,7 @@ import history from "./history.json";
 import marketing from "./marketing.json";
 import nav from "./nav.json";
 import placeholder from "./placeholder.json";
+import recap from "./recap.json";
 import screens from "./screens.json";
 import settings from "./settings.json";
 import shell from "./shell.json";
@@ -21,6 +22,7 @@ const messages = {
   settings,
   discover,
   history,
+  recap,
 };
 
 export type Messages = typeof messages;
