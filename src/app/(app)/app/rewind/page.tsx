@@ -29,6 +29,13 @@ export default async function Page({ searchParams }: { searchParams: Promise<Sea
     loadRecap(source, period, now),
   ]);
 
+  const shortDay = (key: string) =>
+    format.dateTime(dateFromKey(key), {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      timeZone: "UTC",
+    });
   const year = zonedParts(now, rules.timeZone).year;
   const presetLabels: Record<RecapPreset, string> = {
     [RecapPreset.ThisYear]: t("presets.year", { year: String(year) }),
@@ -90,7 +97,22 @@ export default async function Page({ searchParams }: { searchParams: Promise<Sea
           />
         </>
       ) : (
-        <RecapDeck data={data} periodLabel={periodLabel} />
+        <RecapDeck
+          data={data}
+          periodLabel={periodLabel}
+          dates={{
+            firstFind: data.firstFind
+              ? format.dateTime(new Date(data.firstFind.firstPlayedAt), {
+                  month: "short",
+                  day: "numeric",
+                  timeZone: rules.timeZone,
+                })
+              : null,
+            longestStreak: data.longestStreak
+              ? `${shortDay(data.longestStreak.start)} – ${shortDay(data.longestStreak.end)}`
+              : null,
+          }}
+        />
       )}
     </>
   );
