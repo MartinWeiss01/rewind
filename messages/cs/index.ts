@@ -7,6 +7,8 @@ import marketing from "./marketing.json";
 import nav from "./nav.json";
 import placeholder from "./placeholder.json";
 import recap from "./recap.json";
+import playlists from "./playlists.json";
+import playlistTools from "./playlistTools.json";
 import screens from "./screens.json";
 import settings from "./settings.json";
 import shell from "./shell.json";
@@ -25,6 +27,8 @@ const messages: Messages = {
   dashboard,
   history,
   recap,
+  playlists,
+  playlistTools,
 };
 
 export default messages;
