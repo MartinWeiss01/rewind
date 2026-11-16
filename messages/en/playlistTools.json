@@ -6,6 +6,10 @@
       "label": "Remove duplicates",
       "hint": "Find exact and near matches, preview first"
     },
+    "compare": {
+      "label": "Compare with another playlist",
+      "hint": "Find songs both have, remove them from either"
+    },
     "merge": {
       "label": "Merge into this playlist",
       "hint": "Add the tracks of other playlists"
@@ -131,6 +135,33 @@
     "removing": "Removing…",
     "done": "Removed {count, plural, one {# duplicate} other {# duplicates}}."
   },
+  "compare": {
+    "title": "Compare with another playlist",
+    "description": "Finds songs that {name} shares with another playlist, so you can remove them from one of the two.",
+    "with": "Compare with",
+    "pick": "Choose a playlist",
+    "pickTitle": "Pick a playlist to compare",
+    "pickBody": "Tracks both playlists have show up here, with how closely they match.",
+    "loading": "Loading the playlist",
+    "errorTitle": "Couldn't load that playlist",
+    "errorBody": "Spotify didn't answer. Try again in a moment.",
+    "retry": "Try again",
+    "emptyTitle": "No shared tracks at this strictness",
+    "emptyBody": "Try a looser match to catch remasters and alternate releases.",
+    "removeFrom": "Remove the selected matches from",
+    "readOnly": "This playlist is read-only, so its tracks can't be removed.",
+    "selectAll": "Select all",
+    "selectNone": "Select none",
+    "snapshotNote": "A snapshot of the changed playlist is saved first. You can undo this from its History & undo.",
+    "cancel": "Cancel",
+    "submit": "{count, plural, =0 {Remove} one {Remove # track} other {Remove # tracks}}",
+    "removing": "Removing…",
+    "done": "Removed {count, plural, one {# track} other {# tracks}} from {name}.",
+    "found": "{count, plural, one {# track in {name} is also in {other}} other {# tracks in {name} are also in {other}}}",
+    "selected": "{count} selected",
+    "listLabel": "Tracks to remove from {name}",
+    "alsoIn": "Also in {name}: {title} — {details}"
+  },
   "sort": {
     "title": "Sort playlist",
     "by": "Sort by",
@@ -187,6 +218,7 @@
     "emptyBody": "Bulk changes like removing duplicates or sorting save one here first.",
     "kind": {
       "edit": "{count, plural, =0 {Changed the order} one {Removed # track} other {Removed # tracks}}",
+      "removeMatches": "Removed {count, plural, one {# track} other {# tracks}} another playlist also has",
       "removeDuplicates": "Removed {count, plural, one {# duplicate} other {# duplicates}}",
       "sort": "Sorted {count, plural, one {# track} other {# tracks}}",
       "merge": "Merged in {count, plural, one {# track} other {# tracks}}",

@@ -18,6 +18,9 @@ export const queryKeys = {
   playlists: {
     all: ["playlists"] as const,
     trackSearch: (query: string) => ["playlists", "trackSearch", query] as const,
+    /** Prefix of every playlist loaded for comparing; playlist writes invalidate it. */
+    compares: ["playlists", "compare"] as const,
+    compare: (playlistId: string) => ["playlists", "compare", playlistId] as const,
     /** Prefix of every merge preview; playlist writes invalidate it. */
     mergePreviews: ["playlists", "mergePreview"] as const,
     mergePreview: (input: {

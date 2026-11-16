@@ -124,7 +124,7 @@ function createUnion(size: number) {
 }
 
 /** Bucket keys an item contributes at one level; items sharing a key match. */
-function keysAt(level: MatchLevel, track: MatchableItem["track"]): string[] {
+export function keysAt(level: MatchLevel, track: MatchableItem["track"]): string[] {
   return match(level)
     .with(MatchLevel.Exact, () => [track.id])
     .with(MatchLevel.Recording, () => (track.isrc ? [track.isrc.toUpperCase()] : []))
@@ -138,6 +138,9 @@ function keysAt(level: MatchLevel, track: MatchableItem["track"]): string[] {
     .with(MatchLevel.Title, () => [normalizeTitle(track.name)])
     .exhaustive();
 }
+
+/** Keys from an empty normalized title would match unrelated tracks. */
+export const isUsableKey = (key: string) => key !== "" && !key.startsWith("\u0000");
 
 const addedTime = (item: MatchableItem) => item.addedAt?.getTime() ?? Number.POSITIVE_INFINITY;
 
@@ -157,7 +160,7 @@ export function findDuplicateGroups<T extends MatchableItem>(
     const firstByKey = new Map<string, number>();
     items.forEach((item, index) => {
       for (const key of keysAt(current, item.track)) {
-        if (key === "" || key.startsWith("\u0000")) continue;
+        if (!isUsableKey(key)) continue;
         const first = firstByKey.get(key);
         if (first === undefined) firstByKey.set(key, index);
         else union.union(first, index, rank);

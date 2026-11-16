@@ -7,6 +7,8 @@ import { z } from "zod";
 export const ChangeKind = {
   Edit: "edit",
   RemoveDuplicates: "removeDuplicates",
+  /** Removing songs another playlist also has. */
+  RemoveMatches: "removeMatches",
   Sort: "sort",
   Merge: "merge",
   Restore: "restore",

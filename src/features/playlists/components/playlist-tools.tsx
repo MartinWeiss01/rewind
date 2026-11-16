@@ -7,6 +7,7 @@ import { useState } from "react";
 import { z } from "zod";
 import { buttonClass } from "@/components/ui/styles";
 import type { PlaylistItem, PlaylistSnapshot } from "@/domain/playlists";
+import { CompareDialog } from "./compare-dialog";
 import { DuplicatesDialog } from "./duplicates-dialog";
 import { HistoryDialog } from "./history-dialog";
 import { MergeDialog, type MergeOption } from "./merge-dialog";
@@ -16,6 +17,7 @@ import { popup, popupItem } from "./ui";
 
 const Tool = {
   Duplicates: "duplicates",
+  Compare: "compare",
   Merge: "merge",
   Sort: "sort",
   Split: "split",
@@ -47,7 +49,7 @@ export function PlaylistTools({
   const t = useTranslations("playlistTools.menu");
   const [open, setOpen] = useState<Tool | null>(null);
   const setter = (tool: Tool) => (next: boolean) => setOpen(next ? tool : null);
-  const writeTools = [Tool.Duplicates, Tool.Merge, Tool.Sort, Tool.Split] as const;
+  const writeTools = [Tool.Duplicates, Tool.Compare, Tool.Merge, Tool.Sort, Tool.Split] as const;
   const empty = items.length === 0;
 
   return (
@@ -111,6 +113,15 @@ export function PlaylistTools({
         basedOn={basedOn}
         items={items}
         plays={plays}
+      />
+      <CompareDialog
+        open={open === Tool.Compare}
+        onOpenChange={setter(Tool.Compare)}
+        playlistId={playlistId}
+        playlistName={playlistName}
+        basedOn={basedOn}
+        items={items}
+        playlists={mergeOptions}
       />
       <MergeDialog
         open={open === Tool.Merge}
