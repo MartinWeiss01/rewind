@@ -58,7 +58,7 @@
     "finish": "Používám tvoje filtry a ukládám"
   },
   "results": {
-    "heading": "{count, plural, one {# skladba} few {# skladby} other {# skladeb}} pro {title}",
+    "heading": "{count, plural, one {# skladba} few {# skladby} other {# skladeb}} · {title}",
     "summary": "Spárováno {matched} z {asked} · odebrané skladby se neuloží",
     "filtered": "{count, plural, one {# shodu vyřadily} few {# shody vyřadily} other {# shod vyřadily}} tvoje filtry.",
     "reopened": "Dřívější běh. Zdůvodnění se u dřívějších běhů neukládají.",
