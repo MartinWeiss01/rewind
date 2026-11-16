@@ -1,0 +1,94 @@
+{
+  "title": "Access",
+  "eyebrow": "Admin · only you see this",
+  "intro": "Choose who gets which feature. Changes apply on their next page load, no redeploy. Everyone else sees the app without these features.",
+  "back": "Settings",
+  "features": {
+    "stats": {
+      "name": "Stats",
+      "desc": "Dashboard, history, recap and play counts from Spotify data."
+    },
+    "ai": {
+      "name": "AI",
+      "desc": "Discover suggestions. Uses the Gemini quota, 20 runs a day each."
+    },
+    "playlistWrite": {
+      "name": "Playlist changes",
+      "desc": "Edit, sort, merge and clean up their real Spotify playlists."
+    }
+  },
+  "featureCount": "{count, plural, one {# person} other {# people}}",
+  "people": "People",
+  "spotifyLimit": "Spotify allows up to 5 people in Development Mode",
+  "columnPerson": "Person",
+  "columnSeen": "Last seen",
+  "columnActions": "Actions",
+  "admin": "Admin",
+  "pending": "Hasn’t logged in yet",
+  "never": "—",
+  "switchLabel": "{feature} for {name}",
+  "adminNote": "Admins are set in the server environment and always have every feature. Removing someone takes away their features; their listening data stays until they delete it.",
+  "emptyTitle": "Only you so far",
+  "emptyBody": "Add someone by their Spotify user ID. They also need to be on the app’s user list in the Spotify Developer Dashboard.",
+  "changes": "Recent changes",
+  "changesEmpty": "No changes yet.",
+  "verb": {
+    "add": "Add",
+    "remove": "Remove",
+    "grant": "On",
+    "revoke": "Off"
+  },
+  "event": {
+    "add": "Added {subject}",
+    "remove": "Removed {subject}",
+    "grant": "Turned on {feature} for {subject}",
+    "revoke": "Turned off {feature} for {subject}"
+  },
+  "by": "by {actor}",
+  "you": "you",
+  "toast": {
+    "on": "{feature} turned on for {name}",
+    "off": "{feature} turned off for {name}",
+    "undo": "Undo",
+    "failed": "Couldn’t change {feature} for {name}. The switch went back; try again.",
+    "retry": "Try again",
+    "added": "Added {name}",
+    "removed": "Removed {name}"
+  },
+  "add": {
+    "open": "Add person",
+    "title": "Add a person",
+    "id": "Spotify user ID or profile link",
+    "idPlaceholder": "open.spotify.com/user/…",
+    "idHint": "Found in Spotify under Profile › Share › Copy link.",
+    "idInvalid": "That isn’t a Spotify user ID or profile link.",
+    "note": "Note (optional)",
+    "notePlaceholder": "Who is it, so you remember",
+    "features": "Features",
+    "dashboardNote": "Spotify only lets people log in once you also add them to the app’s user list in the Developer Dashboard. Rewind can’t do that for you.",
+    "cancel": "Cancel",
+    "submit": "Add",
+    "adding": "Adding…"
+  },
+  "remove": {
+    "open": "Remove",
+    "label": "Remove {name}",
+    "title": "Remove {name}?",
+    "body": "They lose every feature on this page right away. Their account and listening data stay; they can still log in and see the app without these features.",
+    "cancel": "Cancel",
+    "confirm": "Remove",
+    "removing": "Removing…"
+  },
+  "error": {
+    "forbidden": "Only admins can change access.",
+    "invalid": "That change doesn’t fit. Reload the page and try again.",
+    "admin": "Admins always have every feature; change them in the server environment.",
+    "failed": "The change didn’t go through. Nothing changed; try again.",
+    "invalidId": "That isn’t a Spotify user ID or profile link."
+  },
+  "settingsLink": {
+    "title": "Admin",
+    "label": "Access",
+    "hint": "Choose who gets stats, AI and playlist changes."
+  }
+}

@@ -1,42 +1,40 @@
 import { describe, expect, it } from "vitest";
-import { enabledFlags, FeatureFlag, flagRuleSchema, parseFlagRules } from "./feature-flags";
+import { enabledFlags, FeatureFlag, knownFlags, parseAdminIds } from "./feature-flags";
 
-const spotify = (spotifyUserId: string) => ({ mode: "spotify", spotifyUserId }) as const;
+const spotify = { mode: "spotify", spotifyUserId: "listener-a" } as const;
 
-describe("flagRuleSchema", () => {
-  it("treats a missing or empty value as none", () => {
-    expect(flagRuleSchema.parse(undefined)).toEqual({ kind: "none" });
-    expect(flagRuleSchema.parse("  ")).toEqual({ kind: "none" });
+describe("parseAdminIds", () => {
+  it("reads a trimmed list and ignores empty entries", () => {
+    expect([...parseAdminIds({ ADMIN_SPOTIFY_IDS: " listener-a , ,listener-b" })]).toEqual([
+      "listener-a",
+      "listener-b",
+    ]);
+    expect(parseAdminIds({}).size).toBe(0);
   });
+});
 
-  it("reads all and none case-insensitively", () => {
-    expect(flagRuleSchema.parse("ALL")).toEqual({ kind: "all" });
-    expect(flagRuleSchema.parse("None")).toEqual({ kind: "none" });
-  });
-
-  it("reads a trimmed list of user IDs", () => {
-    expect(flagRuleSchema.parse(" listener-a , ,listener-b")).toEqual({
-      kind: "users",
-      ids: ["listener-a", "listener-b"],
-    });
+describe("knownFlags", () => {
+  it("keeps known flags in their declared order", () => {
+    expect(knownFlags(["playlistWrite", "retired", "stats"])).toEqual([
+      FeatureFlag.Stats,
+      FeatureFlag.PlaylistWrite,
+    ]);
   });
 });
 
 describe("enabledFlags", () => {
-  const rules = parseFlagRules({ FEATURE_STATS: "listener-a", FEATURE_AI: "all" });
-
   it("enables every flag in demo mode", () => {
-    expect([...enabledFlags({ mode: "demo" }, rules)]).toEqual(Object.values(FeatureFlag));
+    expect([...enabledFlags({ mode: "demo" }, { admin: false, granted: [] })]).toEqual(
+      Object.values(FeatureFlag),
+    );
   });
 
-  it("applies each flag's rule in Spotify mode", () => {
-    const forA = enabledFlags(spotify("listener-a"), rules);
-    expect(forA.has(FeatureFlag.Stats)).toBe(true);
-    expect(forA.has(FeatureFlag.Ai)).toBe(true);
-    expect(forA.has(FeatureFlag.PlaylistWrite)).toBe(false);
+  it("enables every flag for admins", () => {
+    expect(enabledFlags(spotify, { admin: true, granted: [] }).size).toBe(3);
+  });
 
-    const forB = enabledFlags(spotify("listener-b"), rules);
-    expect(forB.has(FeatureFlag.Stats)).toBe(false);
-    expect(forB.has(FeatureFlag.Ai)).toBe(true);
+  it("enables only granted flags for everyone else", () => {
+    const flags = enabledFlags(spotify, { admin: false, granted: [FeatureFlag.Ai] });
+    expect([...flags]).toEqual([FeatureFlag.Ai]);
   });
 });
