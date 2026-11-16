@@ -1,41 +1,39 @@
-import { createAnthropic } from "@ai-sdk/anthropic";
-import { createGoogle } from "@ai-sdk/google";
-import type { LanguageModel } from "ai";
-import { match } from "ts-pattern";
+import { createGoogle, type GoogleLanguageModelOptions } from "@ai-sdk/google";
+import { APICallError, generateText, LoadAPIKeyError, Output, RetryError } from "ai";
 import { z } from "zod";
 
-/** Model providers the app can talk to through the Vercel AI SDK. Google is the default. */
-export const AiProvider = {
-  Google: "google",
-  Anthropic: "anthropic",
+/**
+ * The AI gateway: the only module that knows the vendor SDK and model IDs. Features
+ * pass their input, a Zod output schema and a tier, and get validated data back.
+ */
+
+/** What a model call is for. Each tier maps to one Gemini model below. */
+export const AiTier = {
+  /** Extraction, summaries, simple recommendations and cheap structured JSON. */
+  Light: "light",
 } as const;
-export type AiProvider = (typeof AiProvider)[keyof typeof AiProvider];
+export type AiTier = (typeof AiTier)[keyof typeof AiTier];
 
 /**
- * The model each provider uses. Part of the code, not the environment, so a change is
- * reviewed and versioned like any other.
- * - google: gemini-4-hydrogen, Google's fast and efficient Gemini 4 model, available on
- *   the free tier (checked against Google's model and pricing pages on 2026-11-15).
- *   gemini-3.8-flash is the stable fallback if it misbehaves.
- * - anthropic: claude-sonnet-5-5; claude-haiku-5-5 is the cheaper option.
+ * The Gemini model and thinking level per tier. Part of the code, not the
+ * environment, so a change is reviewed and versioned like any other.
+ * - light: gemini-3.5-flash-lite with low thinking, enough for Discover suggestions.
  */
-export const aiModels = {
-  google: "gemini-4-hydrogen",
-  anthropic: "claude-sonnet-5-5",
-} as const satisfies Record<AiProvider, string>;
+export const tierModels = {
+  light: { modelId: "gemini-3.5-flash-lite", thinkingLevel: "low" },
+} as const satisfies Record<
+  AiTier,
+  {
+    modelId: string;
+    thinkingLevel: NonNullable<GoogleLanguageModelOptions["thinkingConfig"]>["thinkingLevel"];
+  }
+>;
 
 const emptyToUndefined = (value: unknown) =>
   typeof value === "string" && value.trim() === "" ? undefined : value;
 
-const optionalText = z.preprocess(emptyToUndefined, z.string().trim().optional());
-
 export const aiEnvSchema = z.object({
-  AI_PROVIDER: z.preprocess(
-    (value) => (typeof value === "string" ? emptyToUndefined(value.trim().toLowerCase()) : value),
-    z.enum(AiProvider).default(AiProvider.Google),
-  ),
-  GOOGLE_GENERATIVE_AI_API_KEY: optionalText,
-  ANTHROPIC_API_KEY: optionalText,
+  GOOGLE_GENERATIVE_AI_API_KEY: z.preprocess(emptyToUndefined, z.string().trim().optional()),
   DEMO_LIVE_AI: z.preprocess(
     (value) => (typeof value === "string" ? value.trim().toLowerCase() : value),
     z.enum(["true", "false", ""]).optional(),
@@ -43,9 +41,7 @@ export const aiEnvSchema = z.object({
 });
 
 export type AiConfig = {
-  provider: AiProvider;
-  modelId: string;
-  /** Null when the provider's key is missing: callers show a "not configured" state. */
+  /** Null when the Gemini key is missing: callers show a "not configured" state. */
   apiKey: string | null;
   /** Whether demo visitors get real model calls instead of pre-generated answers. */
   demoLiveAi: boolean;
@@ -54,32 +50,82 @@ export type AiConfig = {
 /** Reads and validates the AI settings from an environment object such as `process.env`. */
 export function readAiConfig(env: Record<string, string | undefined>): AiConfig {
   const parsed = aiEnvSchema.parse(env);
-  const apiKey = match(parsed.AI_PROVIDER)
-    .with(AiProvider.Google, () => parsed.GOOGLE_GENERATIVE_AI_API_KEY)
-    .with(AiProvider.Anthropic, () => parsed.ANTHROPIC_API_KEY)
-    .exhaustive();
   return {
-    provider: parsed.AI_PROVIDER,
-    modelId: aiModels[parsed.AI_PROVIDER],
-    apiKey: apiKey ?? null,
+    apiKey: parsed.GOOGLE_GENERATIVE_AI_API_KEY ?? null,
     demoLiveAi: parsed.DEMO_LIVE_AI === "true",
   };
 }
 
-/** Thrown when the selected provider has no API key. */
+/** Thrown when the Gemini API key is missing. */
 export class AiNotConfiguredError extends Error {
-  constructor(provider: AiProvider) {
-    super(`No API key configured for the ${provider} AI provider`);
+  constructor() {
+    super("No Gemini API key configured");
     this.name = "AiNotConfiguredError";
   }
 }
 
-/** The language model for the configured provider. Throws AiNotConfiguredError without a key. */
-export function languageModel(config: AiConfig): LanguageModel {
+/** Asks a tier's model for a list of items, each validated by `element`. */
+export async function generateList<T>(
+  config: AiConfig,
+  input: {
+    tier: AiTier;
+    system: string;
+    prompt: string;
+    element: z.ZodType<T>;
+    /** Name and description of the list, which guide the model. */
+    name: string;
+    description: string;
+    timeoutMs: number;
+  },
+): Promise<T[]> {
   const { apiKey } = config;
-  if (!apiKey) throw new AiNotConfiguredError(config.provider);
-  return match(config.provider)
-    .with(AiProvider.Google, () => createGoogle({ apiKey })(config.modelId))
-    .with(AiProvider.Anthropic, () => createAnthropic({ apiKey })(config.modelId))
-    .exhaustive();
+  if (!apiKey) throw new AiNotConfiguredError();
+  const { modelId, thinkingLevel } = tierModels[input.tier];
+  const { output } = await generateText({
+    model: createGoogle({ apiKey })(modelId),
+    system: input.system,
+    prompt: input.prompt,
+    output: Output.array({
+      element: input.element,
+      name: input.name,
+      description: input.description,
+    }),
+    providerOptions: {
+      google: { thinkingConfig: { thinkingLevel } } satisfies GoogleLanguageModelOptions,
+    },
+    maxRetries: 1,
+    abortSignal: AbortSignal.timeout(input.timeoutMs),
+  });
+  // Output.array already validated each element; parse again so nothing unchecked leaves here.
+  return input.element.array().parse(output);
+}
+
+/** Why a model call failed, in terms a feature can explain. */
+export const AiFailure = {
+  /** No key, or the key was refused. */
+  NotConfigured: "notConfigured",
+  Timeout: "timeout",
+  /** Anything else the provider or the network threw. */
+  Provider: "provider",
+} as const;
+export type AiFailure = (typeof AiFailure)[keyof typeof AiFailure];
+
+const timeoutStatus = new Set([408, 504]);
+
+/** Maps anything a model call can throw to a failure kind. */
+export function aiFailureOf(error: unknown): AiFailure {
+  if (RetryError.isInstance(error)) return aiFailureOf(error.lastError);
+  if (error instanceof AiNotConfiguredError || LoadAPIKeyError.isInstance(error)) {
+    return AiFailure.NotConfigured;
+  }
+  if (error instanceof Error && (error.name === "TimeoutError" || error.name === "AbortError")) {
+    return AiFailure.Timeout;
+  }
+  if (APICallError.isInstance(error)) {
+    if (error.statusCode !== undefined && timeoutStatus.has(error.statusCode)) {
+      return AiFailure.Timeout;
+    }
+    if (error.statusCode === 401 || error.statusCode === 403) return AiFailure.NotConfigured;
+  }
+  return AiFailure.Provider;
 }

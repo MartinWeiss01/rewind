@@ -1,51 +1,95 @@
+import { APICallError, RetryError } from "ai";
 import { describe, expect, it } from "vitest";
-import { AiNotConfiguredError, AiProvider, aiModels, languageModel, readAiConfig } from "./ai";
+import { z } from "zod";
+import {
+  AiFailure,
+  AiNotConfiguredError,
+  AiTier,
+  aiFailureOf,
+  generateList,
+  readAiConfig,
+  tierModels,
+} from "./ai";
 
 describe("readAiConfig", () => {
-  it("defaults to Google and its default model", () => {
-    const config = readAiConfig({ GOOGLE_GENERATIVE_AI_API_KEY: "test-key" });
-    expect(config).toEqual({
-      provider: AiProvider.Google,
-      modelId: aiModels.google,
+  it("reads the Gemini key", () => {
+    expect(readAiConfig({ GOOGLE_GENERATIVE_AI_API_KEY: "test-key" })).toEqual({
       apiKey: "test-key",
       demoLiveAi: false,
     });
   });
 
   it("treats empty values as unset", () => {
-    const config = readAiConfig({ AI_PROVIDER: "", DEMO_LIVE_AI: "" });
-    expect(config.provider).toBe(AiProvider.Google);
-    expect(config.modelId).toBe(aiModels.google);
-    expect(config.apiKey).toBeNull();
-  });
-
-  it("reads the Anthropic provider and live demo AI", () => {
-    const config = readAiConfig({
-      AI_PROVIDER: "Anthropic",
-      ANTHROPIC_API_KEY: "test-anthropic-key",
-      GOOGLE_GENERATIVE_AI_API_KEY: "unused",
-      DEMO_LIVE_AI: "true",
-    });
-    expect(config).toEqual({
-      provider: AiProvider.Anthropic,
-      modelId: aiModels.anthropic,
-      apiKey: "test-anthropic-key",
-      demoLiveAi: true,
+    expect(readAiConfig({ GOOGLE_GENERATIVE_AI_API_KEY: " ", DEMO_LIVE_AI: "" })).toEqual({
+      apiKey: null,
+      demoLiveAi: false,
     });
   });
 
-  it("rejects an unknown provider", () => {
-    expect(() => readAiConfig({ AI_PROVIDER: "somewhere" })).toThrow();
+  it("enables live demo AI only for true", () => {
+    expect(readAiConfig({ DEMO_LIVE_AI: "TRUE" }).demoLiveAi).toBe(true);
+    expect(() => readAiConfig({ DEMO_LIVE_AI: "yes" })).toThrow();
   });
 });
 
-describe("languageModel", () => {
-  it("throws a not-configured error without a key", () => {
-    expect(() => languageModel(readAiConfig({}))).toThrow(AiNotConfiguredError);
+describe("tierModels", () => {
+  it("uses Flash Lite with low thinking for the light tier", () => {
+    expect(tierModels[AiTier.Light]).toEqual({
+      modelId: "gemini-3.5-flash-lite",
+      thinkingLevel: "low",
+    });
+  });
+});
+
+describe("generateList", () => {
+  it("refuses to call a model without a key", async () => {
+    await expect(
+      generateList(readAiConfig({}), {
+        tier: AiTier.Light,
+        system: "",
+        prompt: "",
+        element: z.string(),
+        name: "items",
+        description: "",
+        timeoutMs: 1000,
+      }),
+    ).rejects.toThrow(AiNotConfiguredError);
+  });
+});
+
+const apiError = (statusCode: number) =>
+  new APICallError({
+    message: "failed",
+    url: "https://example.test",
+    requestBodyValues: {},
+    statusCode,
   });
 
-  it("creates a model without calling it", () => {
-    const model = languageModel(readAiConfig({ GOOGLE_GENERATIVE_AI_API_KEY: "test-key" }));
-    expect(typeof model).toBe("object");
+describe("aiFailureOf", () => {
+  it("recognises a missing or refused key", () => {
+    expect(aiFailureOf(new AiNotConfiguredError())).toBe(AiFailure.NotConfigured);
+    expect(aiFailureOf(apiError(401))).toBe(AiFailure.NotConfigured);
+    expect(aiFailureOf(apiError(403))).toBe(AiFailure.NotConfigured);
+  });
+
+  it("recognises timeouts", () => {
+    const timeout = new Error("The operation timed out");
+    timeout.name = "TimeoutError";
+    expect(aiFailureOf(timeout)).toBe(AiFailure.Timeout);
+    expect(aiFailureOf(apiError(504))).toBe(AiFailure.Timeout);
+  });
+
+  it("unwraps retry errors", () => {
+    const error = new RetryError({
+      message: "gave up",
+      reason: "maxRetriesExceeded",
+      errors: [apiError(500), apiError(408)],
+    });
+    expect(aiFailureOf(error)).toBe(AiFailure.Timeout);
+  });
+
+  it("treats anything else as a provider error", () => {
+    expect(aiFailureOf(apiError(500))).toBe(AiFailure.Provider);
+    expect(aiFailureOf(new Error("boom"))).toBe(AiFailure.Provider);
   });
 });
