@@ -53,7 +53,7 @@ English for code, comments, docs, commit messages, PRs and UI copy.
 
 Next.js (App Router), TypeScript, Tailwind CSS, ui-sdk, next-intl, ts-pattern, Zod v4, TanStack Query, TanStack Table, Recharts, Supabase, Vercel AI SDK, Vitest, Playwright, Biome. Package manager: pnpm.
 
-AI runs through the Vercel AI SDK; the provider is chosen by env (`AI_PROVIDER`) and each provider's model is set in code (`src/server/ai.ts`); Google (Gemini API key) is the default and must always work.
+AI runs on Google Gemini through the Vercel AI SDK and only through the gateway in `src/server/ai.ts`: features pass their input, a Zod output schema and a model tier, never a vendor SDK or model ID. Model IDs per tier are constants there, never in env; `.env` holds only the Gemini API key.
 
 **ui-sdk** (`@ui-sdk/react`, `@ui-sdk/core`) is the base for every interactive element. Before using it, follow the `ui-sdk` skill if installed and read `node_modules/@ui-sdk/react/docs/llms.txt`; to build a new component also search `node_modules/@ui-sdk/react/docs/core.md` by heading and read `rendering.md` next to it. The shipped docs win over memory. If ui-sdk has no fitting component or behavior, stop and tell the owner what you would use instead, what it is built on and why, before adding it. Accepted exceptions (tables, charts, skeletons) are listed in [ADR 0001](docs/adr/0001-libraries-outside-ui-sdk.md).
 
@@ -82,6 +82,7 @@ Summary; full rules in [`docs/contributing/git-workflow.md`](docs/contributing/g
 | Build or change a UI component | ui-sdk docs in `node_modules/@ui-sdk/react/docs/` (see Stack) |
 | Call a Spotify endpoint | the official Web API reference; record the endpoint in the Spotify integration doc once it exists |
 | Add a library outside ui-sdk | [`docs/adr/0001-libraries-outside-ui-sdk.md`](docs/adr/0001-libraries-outside-ui-sdk.md) |
+| Call a model or add an AI feature | [`docs/adr/0007-ai-gateway.md`](docs/adr/0007-ai-gateway.md) |
 | Read or change data, add a statistic | [`docs/adr/0006-data-sources-and-demo.md`](docs/adr/0006-data-sources-and-demo.md) |
 | Add a route or screen | [`docs/adr/0003-app-router-conventions.md`](docs/adr/0003-app-router-conventions.md) |
 | Add UI copy | [`docs/adr/0002-internationalization-next-intl.md`](docs/adr/0002-internationalization-next-intl.md) |
