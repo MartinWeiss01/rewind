@@ -23,7 +23,7 @@ import { WriteOutcome } from "./write-outcome";
 
 const dotColor = (kind: ChangeKind | null) =>
   match(kind)
-    .with(ChangeKind.RemoveDuplicates, () => "bg-coral")
+    .with(ChangeKind.RemoveDuplicates, ChangeKind.RemoveMatches, () => "bg-coral")
     .with(ChangeKind.Sort, () => "bg-violet")
     .with(ChangeKind.Merge, () => "bg-mint")
     .with(ChangeKind.Restore, () => "bg-butter")

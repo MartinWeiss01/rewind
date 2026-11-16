@@ -6,6 +6,10 @@
       "label": "Odebrat duplicity",
       "hint": "Najde přesné i podobné shody, nejdřív náhled"
     },
+    "compare": {
+      "label": "Porovnat s jiným playlistem",
+      "hint": "Najde společné skladby a odebere je z jednoho z nich"
+    },
     "merge": {
       "label": "Sloučit do tohoto playlistu",
       "hint": "Přidá skladby z jiných playlistů"
@@ -131,6 +135,33 @@
     "removing": "Odebírám…",
     "done": "{count, plural, one {Odebrána # duplicita} few {Odebrány # duplicity} other {Odebráno # duplicit}}."
   },
+  "compare": {
+    "title": "Porovnat s jiným playlistem",
+    "description": "Najde skladby, které má {name} společné s jiným playlistem, a umožní je z jednoho z nich odebrat.",
+    "with": "Porovnat s",
+    "pick": "Vyber playlist",
+    "pickTitle": "Vyber playlist k porovnání",
+    "pickBody": "Tady se ukážou skladby, které mají oba playlisty, i s tím, jak moc se shodují.",
+    "loading": "Načítám playlist",
+    "errorTitle": "Playlist se nepodařilo načíst",
+    "errorBody": "Spotify neodpověděl. Zkus to za chvíli znovu.",
+    "retry": "Zkusit znovu",
+    "emptyTitle": "Při téhle přísnosti nemají nic společného",
+    "emptyBody": "Zkus volnější shodu, ta zachytí i remastery a jiná vydání.",
+    "removeFrom": "Vybrané shody odebrat z",
+    "readOnly": "Tento playlist je jen pro čtení, skladby z něj odebrat nejde.",
+    "selectAll": "Vybrat vše",
+    "selectNone": "Zrušit výběr",
+    "snapshotNote": "Nejdřív se uloží snímek měněného playlistu. Změnu vrátíš v jeho Historii a zpět.",
+    "cancel": "Zrušit",
+    "submit": "{count, plural, =0 {Odebrat} one {Odebrat # skladbu} few {Odebrat # skladby} other {Odebrat # skladeb}}",
+    "removing": "Odebírám…",
+    "done": "Z playlistu {name} {count, plural, one {odebrána # skladba} few {odebrány # skladby} other {odebráno # skladeb}}.",
+    "found": "{count, plural, one {# skladba z playlistu {name} je i v playlistu {other}} few {# skladby z playlistu {name} jsou i v playlistu {other}} other {# skladeb z playlistu {name} je i v playlistu {other}}}",
+    "selected": "vybráno {count}",
+    "listLabel": "Skladby k odebrání z playlistu {name}",
+    "alsoIn": "I v playlistu {name}: {title} — {details}"
+  },
   "sort": {
     "title": "Seřadit playlist",
     "by": "Řadit podle",
@@ -187,6 +218,7 @@
     "emptyBody": "Hromadné změny jako odebrání duplicit nebo řazení sem nejdřív uloží snímek.",
     "kind": {
       "edit": "{count, plural, =0 {Změněno pořadí} one {Odebrána # skladba} few {Odebrány # skladby} other {Odebráno # skladeb}}",
+      "removeMatches": "{count, plural, one {Odebrána # skladba, kterou má} few {Odebrány # skladby, které má} other {Odebráno # skladeb, které má}} i jiný playlist",
       "removeDuplicates": "{count, plural, one {Odebrána # duplicita} few {Odebrány # duplicity} other {Odebráno # duplicit}}",
       "sort": "{count, plural, one {Seřazena # skladba} few {Seřazeny # skladby} other {Seřazeno # skladeb}}",
       "merge": "{count, plural, one {Přisloučena # skladba} few {Přisloučeny # skladby} other {Přisloučeno # skladeb}}",

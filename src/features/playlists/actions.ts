@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 import type { Track } from "@/domain/music";
-import type { PlaylistDetail } from "@/domain/playlists";
+import type { PlaylistDetail, PlaylistItem } from "@/domain/playlists";
 import { FeatureFlag } from "@/server/feature-flags";
 import { getRequestContext, type RequestContext } from "@/server/request-context";
 import {
@@ -75,7 +75,12 @@ const applyEditSchema = z.object({
   /** The playlist version the client edited, to refuse edits on a stale list. */
   basedOn: z.string().max(200),
   trackIds: trackIdsSchema,
-  kind: z.enum([ChangeKind.Edit, ChangeKind.RemoveDuplicates, ChangeKind.Sort]),
+  kind: z.enum([
+    ChangeKind.Edit,
+    ChangeKind.RemoveDuplicates,
+    ChangeKind.RemoveMatches,
+    ChangeKind.Sort,
+  ]),
 });
 
 /**
@@ -199,6 +204,33 @@ export async function searchTracksAction(query: unknown): Promise<readonly Track
   if (!parsed.success || parsed.data.length === 0) return [];
   const { source } = await getRequestContext();
   return (await source.searchTracks(parsed.data)).slice(0, 10);
+}
+
+/* ---------- Compare ---------- */
+
+/** Another playlist's items for the compare dialog, or why they can't be read. */
+export type ComparePlaylist =
+  | {
+      status: "ok";
+      playlist: Pick<PlaylistDetail, "id" | "name" | "snapshotId" | "editable" | "hiddenItems"> & {
+        items: readonly PlaylistItem[];
+      };
+    }
+  | { status: "error"; error: WriteError };
+
+/** Loads the playlist to compare with. Read-only, so it needs no write flag. */
+export async function comparePlaylistAction(id: unknown): Promise<ComparePlaylist> {
+  const parsed = idSchema.safeParse(id);
+  if (!parsed.success) return { status: "error", error: WriteError.Invalid };
+  const { source } = await getRequestContext();
+  const playlist = await source.getPlaylist(parsed.data);
+  if (!playlist) return { status: "error", error: WriteError.NotFound };
+  if (!playlist.items) return { status: "error", error: WriteError.ReadOnly };
+  const { name, snapshotId, editable, hiddenItems, items } = playlist;
+  return {
+    status: "ok",
+    playlist: { id: playlist.id, name, snapshotId, editable, hiddenItems, items },
+  };
 }
 
 /* ---------- Merge ---------- */
