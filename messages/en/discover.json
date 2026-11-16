@@ -58,7 +58,7 @@
     "finish": "Applying your filters and saving"
   },
   "results": {
-    "heading": "{count, plural, one {# track} other {# tracks}} for {title}",
+    "heading": "{count, plural, one {# track} other {# tracks}} · {title}",
     "summary": "Matched {matched} of {asked} · removed tracks don't get saved",
     "filtered": "{count, plural, one {# match was} other {# matches were}} left out by your filters.",
     "reopened": "An earlier run. Reasons aren't kept for earlier runs.",
