@@ -85,10 +85,19 @@ export function RunResults({
   const add = useMutation({
     mutationFn: async (playlistId: string) =>
       unwrapResult(await addToPlaylist({ playlistId, trackIds })),
-    onSuccess: (playlist) =>
+    onSuccess: (result) =>
       setNotice({
         tone: "info",
-        text: t("added", { count: trackIds.length, name: playlist.name }),
+        text:
+          result.added === 0
+            ? t("allPresent", { name: result.name })
+            : result.skipped > 0
+              ? t("addedSkipped", {
+                  count: result.added,
+                  skipped: result.skipped,
+                  name: result.name,
+                })
+              : t("added", { count: result.added, name: result.name }),
       }),
     onError: failed,
     onSettled: playlistsChanged,

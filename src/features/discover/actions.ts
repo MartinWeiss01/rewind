@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 
 import { getLocale, getTranslations } from "next-intl/server";
@@ -9,6 +10,7 @@ import { DataMode } from "@/data/music-data-source";
 import { buildCatalog, type Catalog } from "@/demo/catalog";
 import { persona } from "@/demo/persona";
 import { intervalFor, TimeRange } from "@/domain/time-range";
+import { planMerge } from "@/features/playlists/tools";
 import { readAiConfig } from "@/server/ai";
 import { sha256 } from "@/server/crypto";
 import { FeatureFlag } from "@/server/feature-flags";
@@ -332,6 +334,7 @@ export async function saveAsPlaylist(
       { name: parsed.data.name, description: "", isPublic: false },
       parsed.data.trackIds,
     );
+    playlistsChanged();
     return ok({ id: created.id, name: created.name });
   } catch (error) {
     console.error("Discover: creating the playlist failed", error);
@@ -344,7 +347,16 @@ const addInputSchema = z.object({
   trackIds: trackIdsSchema,
 });
 
-export async function addToPlaylist(input: unknown): Promise<ActionResult<{ name: string }>> {
+/** The playlist pickers here and the playlist screens list playlists rendered on the server. */
+function playlistsChanged() {
+  revalidatePath("/app/discover");
+  revalidatePath("/app/playlists", "layout");
+}
+
+/** Appends the suggestions a playlist doesn't have yet. */
+export async function addToPlaylist(
+  input: unknown,
+): Promise<ActionResult<{ name: string; added: number; skipped: number }>> {
   const parsed = addInputSchema.safeParse(input);
   if (!parsed.success) return fail(DiscoverError.Invalid);
   const access = await contextWith(FeatureFlag.Ai, FeatureFlag.PlaylistWrite);
@@ -353,9 +365,13 @@ export async function addToPlaylist(input: unknown): Promise<ActionResult<{ name
   const playlist = await source.getPlaylist(parsed.data.playlistId);
   if (!playlist) return fail(DiscoverError.PlaylistMissing);
   if (!playlist.editable) return fail(DiscoverError.Forbidden);
+  const existing = (playlist.items ?? []).map((item) => item.track.id);
+  const plan = planMerge(existing, [parsed.data.trackIds], true);
+  if (plan.added.length === 0) return ok({ name: playlist.name, added: 0, skipped: plan.skipped });
   try {
-    await source.addPlaylistItems(playlist.id, parsed.data.trackIds);
-    return ok({ name: playlist.name });
+    await source.addPlaylistItems(playlist.id, plan.added);
+    playlistsChanged();
+    return ok({ name: playlist.name, added: plan.added.length, skipped: plan.skipped });
   } catch (error) {
     console.error("Discover: adding to the playlist failed", error);
     return fail(DiscoverError.Unknown);

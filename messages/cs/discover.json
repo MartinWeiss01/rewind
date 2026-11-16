@@ -78,10 +78,12 @@
     "allRemovedBody": "Odebral(a) jsi všechna doporučení. Vygeneruj nová.",
     "saved": "Uloženo jako „{name}“.",
     "added": "{count, plural, one {Přidána # skladba} few {Přidány # skladby} other {Přidáno # skladeb}} do „{name}“.",
+    "addedSkipped": "{count, plural, one {Přidána # skladba} few {Přidány # skladby} other {Přidáno # skladeb}} do „{name}“, {skipped, plural, one {# už tam byla} few {# už tam byly} other {# už tam bylo}}.",
+    "allPresent": "Všechny tyto skladby už v „{name}“ jsou.",
     "writeFailed": "To se nepovedlo. Zkus to znovu.",
     "saveDialog": {
       "title": "Uložit jako nový playlist",
-      "description": "Vytvoří soukromý playlist {count, plural, one {s # skladbou} few {s # skladbami} other {s # skladbami}} z tohoto seznamu.",
+      "description": "Vytvoří ve tvé knihovně Spotify nový playlist {count, plural, one {s # skladbou} few {s # skladbami} other {s # skladbami}} z tohoto seznamu.",
       "nameLabel": "Název",
       "cancel": "Zrušit",
       "confirm": "Uložit playlist",

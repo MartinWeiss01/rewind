@@ -78,10 +78,12 @@
     "allRemovedBody": "You removed every suggestion. Regenerate to get new ones.",
     "saved": "Saved as “{name}”.",
     "added": "Added {count, plural, one {# track} other {# tracks}} to “{name}”.",
+    "addedSkipped": "Added {count, plural, one {# track} other {# tracks}} to “{name}”; {skipped, plural, one {# was} other {# were}} already there.",
+    "allPresent": "Every track here is already in “{name}”.",
     "writeFailed": "That didn't work. Try again.",
     "saveDialog": {
       "title": "Save as new playlist",
-      "description": "Creates a private playlist with the {count, plural, one {# track} other {# tracks}} in this list.",
+      "description": "Creates a new playlist in your Spotify library with the {count, plural, one {# track} other {# tracks}} in this list.",
       "nameLabel": "Name",
       "cancel": "Cancel",
       "confirm": "Save playlist",

@@ -176,6 +176,12 @@ export function createSpotifyDataSource({ db, user, accessToken }: Context): Mus
     return { items, hidden };
   };
 
+  /**
+   * Drops a playlist's cached detail after a write. Spotify can return the old snapshot
+   * id for a moment after a change, which would otherwise keep serving the old items.
+   */
+  const forgetDetail = (id: string) => detailCache.delete(`${userId}:${id}`);
+
   const writeItems = async (id: string, trackIds: readonly string[], replace: boolean) => {
     const uris = trackIds.map(trackUri);
     const [first = [], ...rest] = chunk(uris, 100);
@@ -491,18 +497,22 @@ export function createSpotifyDataSource({ db, user, accessToken }: Context): Mus
       return { ...summary, trackCount: trackIds.length };
     },
     async updatePlaylistDetails(id, input) {
+      forgetDetail(id);
       await call(`/playlists/${encodeURIComponent(id)}`, ChangePlaylistDetailsResponse, {
         method: "PUT",
         body: { name: input.name, description: input.description, public: input.isPublic },
       });
     },
     async replacePlaylistItems(id, trackIds) {
+      forgetDetail(id);
       await writeItems(encodeURIComponent(id), trackIds, true);
     },
     async addPlaylistItems(id, trackIds) {
+      forgetDetail(id);
       await writeItems(encodeURIComponent(id), trackIds, false);
     },
     async removePlaylist(id) {
+      forgetDetail(id);
       await call(`/playlists/${encodeURIComponent(id)}/followers`, UnfollowPlaylistResponse, {
         method: "DELETE",
       });
