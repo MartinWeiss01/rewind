@@ -85,6 +85,15 @@ export function TrackTable({
   const initialOrder = useMemo(() => items.map((i) => i.key), [items]);
   const [order, setOrder] = useState<string[]>(initialOrder);
   const [selected, setSelected] = useState<string[]>([]);
+  // New items from the server (after a write) start a fresh edit. The `key` on the
+  // snapshot id isn't enough: right after a change Spotify can still report the old
+  // snapshot id while already returning the new items, whose keys hold their positions.
+  const [shownOrder, setShownOrder] = useState(initialOrder);
+  if (shownOrder !== initialOrder) {
+    setShownOrder(initialOrder);
+    setOrder(initialOrder);
+    setSelected([]);
+  }
   const write = usePlaylistWrite(applyEditAction);
   const saving = write.isPending;
 
