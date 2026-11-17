@@ -14,9 +14,12 @@ const loginSchema = z
 const repositoryUrl = "https://github.com/MartinWeiss01/rewind";
 
 const features = [
-  { key: "tools", tint: "bg-coral-soft" },
-  { key: "ai", tint: "bg-butter-soft" },
-  { key: "demo", tint: "bg-mint-soft" },
+  { key: "stats", tint: "bg-violet-soft" },
+  { key: "recap", tint: "bg-coral-soft" },
+  { key: "history", tint: "bg-butter-soft" },
+  { key: "tools", tint: "bg-mint-soft" },
+  { key: "ai", tint: "bg-violet-soft" },
+  { key: "demo", tint: "bg-coral-soft" },
 ] as const;
 
 export default async function LandingPage({ searchParams }: PageProps<"/">) {

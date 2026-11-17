@@ -1,7 +1,7 @@
 # ADR 0004: Feature flags per account
 
 - Status: accepted
-- Date: 2026-11-15, revised 2026-11-17 (access and admins moved from environment variables to the database)
+- Date: 2026-11-15, revised 2026-11-17 (access and admins moved from environment variables to the database; public pages may describe every feature)
 
 ## Context
 
@@ -17,7 +17,7 @@ The first version kept one environment variable per flag with a list of Spotify 
 - Stored flag names are checked against `FeatureFlag` when read, so adding or retiring a flag needs no migration.
 - Demo mode enables every flag.
 - Enabled flags are resolved server-side once per request, next to the data source, and passed down as a typed set. Pages and server actions check it; hidden navigation alone is never the check. If the grants can't be read, the viewer gets no gated features.
-- Public pages (landing, README) describe what the demo shows and do not advertise flagged features.
+- Public pages (landing, README) describe every feature the demo shows, flagged ones included. The public deployment is demo-only (ADR 0006), where every flag is on; flags only decide who gets a feature with their own data.
 
 ## Consequences
 

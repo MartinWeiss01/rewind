@@ -1,7 +1,7 @@
 {
   "eyebrow": "Play it back",
   "title": "Your music library, tidied up.",
-  "lead": "Playlist tools that clean up years of saving, and AI suggestions built from what you actually play.",
+  "lead": "Listening stats, a recap for any period, playlist tools that clean up years of saving, and AI suggestions built from what you actually play.",
   "loginCancelled": "Sign-in was cancelled. You can keep exploring the demo.",
   "loginForbidden": "This account isn’t on the invite list yet. The demo works without one.",
   "loginFailed": "Sign-in didn’t work. Try again in a moment.",
@@ -9,6 +9,21 @@
   "featuresTitle": "What’s on the tape",
   "sideA": "Side A",
   "features": {
+    "stats": {
+      "title": "Listening stats",
+      "text": "Top tracks, artists and albums, listening time, streaks, an hour-by-day heatmap and how much new music you found.",
+      "tag": "Any period"
+    },
+    "recap": {
+      "title": "Your own recap",
+      "text": "A year-in-review for any stretch of time, not just December. Save it as an image.",
+      "tag": "Any period"
+    },
+    "history": {
+      "title": "Full history",
+      "text": "Import your extended streaming history to look back years, not weeks. Re-importing never counts a play twice.",
+      "tag": "Years back"
+    },
     "tools": {
       "title": "Playlist tools",
       "text": "Find duplicates, merge, sort and split playlists. Preview every change and undo it.",
