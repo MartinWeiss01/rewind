@@ -6,7 +6,7 @@
   "features": {
     "stats": {
       "name": "Statistiky",
-      "desc": "Přehled, historie, recap a počty přehrání ze Spotify dat."
+      "desc": "Přehled, historie, recap a počty přehrání z jejich poslechu."
     },
     "ai": {
       "name": "AI",
@@ -14,12 +14,12 @@
     },
     "playlistWrite": {
       "name": "Úpravy playlistů",
-      "desc": "Úpravy, řazení, slučování a čištění jejich skutečných playlistů na Spotify."
+      "desc": "Úpravy, řazení, slučování a čištění jejich skutečných playlistů."
     }
   },
   "featureCount": "{count, plural, one {# člověk} few {# lidé} other {# lidí}}",
   "people": "Lidé",
-  "spotifyLimit": "Spotify v režimu Development Mode povolí nejvýš 5 lidí",
+  "spotifyLimit": "Vývojový režim povolí nejvýš 5 lidí",
   "columnPerson": "Člověk",
   "columnSeen": "Naposledy",
   "columnActions": "Akce",
@@ -29,7 +29,7 @@
   "switchLabel": "{feature} pro {name}",
   "adminNote": "Admini se nastavují přímo v databázi a mají vždy všechny funkce. Odebrání vezme člověku funkce; jeho data o poslechu zůstanou, dokud je sám nesmaže.",
   "emptyTitle": "Zatím jen ty",
-  "emptyBody": "Přidej někoho podle jeho Spotify user ID. Musí být i v seznamu uživatelů appky ve Spotify Developer Dashboardu.",
+  "emptyBody": "Přidej někoho podle jeho user ID. Musí být i v seznamu uživatelů appky v developer dashboardu streamovací služby.",
   "changes": "Poslední změny",
   "changesEmpty": "Zatím žádné změny.",
   "verb": {
@@ -58,14 +58,14 @@
   "add": {
     "open": "Přidat člověka",
     "title": "Přidat člověka",
-    "id": "Spotify user ID nebo odkaz na profil",
-    "idPlaceholder": "open.spotify.com/user/…",
-    "idHint": "Najdeš ve Spotify v Profil › Sdílet › Kopírovat odkaz.",
-    "idInvalid": "Tohle není Spotify user ID ani odkaz na profil.",
+    "id": "User ID nebo odkaz na profil",
+    "idPlaceholder": "Vlož odkaz na profil",
+    "idHint": "Ve streamovací appce: Profil › Sdílet › Kopírovat odkaz.",
+    "idInvalid": "Tohle není user ID ani odkaz na profil.",
     "note": "Poznámka (nepovinné)",
     "notePlaceholder": "Kdo to je, ať si vzpomeneš",
     "features": "Funkce",
-    "dashboardNote": "Spotify pustí člověka dovnitř až poté, co ho přidáš i do seznamu uživatelů appky v Developer Dashboardu. Rewind to za tebe udělat neumí.",
+    "dashboardNote": "Streamovací služba pustí člověka dovnitř až poté, co ho přidáš i do seznamu uživatelů appky v jejím developer dashboardu. Rewind to za tebe udělat neumí.",
     "cancel": "Zrušit",
     "submit": "Přidat",
     "adding": "Přidávám…"
@@ -84,7 +84,7 @@
     "invalid": "Tahle změna nesedí. Načti stránku znovu a zkus to.",
     "admin": "Admini mají vždy všechny funkce; jejich role se mění v databázi.",
     "failed": "Změna neprošla. Nic se nezměnilo, zkus to znovu.",
-    "invalidId": "Tohle není Spotify user ID ani odkaz na profil."
+    "invalidId": "Tohle není user ID ani odkaz na profil."
   },
   "settingsLink": {
     "title": "Admin",

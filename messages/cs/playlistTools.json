@@ -106,7 +106,7 @@
       "title": "Stejný název"
     },
     "hint": {
-      "exact": "Jen stejná skladba ze Spotify dvakrát.",
+      "exact": "Jen úplně stejná skladba dvakrát.",
       "recording": "Stejný ISRC: stejná nahrávka vydaná na různých albech.",
       "titleAllArtists": "Stejný název i interpreti. Poznámky jako „Remastered“, „Live“ nebo „feat.“ se ignorují.",
       "titleSharedArtist": "Stejný název a aspoň jeden společný interpret. Poznámky jako „Remastered“ se ignorují.",
@@ -144,7 +144,7 @@
     "pickBody": "Tady se ukážou skladby, které mají oba playlisty, i s tím, jak moc se shodují.",
     "loading": "Načítám playlist",
     "errorTitle": "Playlist se nepodařilo načíst",
-    "errorBody": "Spotify neodpověděl. Zkus to za chvíli znovu.",
+    "errorBody": "Hudební služba neodpověděla. Zkus to za chvíli znovu.",
     "retry": "Zkusit znovu",
     "emptyTitle": "Při téhle přísnosti nemají nic společného",
     "emptyBody": "Zkus volnější shodu, ta zachytí i remastery a jiná vydání.",

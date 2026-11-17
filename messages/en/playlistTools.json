@@ -106,7 +106,7 @@
       "title": "Same title"
     },
     "hint": {
-      "exact": "Only the same Spotify track twice.",
+      "exact": "Only the very same track twice.",
       "recording": "Same ISRC: the same recording released on different albums.",
       "titleAllArtists": "Same title and the same artists. Notes like “Remastered”, “Live” or “feat.” are ignored.",
       "titleSharedArtist": "Same title and at least one shared artist. Notes like “Remastered” are ignored.",
@@ -144,7 +144,7 @@
     "pickBody": "Tracks both playlists have show up here, with how closely they match.",
     "loading": "Loading the playlist",
     "errorTitle": "Couldn't load that playlist",
-    "errorBody": "Spotify didn't answer. Try again in a moment.",
+    "errorBody": "The music service didn't answer. Try again in a moment.",
     "retry": "Try again",
     "emptyTitle": "No shared tracks at this strictness",
     "emptyBody": "Try a looser match to catch remasters and alternate releases.",

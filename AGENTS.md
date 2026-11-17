@@ -28,6 +28,8 @@ This repository is public. In every file, commit, branch name, PR and issue:
 
 Secrets live only in `.env*` files outside git; every new variable gets a line in `.env.example`.
 
+UI copy and the README describe the integration without naming the streaming service: "your music service", "your library", "your streaming history". In the UI its name appears only where its terms require it (the attribution footer and "Open in …" links), and only on screens that show its real data. Code, ADRs and technical docs name it where accuracy needs it.
+
 ## Language
 
 English for code, comments, docs, commit messages, PRs and UI copy.

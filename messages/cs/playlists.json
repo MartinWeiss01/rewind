@@ -30,9 +30,9 @@
     "tryDiscover": "Zkusit Objevy",
     "noMatchTitle": "Žádný playlist neodpovídá",
     "noMatchBody": "Zkus jiný název nebo zobraz všechny vlastníky.",
-    "readOnlyNote": "Playlisty, které sleduješ, ale nevlastníš, jsou jen pro čtení. Spotify jejich skladby nesdílí, takže ukazujeme jen podrobnosti.",
+    "readOnlyNote": "Sledované playlisty, které nejsou tvoje, jsou jen pro čtení. Jejich skladby se jiným appkám nesdílejí, takže vidíš jen detaily.",
     "errorTitle": "Playlisty se nepodařilo načíst",
-    "errorBody": "Spotify tentokrát neodpověděl. Historie a statistiky fungují dál."
+    "errorBody": "Hudební služba tentokrát neodpověděla. Historie a statistiky fungují dál."
   },
   "detail": {
     "breadcrumb": "Drobečková navigace",
@@ -44,7 +44,7 @@
     "private": "soukromý",
     "openInSpotify": "Otevřít ve Spotify",
     "readOnlyTitle": "Jen pro čtení.",
-    "readOnlyBody": "Tento playlist patří někomu jinému a Spotify jeho skladby nesdílí, takže tu vidíš jen jeho podrobnosti.",
+    "readOnlyBody": "Tenhle playlist patří někomu jinému a jeho skladby se jiným appkám nesdílejí, takže tu vidíš jen detaily.",
     "followedNote": "Tento playlist sleduješ, takže jeho skladby můžeš číst, ale ne měnit.",
     "emptyTitle": "Playlist je prázdný",
     "emptyBody": "Vyhledej skladby, které chceš přidat, nebo ho naplň doporučeními.",

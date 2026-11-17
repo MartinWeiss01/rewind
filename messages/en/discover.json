@@ -83,7 +83,7 @@
     "writeFailed": "That didn't work. Try again.",
     "saveDialog": {
       "title": "Save as new playlist",
-      "description": "Creates a new playlist in your Spotify library with the {count, plural, one {# track} other {# tracks}} in this list.",
+      "description": "Creates a new playlist in your library with the {count, plural, one {# track} other {# tracks}} in this list.",
       "nameLabel": "Name",
       "cancel": "Cancel",
       "confirm": "Save playlist",

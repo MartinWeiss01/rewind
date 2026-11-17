@@ -6,7 +6,7 @@
   "features": {
     "stats": {
       "name": "Stats",
-      "desc": "Dashboard, history, recap and play counts from Spotify data."
+      "desc": "Dashboard, history, recap and play counts from their listening."
     },
     "ai": {
       "name": "AI",
@@ -14,12 +14,12 @@
     },
     "playlistWrite": {
       "name": "Playlist changes",
-      "desc": "Edit, sort, merge and clean up their real Spotify playlists."
+      "desc": "Edit, sort, merge and clean up their real playlists."
     }
   },
   "featureCount": "{count, plural, one {# person} other {# people}}",
   "people": "People",
-  "spotifyLimit": "Spotify allows up to 5 people in Development Mode",
+  "spotifyLimit": "Development mode allows up to 5 people",
   "columnPerson": "Person",
   "columnSeen": "Last seen",
   "columnActions": "Actions",
@@ -29,7 +29,7 @@
   "switchLabel": "{feature} for {name}",
   "adminNote": "Admins are set in the database and always have every feature. Removing someone takes away their features; their listening data stays until they delete it.",
   "emptyTitle": "Only you so far",
-  "emptyBody": "Add someone by their Spotify user ID. They also need to be on the app’s user list in the Spotify Developer Dashboard.",
+  "emptyBody": "Add someone by their user ID. They also need to be on the app’s user list in the streaming service’s developer dashboard.",
   "changes": "Recent changes",
   "changesEmpty": "No changes yet.",
   "verb": {
@@ -58,14 +58,14 @@
   "add": {
     "open": "Add person",
     "title": "Add a person",
-    "id": "Spotify user ID or profile link",
-    "idPlaceholder": "open.spotify.com/user/…",
-    "idHint": "Found in Spotify under Profile › Share › Copy link.",
-    "idInvalid": "That isn’t a Spotify user ID or profile link.",
+    "id": "User ID or profile link",
+    "idPlaceholder": "Paste a profile link",
+    "idHint": "In the streaming app: Profile › Share › Copy link.",
+    "idInvalid": "That isn’t a user ID or profile link.",
     "note": "Note (optional)",
     "notePlaceholder": "Who is it, so you remember",
     "features": "Features",
-    "dashboardNote": "Spotify only lets people log in once you also add them to the app’s user list in the Developer Dashboard. Rewind can’t do that for you.",
+    "dashboardNote": "The streaming service only lets people sign in once you also add them to the app’s user list in its developer dashboard. Rewind can’t do that for you.",
     "cancel": "Cancel",
     "submit": "Add",
     "adding": "Adding…"
@@ -84,7 +84,7 @@
     "invalid": "That change doesn’t fit. Reload the page and try again.",
     "admin": "Admins always have every feature; their role is changed in the database.",
     "failed": "The change didn’t go through. Nothing changed; try again.",
-    "invalidId": "That isn’t a Spotify user ID or profile link."
+    "invalidId": "That isn’t a user ID or profile link."
   },
   "settingsLink": {
     "title": "Admin",

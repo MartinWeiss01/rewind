@@ -40,7 +40,7 @@
   "import": {
     "open": "Importovat historii",
     "title": "Import rozšířené historie streamování",
-    "howTo": "Požádej o ni ve Spotify → Účet → Nastavení soukromí. Dostaneš ZIP se soubory <file>Streaming_History_Audio_*.json</file>.",
+    "howTo": "Požádej o rozšířenou historii streamování v nastavení soukromí své hudební služby. Dostaneš ZIP se soubory <file>Streaming_History_Audio_*.json</file>.",
     "close": "Zavřít import",
     "dropTitle": "Přetáhni sem soubory JSON nebo je vyber",
     "dropHint": "Klidně víc souborů najednou. Opakovaný import stejného souboru nikdy nevytvoří duplicity.",
@@ -77,7 +77,7 @@
       "notJson": {
         "short": "Není JSON",
         "title": "{name} není soubor JSON",
-        "body": "Nahraj soubory <file>Streaming_History_Audio_*.json</file> ze svého exportu ze Spotify."
+        "body": "Nahraj soubory <file>Streaming_History_Audio_*.json</file> ze svého exportu."
       },
       "notHistory": {
         "short": "Není historie streamování",
@@ -87,7 +87,7 @@
       "tooLarge": {
         "short": "Příliš velký",
         "title": "{name} je příliš velký",
-        "body": "Každý soubor může mít až 30 MB. Soubory <file>Streaming_History_Audio_*.json</file> ze Spotify bývají mnohem menší."
+        "body": "Každý soubor může mít až 30 MB. Soubory <file>Streaming_History_Audio_*.json</file> bývají mnohem menší."
       },
       "empty": {
         "short": "Prázdný soubor",
