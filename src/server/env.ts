@@ -1,5 +1,14 @@
 import { z } from "zod";
 
+/** `true` turns a flag on; anything else, or nothing, leaves it off. */
+export const envFlag = z.preprocess(
+  (value) => (typeof value === "string" ? value.trim().toLowerCase() : value),
+  z
+    .enum(["true", "false", ""])
+    .optional()
+    .transform((value) => value === "true"),
+);
+
 const optional = z
   .string()
   .optional()
@@ -7,6 +16,11 @@ const optional = z
 
 /** Server-side environment, validated on first use. Never import from client components. */
 const serverEnvSchema = z.object({
+  /**
+   * A public portfolio deployment: demo mode only, with no database, Spotify or AI
+   * keys used even if some are set. Visitors' demo changes live in their cookies.
+   */
+  DEMO_ONLY: envFlag,
   APP_URL: z.url().default("http://127.0.0.1:3000"),
   NEXT_PUBLIC_SUPABASE_URL: optional.pipe(z.url().optional()),
   SUPABASE_SECRET_KEY: optional,
@@ -22,8 +36,25 @@ export type ServerEnv = z.infer<typeof serverEnvSchema>;
 let cached: ServerEnv | null = null;
 
 export function serverEnv(): ServerEnv {
-  cached ??= serverEnvSchema.parse(process.env);
+  cached ??= withoutKeysWhenDemoOnly(serverEnvSchema.parse(process.env));
   return cached;
+}
+
+/** In a demo-only deployment no key is used, so nothing real can be reached by mistake. */
+function withoutKeysWhenDemoOnly(env: ServerEnv): ServerEnv {
+  if (!env.DEMO_ONLY) return env;
+  return {
+    DEMO_ONLY: true,
+    APP_URL: env.APP_URL,
+    NEXT_PUBLIC_SUPABASE_URL: undefined,
+    SUPABASE_SECRET_KEY: undefined,
+    SPOTIFY_CLIENT_ID: undefined,
+    SPOTIFY_CLIENT_SECRET: undefined,
+    SPOTIFY_REDIRECT_URI: undefined,
+    AUTH_SECRET: undefined,
+    TOKEN_ENCRYPTION_KEY: undefined,
+    CRON_SECRET: undefined,
+  };
 }
 
 export type SpotifyConfig = {

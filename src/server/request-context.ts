@@ -6,13 +6,10 @@ import type { MusicDataSource } from "@/data/music-data-source";
 import { createSpotifyDataSource } from "@/data/spotify/spotify-data-source";
 import { syncRecentlyPlayed } from "@/data/spotify/sync";
 import { adminDb } from "@/data/supabase/client";
+import { type CookieJar, createCookieDemoSessionStore } from "@/demo/cookie-session-store";
 import { createDbDemoSessionStore } from "@/demo/db-session-store";
 import { persona } from "@/demo/persona";
-import {
-  createMemoryDemoSessionStore,
-  type DemoSessionStore,
-  emptyDemoSessionState,
-} from "@/demo/session-state";
+import { type DemoSessionStore, emptyDemoSessionState } from "@/demo/session-state";
 import { accessFor } from "./access";
 import { accessTokenFor, sessionCookie, userForSession } from "./auth/session";
 import { serverEnv, spotifyConfig } from "./env";
@@ -45,12 +42,11 @@ export type SpotifyAccount = {
 const syncEveryMs = 10 * 60 * 1000;
 const sixMonthsMs = 182 * 24 * 60 * 60 * 1000;
 
-// Process-local fallback when no database is configured (development without Supabase).
-const globalStore = globalThis as typeof globalThis & { rewindDemoStore?: DemoSessionStore };
-globalStore.rewindDemoStore ??= createMemoryDemoSessionStore();
-const memoryStore: DemoSessionStore = globalStore.rewindDemoStore;
-
-function demoStore(): DemoSessionStore {
+/**
+ * Where the visitor's demo sandbox lives: the database when one is configured,
+ * otherwise their own cookies (a demo-only deployment has no database).
+ */
+function demoStore(cookieStore: CookieJar): DemoSessionStore {
   const env = serverEnv();
   return env.NEXT_PUBLIC_SUPABASE_URL && env.SUPABASE_SECRET_KEY
     ? createDbDemoSessionStore(
@@ -59,7 +55,9 @@ function demoStore(): DemoSessionStore {
           supabaseSecretKey: env.SUPABASE_SECRET_KEY,
         }),
       )
-    : memoryStore;
+    : createCookieDemoSessionStore(cookieStore, {
+        secure: process.env.NODE_ENV === "production",
+      });
 }
 
 /**
@@ -119,7 +117,7 @@ export const getRequestContext = cache(async (): Promise<RequestContext> => {
     }
   }
 
-  const store = demoStore();
+  const store = demoStore(cookieStore);
   const viewer: Viewer = { mode: "demo" };
   const existingId = cookieStore.get(demoSessionCookie)?.value;
   const state =
@@ -157,6 +155,7 @@ export const getRequestContext = cache(async (): Promise<RequestContext> => {
 export async function resetDemoSession(): Promise<void> {
   const cookieStore = await cookies();
   const id = cookieStore.get(demoSessionCookie)?.value;
-  if (id) await demoStore().remove(id);
+  // The cookie store needs no ID: it always clears the visitor's sandbox.
+  await demoStore(cookieStore).remove(id ?? "");
   cookieStore.delete(demoSessionCookie);
 }

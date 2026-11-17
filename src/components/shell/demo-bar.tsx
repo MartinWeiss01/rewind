@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { SpotifyLoginLink } from "@/components/auth/spotify-login-link";
 import { buttonClass } from "@/components/ui/styles";
+import { spotifyConfig } from "@/server/env";
 
 export async function DemoBar() {
   const t = await getTranslations("shell");
@@ -10,9 +11,11 @@ export async function DemoBar() {
         {t("demo")}
       </span>
       <span>{t("demoNotice")}</span>
-      <SpotifyLoginLink className={buttonClass("primary", "sm")}>
-        {t("useMySpotify")}
-      </SpotifyLoginLink>
+      {spotifyConfig() ? (
+        <SpotifyLoginLink className={buttonClass("primary", "sm")}>
+          {t("useMySpotify")}
+        </SpotifyLoginLink>
+      ) : null}
     </div>
   );
 }

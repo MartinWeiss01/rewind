@@ -1,6 +1,7 @@
 import { createGoogle, type GoogleLanguageModelOptions } from "@ai-sdk/google";
 import { APICallError, generateText, LoadAPIKeyError, Output, RetryError } from "ai";
 import { z } from "zod";
+import { envFlag } from "./env";
 
 /**
  * The AI gateway: the only module that knows the vendor SDK and model IDs. Features
@@ -34,10 +35,8 @@ const emptyToUndefined = (value: unknown) =>
 
 export const aiEnvSchema = z.object({
   GOOGLE_GENERATIVE_AI_API_KEY: z.preprocess(emptyToUndefined, z.string().trim().optional()),
-  DEMO_LIVE_AI: z.preprocess(
-    (value) => (typeof value === "string" ? value.trim().toLowerCase() : value),
-    z.enum(["true", "false", ""]).optional(),
-  ),
+  DEMO_LIVE_AI: envFlag,
+  DEMO_ONLY: envFlag,
 });
 
 export type AiConfig = {
@@ -50,9 +49,11 @@ export type AiConfig = {
 /** Reads and validates the AI settings from an environment object such as `process.env`. */
 export function readAiConfig(env: Record<string, string | undefined>): AiConfig {
   const parsed = aiEnvSchema.parse(env);
+  // A demo-only deployment never calls a model, whatever else is set.
+  if (parsed.DEMO_ONLY) return { apiKey: null, demoLiveAi: false };
   return {
     apiKey: parsed.GOOGLE_GENERATIVE_AI_API_KEY ?? null,
-    demoLiveAi: parsed.DEMO_LIVE_AI === "true",
+    demoLiveAi: parsed.DEMO_LIVE_AI,
   };
 }
 

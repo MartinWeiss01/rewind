@@ -26,6 +26,16 @@ describe("readAiConfig", () => {
     });
   });
 
+  it("never calls a model in a demo-only deployment", () => {
+    expect(
+      readAiConfig({
+        DEMO_ONLY: "true",
+        GOOGLE_GENERATIVE_AI_API_KEY: "test-key",
+        DEMO_LIVE_AI: "true",
+      }),
+    ).toEqual({ apiKey: null, demoLiveAi: false });
+  });
+
   it("enables live demo AI only for true", () => {
     expect(readAiConfig({ DEMO_LIVE_AI: "TRUE" }).demoLiveAi).toBe(true);
     expect(() => readAiConfig({ DEMO_LIVE_AI: "yes" })).toThrow();
