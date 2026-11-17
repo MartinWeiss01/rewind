@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { getFormatter, getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 import { SpotifyLoginLink } from "@/components/auth/spotify-login-link";
@@ -57,9 +58,10 @@ function Row({ label, hint, children }: { label: string; hint?: string; children
 }
 
 export default async function SettingsPage() {
-  const [t, tScreens, format, { source, account }] = await Promise.all([
+  const [t, tScreens, tAdmin, format, { source, account, isAdmin }] = await Promise.all([
     getTranslations("settings"),
     getTranslations("screens.settings"),
+    getTranslations("admin.settingsLink"),
     getFormatter(),
     getRequestContext(),
   ]);
@@ -127,6 +129,16 @@ export default async function SettingsPage() {
           </div>
         </div>
       </Section>
+
+      {isAdmin ? (
+        <Section id="admin-heading" title={tAdmin("title")}>
+          <Row label={tAdmin("label")} hint={tAdmin("hint")}>
+            <Link href="/app/admin" className={buttonClass("secondary", "sm")}>
+              {tAdmin("label")}
+            </Link>
+          </Row>
+        </Section>
+      ) : null}
 
       <Section id="appearance-heading" title={t("appearance")}>
         <Row label={t("theme")} hint={t("themeHint")}>

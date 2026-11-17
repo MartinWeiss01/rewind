@@ -1,0 +1,94 @@
+{
+  "title": "Přístupy",
+  "eyebrow": "Admin · vidíš jen ty",
+  "intro": "Vyber, kdo dostane kterou funkci. Změna platí při jejich dalším načtení stránky, bez nového nasazení. Ostatní vidí appku bez těchto funkcí.",
+  "back": "Nastavení",
+  "features": {
+    "stats": {
+      "name": "Statistiky",
+      "desc": "Přehled, historie, recap a počty přehrání ze Spotify dat."
+    },
+    "ai": {
+      "name": "AI",
+      "desc": "Doporučení v Objevování. Čerpá kvótu Gemini, každý 20 běhů denně."
+    },
+    "playlistWrite": {
+      "name": "Úpravy playlistů",
+      "desc": "Úpravy, řazení, slučování a čištění jejich skutečných playlistů na Spotify."
+    }
+  },
+  "featureCount": "{count, plural, one {# člověk} few {# lidé} other {# lidí}}",
+  "people": "Lidé",
+  "spotifyLimit": "Spotify v režimu Development Mode povolí nejvýš 5 lidí",
+  "columnPerson": "Člověk",
+  "columnSeen": "Naposledy",
+  "columnActions": "Akce",
+  "admin": "Admin",
+  "pending": "Ještě se nepřihlásil(a)",
+  "never": "—",
+  "switchLabel": "{feature} pro {name}",
+  "adminNote": "Admini se nastavují přímo v databázi a mají vždy všechny funkce. Odebrání vezme člověku funkce; jeho data o poslechu zůstanou, dokud je sám nesmaže.",
+  "emptyTitle": "Zatím jen ty",
+  "emptyBody": "Přidej někoho podle jeho Spotify user ID. Musí být i v seznamu uživatelů appky ve Spotify Developer Dashboardu.",
+  "changes": "Poslední změny",
+  "changesEmpty": "Zatím žádné změny.",
+  "verb": {
+    "add": "Přidání",
+    "remove": "Odebrání",
+    "grant": "Zap.",
+    "revoke": "Vyp."
+  },
+  "event": {
+    "add": "Přidán(a) {subject}",
+    "remove": "Odebrán(a) {subject}",
+    "grant": "{feature} zapnuto pro {subject}",
+    "revoke": "{feature} vypnuto pro {subject}"
+  },
+  "by": "provedl(a) {actor}",
+  "you": "ty",
+  "toast": {
+    "on": "{feature}: zapnuto pro {name}",
+    "off": "{feature}: vypnuto pro {name}",
+    "undo": "Vrátit",
+    "failed": "{feature} pro {name} se nepodařilo změnit. Přepínač se vrátil, zkus to znovu.",
+    "retry": "Zkusit znovu",
+    "added": "Přidán(a) {name}",
+    "removed": "Odebrán(a) {name}"
+  },
+  "add": {
+    "open": "Přidat člověka",
+    "title": "Přidat člověka",
+    "id": "Spotify user ID nebo odkaz na profil",
+    "idPlaceholder": "open.spotify.com/user/…",
+    "idHint": "Najdeš ve Spotify v Profil › Sdílet › Kopírovat odkaz.",
+    "idInvalid": "Tohle není Spotify user ID ani odkaz na profil.",
+    "note": "Poznámka (nepovinné)",
+    "notePlaceholder": "Kdo to je, ať si vzpomeneš",
+    "features": "Funkce",
+    "dashboardNote": "Spotify pustí člověka dovnitř až poté, co ho přidáš i do seznamu uživatelů appky v Developer Dashboardu. Rewind to za tebe udělat neumí.",
+    "cancel": "Zrušit",
+    "submit": "Přidat",
+    "adding": "Přidávám…"
+  },
+  "remove": {
+    "open": "Odebrat",
+    "label": "Odebrat {name}",
+    "title": "Odebrat {name}?",
+    "body": "Hned přijde o všechny funkce z této stránky. Účet a data o poslechu mu zůstanou; dál se může přihlásit a vidí appku bez těchto funkcí.",
+    "cancel": "Zrušit",
+    "confirm": "Odebrat",
+    "removing": "Odebírám…"
+  },
+  "error": {
+    "forbidden": "Přístupy může měnit jen admin.",
+    "invalid": "Tahle změna nesedí. Načti stránku znovu a zkus to.",
+    "admin": "Admini mají vždy všechny funkce; jejich role se mění v databázi.",
+    "failed": "Změna neprošla. Nic se nezměnilo, zkus to znovu.",
+    "invalidId": "Tohle není Spotify user ID ani odkaz na profil."
+  },
+  "settingsLink": {
+    "title": "Admin",
+    "label": "Přístupy",
+    "hint": "Vyber, kdo dostane statistiky, AI a úpravy playlistů."
+  }
+}

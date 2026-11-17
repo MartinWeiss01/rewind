@@ -8,6 +8,60 @@ export type Database = {
   };
   public: {
     Tables: {
+      rewind_access_events: {
+        Row: {
+          action: string;
+          actor_spotify_user_id: string;
+          created_at: string;
+          feature: string | null;
+          id: number;
+          subject_spotify_user_id: string;
+        };
+        Insert: {
+          action: string;
+          actor_spotify_user_id: string;
+          created_at?: string;
+          feature?: string | null;
+          id?: never;
+          subject_spotify_user_id: string;
+        };
+        Update: {
+          action?: string;
+          actor_spotify_user_id?: string;
+          created_at?: string;
+          feature?: string | null;
+          id?: never;
+          subject_spotify_user_id?: string;
+        };
+        Relationships: [];
+      };
+      rewind_access_members: {
+        Row: {
+          created_at: string;
+          features: string[];
+          note: string;
+          role: string | null;
+          spotify_user_id: string;
+          updated_at: string;
+        };
+        Insert: {
+          created_at?: string;
+          features?: string[];
+          note?: string;
+          role?: string | null;
+          spotify_user_id: string;
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          features?: string[];
+          note?: string;
+          role?: string | null;
+          spotify_user_id?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       rewind_demo_sessions: {
         Row: {
           expires_at: string;

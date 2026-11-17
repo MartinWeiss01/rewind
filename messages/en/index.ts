@@ -1,3 +1,4 @@
+import admin from "./admin.json";
 import common from "./common.json";
 import dashboard from "./dashboard.json";
 import discover from "./discover.json";
@@ -29,6 +30,7 @@ const messages = {
   recap,
   playlists,
   playlistTools,
+  admin,
 };
 
 export type Messages = typeof messages;

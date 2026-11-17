@@ -1,4 +1,5 @@
 import type { Messages } from "../en";
+import admin from "./admin.json";
 import common from "./common.json";
 import dashboard from "./dashboard.json";
 import discover from "./discover.json";
@@ -29,6 +30,7 @@ const messages: Messages = {
   recap,
   playlists,
   playlistTools,
+  admin,
 };
 
 export default messages;
