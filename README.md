@@ -20,6 +20,7 @@ pnpm dev        # http://127.0.0.1:3000
 pnpm lint
 pnpm typecheck
 pnpm test
+pnpm e2e        # Playwright against a demo-only build
 ```
 
 ## Contributing

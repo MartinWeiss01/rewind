@@ -33,7 +33,8 @@
     },
     "domains": {
       "next": "recommended",
-      "react": "recommended"
+      "react": "recommended",
+      "playwright": "none"
     }
   },
   "css": {
@@ -47,5 +48,15 @@
         "organizeImports": "on"
       }
     }
-  }
+  },
+  "overrides": [
+    {
+      "includes": ["e2e/**", "playwright.config.ts"],
+      "linter": {
+        "domains": {
+          "playwright": "recommended"
+        }
+      }
+    }
+  ]
 }
