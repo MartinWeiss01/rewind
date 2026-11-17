@@ -12,7 +12,7 @@ import { RemovePerson } from "@/features/admin/components/remove-person";
 import { table, tableBox, td, th } from "@/features/playlists/components/ui";
 import { AccessAction, type AccessPerson, loadAccessOverview } from "@/server/access";
 import { spotifyConfig } from "@/server/env";
-import { featureFlags, parseAdminIds } from "@/server/feature-flags";
+import { featureFlags } from "@/server/feature-flags";
 import { getRequestContext } from "@/server/request-context";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -72,7 +72,7 @@ export default async function AdminPage() {
   const [t, format, overview] = await Promise.all([
     getTranslations("admin"),
     getFormatter(),
-    loadAccessOverview(adminDb(config), parseAdminIds(process.env)),
+    loadAccessOverview(adminDb(config)),
   ]);
   const { people, events } = overview;
   const nameOf = (id: string) =>

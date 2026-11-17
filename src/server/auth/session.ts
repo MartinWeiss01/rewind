@@ -45,14 +45,28 @@ export async function createSession(db: Db, userId: string): Promise<string> {
 }
 
 /** The signed-in user for a session token, or null when it is missing, unknown or expired. */
+/** How often a session's `last_seen_at` is refreshed while it is used. */
+const lastSeenEveryMs = 10 * 60 * 1000;
+
 export async function userForSession(db: Db, token: string | undefined): Promise<UserRow | null> {
   if (!token) return null;
   const { data: session } = await db
     .from("rewind_sessions")
-    .select("user_id, expires_at")
+    .select("user_id, expires_at, last_seen_at")
     .eq("token_hash", sha256(token))
     .maybeSingle();
-  if (!session || new Date(session.expires_at) < new Date()) return null;
+  const now = new Date();
+  if (!session || new Date(session.expires_at) < now) return null;
+  if (now.getTime() - new Date(session.last_seen_at).getTime() > lastSeenEveryMs) {
+    // For "last seen" on the admin page; not worth delaying the request for.
+    void db
+      .from("rewind_sessions")
+      .update({ last_seen_at: now.toISOString() })
+      .eq("token_hash", sha256(token))
+      .then(({ error }) => {
+        if (error) console.error("Could not update last seen", error.message);
+      });
+  }
   const { data: user } = await db
     .from("rewind_users")
     .select(userColumns)

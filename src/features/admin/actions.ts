@@ -3,9 +3,15 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { adminDb, type Db } from "@/data/supabase/client";
-import { addMember, parseSpotifyUserId, removeMember, setFeature } from "@/server/access";
+import {
+  accessFor,
+  addMember,
+  parseSpotifyUserId,
+  removeMember,
+  setFeature,
+} from "@/server/access";
 import { spotifyConfig } from "@/server/env";
-import { featureFlagSchema, parseAdminIds } from "@/server/feature-flags";
+import { featureFlagSchema } from "@/server/feature-flags";
 import { getRequestContext } from "@/server/request-context";
 import { AccessError, type AccessResult } from "./types";
 
@@ -27,8 +33,8 @@ async function run(
 ): Promise<AccessResult> {
   const admin = await asAdmin();
   if (!admin) return fail(AccessError.Forbidden);
-  if (parseAdminIds(process.env).has(subject)) return fail(AccessError.Admin);
   try {
+    if ((await accessFor(admin.db, subject)).admin) return fail(AccessError.Admin);
     await write(admin);
   } catch (error) {
     console.error(error);

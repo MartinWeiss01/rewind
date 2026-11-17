@@ -13,10 +13,10 @@ import {
   type DemoSessionStore,
   emptyDemoSessionState,
 } from "@/demo/session-state";
-import { grantedFlags } from "./access";
+import { accessFor } from "./access";
 import { accessTokenFor, sessionCookie, userForSession } from "./auth/session";
 import { serverEnv, spotifyConfig } from "./env";
-import { enabledFlags, type FeatureFlag, parseAdminIds, type Viewer } from "./feature-flags";
+import { enabledFlags, type FeatureFlag, type Viewer } from "./feature-flags";
 
 export const demoSessionCookie = "rewind_demo";
 
@@ -24,7 +24,7 @@ export type RequestContext = {
   viewer: Viewer;
   source: MusicDataSource;
   flags: ReadonlySet<FeatureFlag>;
-  /** Whether the viewer is listed in `ADMIN_SPOTIFY_IDS` and may manage access. */
+  /** Whether the viewer has the admin role and may manage access. */
   isAdmin: boolean;
   now: Date;
   /** True when Spotify sign-in is configured on this deployment. */
@@ -70,7 +70,6 @@ export const getRequestContext = cache(async (): Promise<RequestContext> => {
   const now = new Date();
   const cookieStore = await cookies();
   const config = spotifyConfig();
-  const adminIds = parseAdminIds(process.env);
 
   if (config) {
     const db = adminDb(config);
@@ -107,13 +106,12 @@ export const getRequestContext = cache(async (): Promise<RequestContext> => {
           cookieStore.delete(sessionCookie);
         },
       };
-      const isAdmin = adminIds.has(user.spotify_user_id);
-      const granted = isAdmin ? [] : await grantedFlags(db, user.spotify_user_id);
+      const access = await accessFor(db, user.spotify_user_id);
       return {
         viewer,
         source: createSpotifyDataSource({ db, user, accessToken }),
-        flags: enabledFlags(viewer, { admin: isAdmin, granted }),
-        isAdmin,
+        flags: enabledFlags(viewer, access),
+        isAdmin: access.admin,
         now,
         spotifyAvailable: true,
         account,

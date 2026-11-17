@@ -1,5 +1,5 @@
--- Feature access per person (ADR 0004). Admins come from the environment and are not
--- stored here. A member is keyed by Spotify user ID so access can be granted before the
+-- Feature access per person (ADR 0004). Admins get a role in the next migration.
+-- A member is keyed by Spotify user ID so access can be granted before the
 -- person first signs in. Feature names are validated by the app, so adding a flag
 -- needs no migration.
 

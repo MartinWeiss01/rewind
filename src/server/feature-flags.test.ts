@@ -1,17 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { enabledFlags, FeatureFlag, knownFlags, parseAdminIds } from "./feature-flags";
+import { enabledFlags, FeatureFlag, knownFlags } from "./feature-flags";
 
 const spotify = { mode: "spotify", spotifyUserId: "listener-a" } as const;
-
-describe("parseAdminIds", () => {
-  it("reads a trimmed list and ignores empty entries", () => {
-    expect([...parseAdminIds({ ADMIN_SPOTIFY_IDS: " listener-a , ,listener-b" })]).toEqual([
-      "listener-a",
-      "listener-b",
-    ]);
-    expect(parseAdminIds({}).size).toBe(0);
-  });
-});
 
 describe("knownFlags", () => {
   it("keeps known flags in their declared order", () => {

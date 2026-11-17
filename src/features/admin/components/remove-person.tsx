@@ -40,7 +40,7 @@ export function RemovePerson({ spotifyUserId, name }: { spotifyUserId: string; n
         {t("remove.open")}
       </AlertDialogTrigger>
       <AlertDialogBackdrop className={dialogBackdrop} />
-      <AlertDialogContent className={`${dialogContent} max-w-[480px]`}>
+      <AlertDialogContent className={`${dialogContent} max-w-[480px] text-left`}>
         <AlertDialogTitle className={dialogTitle}>{t("remove.title", { name })}</AlertDialogTitle>
         <AlertDialogDescription className="m-0 text-sm leading-relaxed">
           {t("remove.body")}

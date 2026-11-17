@@ -135,6 +135,7 @@ export function AddPersonDialog({ variant = "primary" }: { variant?: "primary" |
                   <span className="text-muted text-sm">{t(`features.${flag}.desc`)}</span>
                 </span>
                 <Switch
+                  aria-label={t(`features.${flag}.name`)}
                   checked={features.includes(flag)}
                   onCheckedChange={(on) =>
                     setFeatures(on ? [...features, flag] : features.filter((f) => f !== flag))

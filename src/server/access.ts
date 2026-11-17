@@ -4,24 +4,30 @@ import { type FeatureFlag, knownFlags } from "./feature-flags";
 
 /**
  * Feature access per person (ADR 0004), stored in `rewind_access_members` and
- * logged in `rewind_access_events`. Admins come from `ADMIN_SPOTIFY_IDS` and are
- * never stored. Server only: callers check that the viewer is an admin.
+ * logged in `rewind_access_events`. Admins are members whose `role` is `admin`, set
+ * by hand in the database; the app never changes roles. Server only: callers check
+ * that the viewer is an admin.
  */
 
-/** Flags granted to a Spotify user; empty when they have no row. */
-export async function grantedFlags(db: Db, spotifyUserId: string): Promise<FeatureFlag[]> {
+/** A Spotify user's access; no admin role and no features when they have no row. */
+export async function accessFor(
+  db: Db,
+  spotifyUserId: string,
+): Promise<{ admin: boolean; granted: FeatureFlag[] }> {
   const { data, error } = await db
     .from("rewind_access_members")
-    .select("features")
+    .select("role, features")
     .eq("spotify_user_id", spotifyUserId)
     .maybeSingle();
   if (error) {
     // Failing closed: without the row the person just doesn't get gated features.
     console.error("Could not read feature access", error.message);
-    return [];
+    return { admin: false, granted: [] };
   }
-  return data ? knownFlags(data.features) : [];
+  return { admin: data?.role === adminRole, granted: data ? knownFlags(data.features) : [] };
 }
+
+const adminRole = "admin";
 
 /** Someone on the admin page: an admin, a member, or a person who signed in. */
 export type AccessPerson = {
@@ -62,12 +68,9 @@ export type AccessOverview = { people: AccessPerson[]; events: AccessEvent[] };
 const recentEvents = 10;
 
 /** Everyone the admin page lists, admins first, then by last visit, then not yet signed in. */
-export async function loadAccessOverview(
-  db: Db,
-  adminIds: ReadonlySet<string>,
-): Promise<AccessOverview> {
+export async function loadAccessOverview(db: Db): Promise<AccessOverview> {
   const [members, users, events] = await Promise.all([
-    db.from("rewind_access_members").select("spotify_user_id, note, features"),
+    db.from("rewind_access_members").select("spotify_user_id, note, features, role"),
     db.from("rewind_users").select("id, spotify_user_id, display_name, avatar_url"),
     db
       .from("rewind_access_events")
@@ -97,7 +100,7 @@ export async function loadAccessOverview(
 
   const memberById = new Map((members.data ?? []).map((m) => [m.spotify_user_id, m]));
   const userById = new Map(userRows.map((u) => [u.spotify_user_id, u]));
-  const ids = new Set([...adminIds, ...memberById.keys(), ...userById.keys()]);
+  const ids = new Set([...memberById.keys(), ...userById.keys()]);
 
   const people = [...ids].map((id): AccessPerson => {
     const member = memberById.get(id);
@@ -109,7 +112,7 @@ export async function loadAccessOverview(
       name: user?.display_name || note || id,
       note,
       avatarUrl: user?.avatar_url ?? null,
-      admin: adminIds.has(id),
+      admin: member?.role === adminRole,
       member: member !== undefined,
       signedIn: user !== undefined,
       lastSeenAt: seen ? new Date(seen) : null,
@@ -185,7 +188,7 @@ export async function setFeature(
   feature: FeatureFlag,
   on: boolean,
 ): Promise<void> {
-  const current = await grantedFlags(db, subject);
+  const { granted: current } = await accessFor(db, subject);
   const next = on ? knownFlags([...current, feature]) : current.filter((flag) => flag !== feature);
   const { error } = await db.from("rewind_access_members").upsert({
     spotify_user_id: subject,
@@ -198,7 +201,12 @@ export async function setFeature(
 
 /** Removes a person's member row and with it every feature they had. */
 export async function removeMember(db: Db, actor: string, subject: string): Promise<void> {
-  const { error } = await db.from("rewind_access_members").delete().eq("spotify_user_id", subject);
+  const { error } = await db
+    .from("rewind_access_members")
+    .delete()
+    .eq("spotify_user_id", subject)
+    // Admin rows are only changed by hand in the database.
+    .is("role", null);
   if (error) throw new Error(`Could not remove a person: ${error.message}`);
   await log(db, actor, subject, AccessAction.Remove);
 }

@@ -27,7 +27,7 @@
   "pending": "Hasn’t logged in yet",
   "never": "—",
   "switchLabel": "{feature} for {name}",
-  "adminNote": "Admins are set in the server environment and always have every feature. Removing someone takes away their features; their listening data stays until they delete it.",
+  "adminNote": "Admins are set in the database and always have every feature. Removing someone takes away their features; their listening data stays until they delete it.",
   "emptyTitle": "Only you so far",
   "emptyBody": "Add someone by their Spotify user ID. They also need to be on the app’s user list in the Spotify Developer Dashboard.",
   "changes": "Recent changes",
@@ -82,7 +82,7 @@
   "error": {
     "forbidden": "Only admins can change access.",
     "invalid": "That change doesn’t fit. Reload the page and try again.",
-    "admin": "Admins always have every feature; change them in the server environment.",
+    "admin": "Admins always have every feature; their role is changed in the database.",
     "failed": "The change didn’t go through. Nothing changed; try again.",
     "invalidId": "That isn’t a Spotify user ID or profile link."
   },

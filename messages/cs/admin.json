@@ -27,7 +27,7 @@
   "pending": "Ještě se nepřihlásil(a)",
   "never": "—",
   "switchLabel": "{feature} pro {name}",
-  "adminNote": "Admini se nastavují v prostředí serveru a mají vždy všechny funkce. Odebrání vezme člověku funkce; jeho data o poslechu zůstanou, dokud je sám nesmaže.",
+  "adminNote": "Admini se nastavují přímo v databázi a mají vždy všechny funkce. Odebrání vezme člověku funkce; jeho data o poslechu zůstanou, dokud je sám nesmaže.",
   "emptyTitle": "Zatím jen ty",
   "emptyBody": "Přidej někoho podle jeho Spotify user ID. Musí být i v seznamu uživatelů appky ve Spotify Developer Dashboardu.",
   "changes": "Poslední změny",
@@ -82,7 +82,7 @@
   "error": {
     "forbidden": "Přístupy může měnit jen admin.",
     "invalid": "Tahle změna nesedí. Načti stránku znovu a zkus to.",
-    "admin": "Admini mají vždy všechny funkce; mění se v prostředí serveru.",
+    "admin": "Admini mají vždy všechny funkce; jejich role se mění v databázi.",
     "failed": "Změna neprošla. Nic se nezměnilo, zkus to znovu.",
     "invalidId": "Tohle není Spotify user ID ani odkaz na profil."
   },
