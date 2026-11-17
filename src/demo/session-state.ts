@@ -79,26 +79,3 @@ export type DemoSessionStore = {
   save(sessionId: string, state: DemoSessionState): Promise<void>;
   remove(sessionId: string): Promise<void>;
 };
-
-const ttlMs = 24 * 60 * 60 * 1000;
-
-/** Process-local store. Fine for development and a single server; replaced by the database store in production. */
-export function createMemoryDemoSessionStore(): DemoSessionStore {
-  const sessions = new Map<string, { state: DemoSessionState; expiresAt: number }>();
-  return {
-    async load(sessionId) {
-      const entry = sessions.get(sessionId);
-      if (!entry || entry.expiresAt < Date.now()) {
-        sessions.delete(sessionId);
-        return null;
-      }
-      return structuredClone(entry.state);
-    },
-    async save(sessionId, state) {
-      sessions.set(sessionId, { state: structuredClone(state), expiresAt: Date.now() + ttlMs });
-    },
-    async remove(sessionId) {
-      sessions.delete(sessionId);
-    },
-  };
-}

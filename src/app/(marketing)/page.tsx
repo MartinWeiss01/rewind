@@ -5,6 +5,7 @@ import { z } from "zod";
 import { SpotifyLoginLink } from "@/components/auth/spotify-login-link";
 import { Cover } from "@/components/ui/cover";
 import { alert, buttonClass, card, cardFlat, chipClass, heading } from "@/components/ui/styles";
+import { spotifyConfig } from "@/server/env";
 
 const loginSchema = z
   .enum(["cancelled", "forbidden", "failed", "unavailable"])
@@ -21,6 +22,11 @@ const features = [
 export default async function LandingPage({ searchParams }: PageProps<"/">) {
   const t = await getTranslations();
   const login = loginSchema.parse((await searchParams).login);
+  // Without Spotify sign-in (a demo-only deployment) the page doesn't mention Spotify.
+  const spotify = spotifyConfig() !== null;
+  const infoCards = spotify
+    ? (["whyInvite", "yourData", "openSource"] as const)
+    : (["openSource"] as const);
   const loginMessage =
     login &&
     match(login)
@@ -79,9 +85,11 @@ export default async function LandingPage({ searchParams }: PageProps<"/">) {
           <Link href="/app" className={buttonClass("primary", "lg")}>
             {t("common.tryDemo")}
           </Link>
-          <SpotifyLoginLink className={buttonClass("secondary", "lg")}>
-            {t("shell.useMySpotify")}
-          </SpotifyLoginLink>
+          {spotify ? (
+            <SpotifyLoginLink className={buttonClass("secondary", "lg")}>
+              {t("shell.useMySpotify")}
+            </SpotifyLoginLink>
+          ) : null}
         </div>
         <span className="text-muted text-sm">{t("common.demoNote")}</span>
       </section>
@@ -156,8 +164,8 @@ export default async function LandingPage({ searchParams }: PageProps<"/">) {
         </div>
       </section>
 
-      <section className="grid gap-4 md:grid-cols-3">
-        {(["whyInvite", "yourData", "openSource"] as const).map((key) => (
+      <section className={`grid gap-4 ${infoCards.length > 1 ? "md:grid-cols-3" : "md:max-w-md"}`}>
+        {infoCards.map((key) => (
           <div key={key} className={`${cardFlat} flex flex-col gap-2.5`}>
             <span className="eyebrow">{t(`marketing.${key}Title`)}</span>
             <p className="m-0 text-sm leading-relaxed">{t(`marketing.${key}Text`)}</p>
@@ -175,10 +183,12 @@ export default async function LandingPage({ searchParams }: PageProps<"/">) {
         ))}
       </section>
 
-      <footer className="flex flex-wrap items-center justify-between gap-3 border-line border-t pt-5 text-muted text-sm">
-        <span>{t("marketing.disclaimer")}</span>
-        <span>{t("marketing.attribution")}</span>
-      </footer>
+      {spotify ? (
+        <footer className="flex flex-wrap items-center justify-between gap-3 border-line border-t pt-5 text-muted text-sm">
+          <span>{t("marketing.disclaimer")}</span>
+          <span>{t("marketing.attribution")}</span>
+        </footer>
+      ) : null}
     </div>
   );
 }

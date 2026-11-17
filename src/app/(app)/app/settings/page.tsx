@@ -58,13 +58,14 @@ function Row({ label, hint, children }: { label: string; hint?: string; children
 }
 
 export default async function SettingsPage() {
-  const [t, tScreens, tAdmin, format, { source, account, isAdmin }] = await Promise.all([
-    getTranslations("settings"),
-    getTranslations("screens.settings"),
-    getTranslations("admin.settingsLink"),
-    getFormatter(),
-    getRequestContext(),
-  ]);
+  const [t, tScreens, tAdmin, format, { source, account, isAdmin, spotifyAvailable }] =
+    await Promise.all([
+      getTranslations("settings"),
+      getTranslations("screens.settings"),
+      getTranslations("admin.settingsLink"),
+      getFormatter(),
+      getRequestContext(),
+    ]);
   const isDemo = source.mode === DataMode.Demo;
   const [profile, rules, summary, imports, lastSync] = await Promise.all([
     source.getProfile(),
@@ -103,9 +104,11 @@ export default async function SettingsPage() {
                     {t("endDemo")}
                   </button>
                 </form>
-                <SpotifyLoginLink className={buttonClass("primary", "sm")}>
-                  {t("useMySpotify")}
-                </SpotifyLoginLink>
+                {spotifyAvailable ? (
+                  <SpotifyLoginLink className={buttonClass("primary", "sm")}>
+                    {t("useMySpotify")}
+                  </SpotifyLoginLink>
+                ) : null}
               </>
             ) : (
               <>
