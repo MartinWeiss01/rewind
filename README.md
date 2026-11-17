@@ -25,3 +25,7 @@ pnpm test
 ## Contributing
 
 See [`AGENTS.md`](AGENTS.md) and [`docs/contributing/git-workflow.md`](docs/contributing/git-workflow.md).
+
+## License
+
+[MIT](LICENSE)
