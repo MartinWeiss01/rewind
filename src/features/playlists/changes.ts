@@ -11,6 +11,10 @@ export const ChangeKind = {
   RemoveMatches: "removeMatches",
   Sort: "sort",
   Merge: "merge",
+  /** Tracks moved out to other playlists (sort into playlists). */
+  MoveOut: "moveOut",
+  /** Tracks moved in from another playlist (sort into playlists). */
+  MoveIn: "moveIn",
   Restore: "restore",
 } as const;
 export type ChangeKind = (typeof ChangeKind)[keyof typeof ChangeKind];

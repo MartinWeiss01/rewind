@@ -138,6 +138,7 @@ export default async function Page({ params }: Props) {
               plays={plays}
               snapshots={snapshots}
               canWrite={canWrite && items !== null}
+              canUseAi={context.flags.has(FeatureFlag.Ai)}
               mergeOptions={library.map((p) => ({
                 id: p.id,
                 name: p.name,

@@ -12,6 +12,7 @@ import { DuplicatesDialog } from "./duplicates-dialog";
 import { HistoryDialog } from "./history-dialog";
 import { MergeDialog, type MergeOption } from "./merge-dialog";
 import { SortDialog } from "./sort-dialog";
+import { SortIntoDialog } from "./sort-into-dialog";
 import { SplitDialog } from "./split-dialog";
 import { popup, popupItem } from "./ui";
 
@@ -21,6 +22,7 @@ const Tool = {
   Merge: "merge",
   Sort: "sort",
   Split: "split",
+  SortInto: "sortInto",
   History: "history",
 } as const;
 type Tool = (typeof Tool)[keyof typeof Tool];
@@ -36,6 +38,7 @@ export function PlaylistTools({
   snapshots,
   mergeOptions,
   canWrite,
+  canUseAi,
 }: {
   playlistId: string;
   playlistName: string;
@@ -45,11 +48,20 @@ export function PlaylistTools({
   snapshots: readonly PlaylistSnapshot[];
   mergeOptions: readonly MergeOption[];
   canWrite: boolean;
+  /** Whether the viewer has the AI flag, for "Sort into playlists". */
+  canUseAi: boolean;
 }) {
   const t = useTranslations("playlistTools.menu");
   const [open, setOpen] = useState<Tool | null>(null);
   const setter = (tool: Tool) => (next: boolean) => setOpen(next ? tool : null);
-  const writeTools = [Tool.Duplicates, Tool.Compare, Tool.Merge, Tool.Sort, Tool.Split] as const;
+  const writeTools = [
+    Tool.Duplicates,
+    Tool.Compare,
+    Tool.Merge,
+    Tool.Sort,
+    Tool.Split,
+    ...(canUseAi ? [Tool.SortInto] : []),
+  ];
   const empty = items.length === 0;
 
   return (
@@ -144,6 +156,17 @@ export function PlaylistTools({
         playlistName={playlistName}
         items={items}
       />
+      {canUseAi ? (
+        <SortIntoDialog
+          open={open === Tool.SortInto}
+          onOpenChange={setter(Tool.SortInto)}
+          playlistId={playlistId}
+          playlistName={playlistName}
+          basedOn={basedOn}
+          items={items}
+          playlists={mergeOptions}
+        />
+      ) : null}
       <HistoryDialog
         open={open === Tool.History}
         onOpenChange={setter(Tool.History)}

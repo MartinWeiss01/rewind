@@ -1,5 +1,12 @@
 import { createGoogle, type GoogleLanguageModelOptions } from "@ai-sdk/google";
-import { APICallError, generateText, LoadAPIKeyError, Output, RetryError } from "ai";
+import {
+  APICallError,
+  experimental_decide,
+  generateText,
+  LoadAPIKeyError,
+  Output,
+  RetryError,
+} from "ai";
 import { z } from "zod";
 import { envFlag } from "./env";
 
@@ -99,6 +106,74 @@ export async function generateList<T>(
   });
   // Output.array already validated each element; parse again so nothing unchecked leaves here.
   return input.element.array().parse(output);
+}
+
+/**
+ * The decision model: picks one of a closed set of options per question and returns
+ * a calibrated probability for each option. Needs Decisions API access on the key.
+ */
+export const decisionModelId = "gemini-decision-1";
+
+/** At most this many questions go into one decision call. */
+export const decisionBatchSize = 200;
+
+/** One multiple-choice question: option ID → what the option means. */
+export type ChoiceQuestion = {
+  id: string;
+  instructions: string;
+  options: Readonly<Record<string, string>>;
+};
+
+export type ChoiceAnswer = {
+  choice: string;
+  /** Probability per option ID, summing to about 1. */
+  probabilities: Readonly<Record<string, number>>;
+};
+
+const choiceAnswerSchema = z.object({
+  type: z.literal("choice"),
+  choice: z.string(),
+  probabilities: z.record(z.string(), z.number().min(0).max(1)),
+});
+
+/**
+ * Answers multiple-choice questions against one shared state with the decision
+ * model, in batches. Returns an answer for every question ID.
+ */
+export async function decideChoices(
+  config: AiConfig,
+  input: {
+    /** Shared context every question is decided against, as text. */
+    state: string;
+    questions: readonly ChoiceQuestion[];
+    timeoutMs: number;
+  },
+): Promise<Map<string, ChoiceAnswer>> {
+  const { apiKey } = config;
+  if (!apiKey) throw new AiNotConfiguredError();
+  const model = createGoogle({ apiKey }).decisionModel(decisionModelId);
+  const signal = AbortSignal.timeout(input.timeoutMs);
+  const answers = new Map<string, ChoiceAnswer>();
+  for (let start = 0; start < input.questions.length; start += decisionBatchSize) {
+    const batch = input.questions.slice(start, start + decisionBatchSize);
+    const result = await experimental_decide({
+      model,
+      state: input.state,
+      questions: Object.fromEntries(
+        batch.map((q) => [
+          q.id,
+          { type: "choice" as const, instructions: q.instructions, criteria: { ...q.options } },
+        ]),
+      ),
+      maxRetries: 1,
+      abortSignal: signal,
+    });
+    for (const q of batch) {
+      const answer = choiceAnswerSchema.parse(result.answers[q.id]);
+      answers.set(q.id, { choice: answer.choice, probabilities: answer.probabilities });
+    }
+  }
+  return answers;
 }
 
 /** Why a model call failed, in terms a feature can explain. */

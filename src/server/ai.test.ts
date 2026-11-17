@@ -6,6 +6,7 @@ import {
   AiNotConfiguredError,
   AiTier,
   aiFailureOf,
+  decideChoices,
   generateList,
   readAiConfig,
   tierModels,
@@ -101,5 +102,16 @@ describe("aiFailureOf", () => {
   it("treats anything else as a provider error", () => {
     expect(aiFailureOf(apiError(500))).toBe(AiFailure.Provider);
     expect(aiFailureOf(new Error("boom"))).toBe(AiFailure.Provider);
+  });
+});
+
+describe("decideChoices", () => {
+  it("refuses to call the decision model without a key", async () => {
+    await expect(
+      decideChoices(
+        { apiKey: null, demoLiveAi: false },
+        { state: "", questions: [], timeoutMs: 1000 },
+      ),
+    ).rejects.toBeInstanceOf(AiNotConfiguredError);
   });
 });
