@@ -13,7 +13,10 @@ const authorized = (request: NextRequest, secret: string) => {
   return given.length === expected.length && timingSafeEqual(given, expected);
 };
 
-/** Scheduled sync of every signed-in user's recent plays. Called by Vercel Cron. */
+/**
+ * Syncs every signed-in user's recent plays. No schedule calls it by default (the public
+ * deployment is demo-only); call it with `Authorization: Bearer <CRON_SECRET>`.
+ */
 export async function GET(request: NextRequest) {
   const secret = serverEnv().CRON_SECRET;
   const config = spotifyConfig();
