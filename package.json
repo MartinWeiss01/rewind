@@ -16,6 +16,7 @@
     "format": "biome check --write .",
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
+    "e2e": "playwright test",
     "spotify:generate": "node scripts/fetch-spotify-openapi.mjs && orval --config orval.config.ts && biome check --write src/data/spotify/generated",
     "db:types": "supabase gen types typescript --db-url \"$DATABASE_URL\" --schema public | node scripts/filter-db-types.mjs > src/data/supabase/database.types.ts && biome check --write src/data/supabase/database.types.ts",
     "db:push": "supabase db push --db-url \"$DATABASE_URL\""
@@ -39,6 +40,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.6.7",
+    "@playwright/test": "1.65.1",
     "@tailwindcss/postcss": "4.3.5",
     "@types/node": "26.6.6",
     "@types/react": "19.3.0",

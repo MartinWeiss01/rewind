@@ -45,6 +45,7 @@ English for code, comments, docs, commit messages, PRs and UI copy.
 - Client-side async calls (server actions or fetches from client components) go through TanStack Query (`useMutation` for writes, `useQuery` for reads); Server Components load data on the server.
 - UI components are mode-agnostic: data comes through the `MusicDataSource` abstraction resolved server-side per request.
 - Every data-driven component ships loading (skeleton), empty and error (with retry) states.
+- Pure logic gets Vitest unit tests next to it; every screen or flow gets a Playwright test against the demo in `e2e/` (`pnpm e2e` builds and starts a demo-only server).
 - Routes follow the App Router file conventions in [ADR 0003](docs/adr/0003-app-router-conventions.md): route groups, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`.
 - Every UI string goes through next-intl ([ADR 0002](docs/adr/0002-internationalization-next-intl.md)) with English and Czech messages; no hardcoded copy.
 - Gated features use feature flags checked server-side per [ADR 0004](docs/adr/0004-feature-flags.md); public pages may describe them, since the public deployment is demo-only.
