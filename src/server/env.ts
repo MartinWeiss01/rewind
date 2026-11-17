@@ -27,7 +27,6 @@ const serverEnvSchema = z.object({
   SPOTIFY_CLIENT_ID: optional,
   SPOTIFY_CLIENT_SECRET: optional,
   SPOTIFY_REDIRECT_URI: optional.pipe(z.url().optional()),
-  AUTH_SECRET: optional,
   TOKEN_ENCRYPTION_KEY: optional,
   CRON_SECRET: optional,
 });
@@ -51,7 +50,6 @@ function withoutKeysWhenDemoOnly(env: ServerEnv): ServerEnv {
     SPOTIFY_CLIENT_ID: undefined,
     SPOTIFY_CLIENT_SECRET: undefined,
     SPOTIFY_REDIRECT_URI: undefined,
-    AUTH_SECRET: undefined,
     TOKEN_ENCRYPTION_KEY: undefined,
     CRON_SECRET: undefined,
   };

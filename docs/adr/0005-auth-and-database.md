@@ -1,7 +1,7 @@
 # ADR 0005: Spotify sign-in and database
 
 - Status: accepted
-- Date: 2026-11-15
+- Date: 2026-11-15, revised 2026-11-17 (session token described as built; no scheduled sync)
 
 ## Context
 
@@ -10,7 +10,7 @@ Spotify recommends the Authorization Code flow with a client secret for apps wit
 ## Decision
 
 - **Sign-in:** our own Authorization Code flow in route handlers. The client secret, access token and refresh token never reach the browser. Refresh tokens are encrypted at rest (AES-256-GCM, key from `TOKEN_ENCRYPTION_KEY`) and refreshed on demand; `invalid_grant` signs the user out.
-- **Session:** an HTTP-only, signed session cookie (`AUTH_SECRET`) that holds only our session ID.
+- **Session:** an HTTP-only cookie with a random session token; the database stores only its SHA-256 hash, so a leaked table can't be used to sign in.
 - **Database:** Supabase Postgres accessed from the server with the secret key. Supabase Auth is not used. Row-level security stays enabled on every table with no public policies, so the publishable key cannot read anything.
 - **Tooling:** the Supabase CLI is a pinned dev dependency for creating migrations, applying them and generating database types. It is never linked to a project: commands take the connection string from `DATABASE_URL` (`--db-url`), so nothing project-specific is written to the repository. `supabase/.temp/` stays ignored in case someone links locally.
 - **Project independence:** the repository holds SQL migrations (`supabase/migrations/`) and generated database types only. No project ref, URL or key is committed; the project is chosen entirely by environment variables, so the app can point at another Supabase project by applying the migrations there and changing `.env.local`.
@@ -24,6 +24,6 @@ Spotify recommends the Authorization Code flow with a client secret for apps wit
 
 - Tables live in `public` with the `rewind_` prefix, so Rewind can share a Supabase project with other apps. RLS is enabled and forced on every table with no policies, and `anon` / `authenticated` have no privileges.
 - Every user-owned table has `user_id` with `on delete cascade`; disconnecting deletes the user row and everything goes with it. The only shared table is `rewind_tracks`, a cache of public catalog metadata (names, artists, album, length) that says nothing about who listened.
-- Spotify exposes only the last 50 plays. They are synced when the user opens the app (at most every 10 minutes, after the response) and by a daily cron; imports fill in older history and never overlap synced plays.
+- Spotify exposes only the last 50 plays. They are synced when the user opens the app (at most every 10 minutes, after the response) and by `/api/cron/sync` when something calls it with `CRON_SECRET` (no schedule is configured, since the public deployment is demo-only); imports fill in older history and never overlap synced plays.
 - Imported tracks start with the names from the export and are enriched from the API in small batches, because Spotify removed batch track lookups.
 - Spotify request and response schemas are generated with Orval from Spotify's OpenAPI document (`pnpm spotify:generate`); fields Spotify marks deprecated are dropped before generation.
