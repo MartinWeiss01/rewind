@@ -40,7 +40,7 @@
   "import": {
     "open": "Import history",
     "title": "Import Extended Streaming History",
-    "howTo": "Request it in Spotify → Account → Privacy settings. You’ll get a ZIP with <file>Streaming_History_Audio_*.json</file> files.",
+    "howTo": "Request your extended streaming history in your music service’s privacy settings. You’ll get a ZIP with <file>Streaming_History_Audio_*.json</file> files.",
     "close": "Close import",
     "dropTitle": "Drop JSON files here or choose files",
     "dropHint": "Several files at once are fine. Re-importing the same file never creates duplicates.",
@@ -77,7 +77,7 @@
       "notJson": {
         "short": "Not JSON",
         "title": "{name} isn’t a JSON file",
-        "body": "Upload the <file>Streaming_History_Audio_*.json</file> files from your Spotify export."
+        "body": "Upload the <file>Streaming_History_Audio_*.json</file> files from your export."
       },
       "notHistory": {
         "short": "Not streaming history",
@@ -87,7 +87,7 @@
       "tooLarge": {
         "short": "Too large",
         "title": "{name} is too large",
-        "body": "Each file can be up to 30 MB. Spotify’s <file>Streaming_History_Audio_*.json</file> files are usually much smaller."
+        "body": "Each file can be up to 30 MB. <file>Streaming_History_Audio_*.json</file> files are usually much smaller."
       },
       "empty": {
         "short": "Empty file",

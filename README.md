@@ -1,8 +1,8 @@
 # Rewind
 
-Playlist tools and AI-assisted suggestions for your Spotify library.
+Playlist tools and AI-assisted suggestions for your music library.
 
-Explore everything without an account in **demo mode**, or log in with Spotify to see your own data.
+Explore everything without an account in **demo mode**: a fictional listener with a full library.
 
 > Work in progress.
 

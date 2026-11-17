@@ -83,7 +83,7 @@
     "writeFailed": "To se nepovedlo. Zkus to znovu.",
     "saveDialog": {
       "title": "Uložit jako nový playlist",
-      "description": "Vytvoří ve tvé knihovně Spotify nový playlist {count, plural, one {s # skladbou} few {s # skladbami} other {s # skladbami}} z tohoto seznamu.",
+      "description": "Vytvoří ve tvé knihovně nový playlist {count, plural, one {s # skladbou} few {s # skladbami} other {s # skladbami}} z tohoto seznamu.",
       "nameLabel": "Název",
       "cancel": "Zrušit",
       "confirm": "Uložit playlist",

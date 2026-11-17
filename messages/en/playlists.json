@@ -30,9 +30,9 @@
     "tryDiscover": "Try Discover",
     "noMatchTitle": "No playlists match",
     "noMatchBody": "Try another name or show all owners.",
-    "readOnlyNote": "Playlists you follow but don’t own are read-only. Spotify doesn’t share their tracks, so they show details only.",
+    "readOnlyNote": "Playlists you follow but don’t own are read-only. Their tracks aren’t shared with other apps, so they show details only.",
     "errorTitle": "Couldn’t load your playlists",
-    "errorBody": "Spotify didn’t answer this time. Your history and stats still work."
+    "errorBody": "The music service didn’t answer this time. Your history and stats still work."
   },
   "detail": {
     "breadcrumb": "Breadcrumb",
@@ -44,7 +44,7 @@
     "private": "private",
     "openInSpotify": "Open in Spotify",
     "readOnlyTitle": "Read-only.",
-    "readOnlyBody": "This playlist belongs to someone else and Spotify doesn’t share its tracks, so only its details show here.",
+    "readOnlyBody": "This playlist belongs to someone else and its tracks aren’t shared with other apps, so only its details show here.",
     "followedNote": "You follow this playlist, so its tracks can be read but not changed.",
     "emptyTitle": "This playlist is empty",
     "emptyBody": "Search for tracks to add, or fill it with suggestions.",
