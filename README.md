@@ -1,6 +1,6 @@
 # Rewind
 
-Playlist tools and AI-assisted suggestions for your music library.
+Listening stats, recaps for any period, playlist tools and AI-assisted suggestions for your music library.
 
 Explore everything without an account in **demo mode**: a fictional listener with a full library.
 

@@ -47,7 +47,7 @@ English for code, comments, docs, commit messages, PRs and UI copy.
 - Every data-driven component ships loading (skeleton), empty and error (with retry) states.
 - Routes follow the App Router file conventions in [ADR 0003](docs/adr/0003-app-router-conventions.md): route groups, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`.
 - Every UI string goes through next-intl ([ADR 0002](docs/adr/0002-internationalization-next-intl.md)) with English and Czech messages; no hardcoded copy.
-- Gated features use feature flags checked server-side per [ADR 0004](docs/adr/0004-feature-flags.md); public pages never advertise them.
+- Gated features use feature flags checked server-side per [ADR 0004](docs/adr/0004-feature-flags.md); public pages may describe them, since the public deployment is demo-only.
 - Dependencies: exact versions, lockfile committed, no new library for a problem the existing stack already covers.
 - Check current official docs before writing config or calling a library or external API. When unsure about Spotify API behaviour, verify and state what was verified; do not guess.
 

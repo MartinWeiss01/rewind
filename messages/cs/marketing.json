@@ -1,7 +1,7 @@
 {
   "eyebrow": "Pusť si to znovu",
   "title": "Hudební knihovna v pořádku.",
-  "lead": "Nástroje, které uklidí roky ukládání do playlistů, a AI doporučení podle toho, co opravdu posloucháš.",
+  "lead": "Statistiky poslechu, rekapitulace za libovolné období, nástroje, které uklidí roky ukládání do playlistů, a AI doporučení podle toho, co opravdu posloucháš.",
   "loginCancelled": "Přihlášení bylo zrušeno. Demo můžeš dál prozkoumávat.",
   "loginForbidden": "Tenhle účet zatím není na seznamu pozvaných. Demo funguje i bez něj.",
   "loginFailed": "Přihlášení nevyšlo. Zkus to za chvíli znovu.",
@@ -9,6 +9,21 @@
   "featuresTitle": "Co je na kazetě",
   "sideA": "Strana A",
   "features": {
+    "stats": {
+      "title": "Statistiky poslechu",
+      "text": "Nejposlouchanější skladby, interpreti a alba, čas poslechu, série, heatmapa podle hodin a dnů a podíl nově objevené hudby.",
+      "tag": "Libovolné období"
+    },
+    "recap": {
+      "title": "Vlastní rekapitulace",
+      "text": "Ohlédnutí za libovolným obdobím, ne jen v prosinci. Ulož si ho jako obrázek.",
+      "tag": "Libovolné období"
+    },
+    "history": {
+      "title": "Celá historie",
+      "text": "Naimportuj rozšířenou historii poslechu a dívej se roky zpět, ne jen týdny. Opakovaný import nic nezapočítá dvakrát.",
+      "tag": "Roky zpět"
+    },
     "tools": {
       "title": "Nástroje na playlisty",
       "text": "Najdi duplicity, spoj, seřaď a rozděl playlisty. Každou změnu uvidíš předem a jde vrátit.",
