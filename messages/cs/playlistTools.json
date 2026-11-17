@@ -21,6 +21,10 @@
     "split": {
       "label": "Rozdělit",
       "hint": "Do nových playlistů podle interpreta nebo roku"
+    },
+    "sortInto": {
+      "label": "Rozřadit do playlistů",
+      "hint": "AI navrhne, kam která skladba patří"
     }
   },
   "outcome": {
@@ -222,7 +226,9 @@
       "removeDuplicates": "{count, plural, one {Odebrána # duplicita} few {Odebrány # duplicity} other {Odebráno # duplicit}}",
       "sort": "{count, plural, one {Seřazena # skladba} few {Seřazeny # skladby} other {Seřazeno # skladeb}}",
       "merge": "{count, plural, one {Přisloučena # skladba} few {Přisloučeny # skladby} other {Přisloučeno # skladeb}}",
-      "restore": "Obnoven snímek"
+      "restore": "Obnoven snímek",
+      "moveOut": "{count, plural, one {Přesunuta # skladba} few {Přesunuty # skladby} other {Přesunuto # skladeb}} do jiných playlistů",
+      "moveIn": "{count, plural, one {Přesunuta sem # skladba} few {Přesunuty sem # skladby} other {Přesunuto sem # skladeb}}"
     },
     "meta": "{date} · předtím {count, plural, one {# skladba} few {# skladby} other {# skladeb}}",
     "restore": "Obnovit",
@@ -230,5 +236,73 @@
     "note": "Obnovení taky uloží snímek, takže jde vrátit.",
     "close": "Zavřít",
     "done": "Obnoven snímek z {date}."
+  },
+  "sortInto": {
+    "title": "Rozřadit do playlistů",
+    "description": "AI navrhne nejvhodnější playlist pro {count, plural, one {# skladbu} few {# skladby} other {# skladeb}} z playlistu {name}. Každý návrh před přesunem zkontroluješ.",
+    "targets": "Rozřadit do",
+    "targetsPlaceholder": "Přidat playlist",
+    "targetsHint": "Nejvýš {max} playlistů. Podle jejich názvů, popisů a několika skladeb AI pozná, co kam patří.",
+    "noTargets": "Žádný jiný playlist, který můžeš měnit",
+    "removeTarget": "Odebrat {name}",
+    "needTarget": "Potřebuješ ještě jiný playlist, který můžeš měnit.",
+    "confidence": "Když si AI není jistá",
+    "level": {
+      "strict": "Přísně",
+      "balanced": "Vyváženě",
+      "loose": "Volně"
+    },
+    "levelHint": {
+      "strict": "Předvybrané jsou jen návrhy s jistotou aspoň 80 %. Méně přesunů, skoro žádné chyby.",
+      "balanced": "Předvybrané jsou návrhy s jistotou aspoň 60 %. Zbytek zůstane v playlistu k tvému rozhodnutí.",
+      "loose": "Předvybrané jsou návrhy s jistotou aspoň 40 %. Víc přesunů; ty nejisté zkontroluj."
+    },
+    "removeFromSource": "Odebrat přesunuté skladby z {name}",
+    "skipExisting": "Přeskočit skladby, které playlist už má",
+    "demoNote": "Návrhy jsou předpřipravené podle žánru skladby; žádný AI model neběží.",
+    "demo": "Demo",
+    "suggest": "{count, plural, one {Navrhnout pro # skladbu} few {Navrhnout pro # skladby} other {Navrhnout pro # skladeb}}",
+    "cancel": "Zrušit",
+    "close": "Zavřít",
+    "reviewTitle": "Kontrola návrhů",
+    "deciding": "Rozhoduju {tracks, plural, one {# skladbu} few {# skladby} other {# skladeb}} mezi {targets, plural, one {# playlist} few {# playlisty} other {# playlistů}}…",
+    "summary": "<b>{move, plural, one {# skladba se přesune} few {# skladby se přesunou} other {# skladeb se přesune}}</b> · {stay} zůstane na místě",
+    "show": "Zobrazit",
+    "filterAll": "Vše",
+    "filterUnsure": "Nejisté napřed",
+    "filterBy": "Jen skladby pro {name}",
+    "colInclude": "Zahrnout",
+    "colTrack": "Skladba",
+    "colConfidence": "Jistota",
+    "colTarget": "Přesunout do",
+    "include": "Zahrnout {name}",
+    "keep": "Nechat v {name}",
+    "moveTo": "Kam přesunout {name}",
+    "snapshotNote": "Před změnou se uloží snímek každého měněného playlistu, takže jde vrátit v Historii a zpět.",
+    "back": "Zpět",
+    "submit": "{count, plural, one {Přesunout # skladbu} few {Přesunout # skladby} other {Přesunout # skladeb}}",
+    "moving": "Přesouvám…",
+    "emptyTitle": "Žádná skladba se do těchto playlistů nehodí",
+    "emptyBody": "Všechny návrhy zněly „nechat tady“. Přidej jiné playlisty nebo zkus volnější úroveň.",
+    "backToSettings": "Zpět k nastavení",
+    "doneTitle": "{count, plural, one {Přesunuta # skladba} few {Přesunuty # skladby} other {Přesunuto # skladeb}}",
+    "done": "Hotovo",
+    "added": "+{count}",
+    "retry": "Zkusit znovu",
+    "error": {
+      "forbidden": "Třídění pomocí AI nemáš pro svůj účet zapnuté.",
+      "invalid": "Něco v požadavku nebylo v pořádku. Zavři dialog a zkus to znovu.",
+      "notFound": "Některý z playlistů už neexistuje.",
+      "readOnly": "Některý z playlistů nejde měnit ani číst.",
+      "tooLarge": "Playlist je na jedno rozřazení moc velký (přes {max} skladeb).",
+      "notConfigured": "Třídění pomocí AI tu není dostupné: nasazení nemá přístup k rozhodovacímu modelu. Ostatní nástroje fungují.",
+      "timeout": "AI odpovídala moc dlouho. Nic se nezměnilo; zkus to znovu.",
+      "provider": "AI neodpověděla. V playlistech se nic nezměnilo; zkus to za chvíli.",
+      "rateLimited": "Dnešní AI běhy máš vyčerpané. Zkus to zítra."
+    },
+    "errorTitle": {
+      "unavailable": "Třídění pomocí AI tu není dostupné",
+      "failed": "AI neodpověděla"
+    }
   }
 }

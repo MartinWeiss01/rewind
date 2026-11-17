@@ -21,6 +21,10 @@
     "split": {
       "label": "Split",
       "hint": "Into new playlists by artist or by year"
+    },
+    "sortInto": {
+      "label": "Sort into playlists",
+      "hint": "AI suggests where each track belongs"
     }
   },
   "outcome": {
@@ -222,7 +226,9 @@
       "removeDuplicates": "Removed {count, plural, one {# duplicate} other {# duplicates}}",
       "sort": "Sorted {count, plural, one {# track} other {# tracks}}",
       "merge": "Merged in {count, plural, one {# track} other {# tracks}}",
-      "restore": "Restored a snapshot"
+      "restore": "Restored a snapshot",
+      "moveOut": "Moved {count, plural, one {# track} other {# tracks}} to other playlists",
+      "moveIn": "Moved in {count, plural, one {# track} other {# tracks}}"
     },
     "meta": "{date} · {count, plural, one {# track} other {# tracks}} before",
     "restore": "Restore",
@@ -230,5 +236,73 @@
     "note": "Restoring saves a snapshot too, so a restore can be undone.",
     "close": "Close",
     "done": "Restored the snapshot from {date}."
+  },
+  "sortInto": {
+    "title": "Sort into playlists",
+    "description": "AI suggests the best playlist for each of the {count, plural, one {# track} other {# tracks}} in {name}. You review every suggestion before anything moves.",
+    "targets": "Sort into",
+    "targetsPlaceholder": "Add a playlist",
+    "targetsHint": "Up to {max} playlists. Their names, descriptions and a few tracks from each tell the AI what belongs where.",
+    "noTargets": "No other playlist you can change",
+    "removeTarget": "Remove {name}",
+    "needTarget": "You need another playlist you can change to sort into.",
+    "confidence": "When the AI isn’t sure",
+    "level": {
+      "strict": "Strict",
+      "balanced": "Balanced",
+      "loose": "Loose"
+    },
+    "levelHint": {
+      "strict": "Only suggestions with at least 80% confidence start ticked. Fewer moves, almost no mistakes.",
+      "balanced": "Suggestions with at least 60% confidence start ticked. The rest stay in the playlist for you to decide.",
+      "loose": "Suggestions with at least 40% confidence start ticked. More moves; check the low ones."
+    },
+    "removeFromSource": "Remove moved tracks from {name}",
+    "skipExisting": "Skip tracks a playlist already has",
+    "demoNote": "Suggestions are pre-made from each track’s genre; no AI model runs.",
+    "demo": "Demo",
+    "suggest": "{count, plural, one {Suggest for # track} other {Suggest for # tracks}}",
+    "cancel": "Cancel",
+    "close": "Close",
+    "reviewTitle": "Review suggestions",
+    "deciding": "Deciding {tracks, plural, one {# track} other {# tracks}} across {targets, plural, one {# playlist} other {# playlists}}…",
+    "summary": "<b>{move, plural, one {# track} other {# tracks}}</b> will move · {stay} stay where they are",
+    "show": "Show",
+    "filterAll": "All",
+    "filterUnsure": "Unsure first",
+    "filterBy": "Show only tracks for {name}",
+    "colInclude": "Include",
+    "colTrack": "Track",
+    "colConfidence": "Confidence",
+    "colTarget": "Move to",
+    "include": "Include {name}",
+    "keep": "Keep in {name}",
+    "moveTo": "Move {name} to",
+    "snapshotNote": "A snapshot of every playlist that changes is saved first, so each one can be undone from History & undo.",
+    "back": "Back",
+    "submit": "{count, plural, one {Move # track} other {Move # tracks}}",
+    "moving": "Moving…",
+    "emptyTitle": "No track fits any of these playlists",
+    "emptyBody": "Every suggestion was “keep it here”. Add other playlists or try a looser level.",
+    "backToSettings": "Back to settings",
+    "doneTitle": "{count, plural, one {Moved # track} other {Moved # tracks}}",
+    "done": "Done",
+    "added": "+{count}",
+    "retry": "Try again",
+    "error": {
+      "forbidden": "Sorting with AI isn’t enabled for your account.",
+      "invalid": "Something in the request wasn’t valid. Close the dialog and try again.",
+      "notFound": "One of the playlists no longer exists.",
+      "readOnly": "One of the playlists can’t be changed or read.",
+      "tooLarge": "This playlist is too large to sort at once (over {max} tracks).",
+      "notConfigured": "AI sorting isn’t available here: this deployment has no access to the decision model. The other playlist tools still work.",
+      "timeout": "The AI took too long to answer. Nothing changed; try again.",
+      "provider": "The AI didn’t answer. Nothing changed in your playlists; try again in a moment.",
+      "rateLimited": "You’ve used today’s AI runs. Try again tomorrow."
+    },
+    "errorTitle": {
+      "unavailable": "AI sorting isn’t available here",
+      "failed": "The AI didn’t answer"
+    }
   }
 }
