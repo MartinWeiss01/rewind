@@ -1,3 +1,4 @@
+import { Button } from "@ui-sdk/react/button";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getFormatter, getTranslations } from "next-intl/server";
@@ -95,14 +96,14 @@ export default async function SettingsPage() {
             {isDemo ? (
               <>
                 <form action={resetDemo}>
-                  <button type="submit" className={buttonClass("secondary", "sm")}>
+                  <Button type="submit" className={buttonClass("secondary", "sm")}>
                     {t("resetDemo")}
-                  </button>
+                  </Button>
                 </form>
                 <form action={endDemo}>
-                  <button type="submit" className={buttonClass("ghost", "sm")}>
+                  <Button type="submit" className={buttonClass("ghost", "sm")}>
                     {t("endDemo")}
-                  </button>
+                  </Button>
                 </form>
                 {spotifyAvailable ? (
                   <SpotifyLoginLink className={buttonClass("primary", "sm")}>
@@ -123,9 +124,9 @@ export default async function SettingsPage() {
                   </a>
                 ) : null}
                 <form action="/api/auth/logout" method="post">
-                  <button type="submit" className={buttonClass("ghost", "sm")}>
+                  <Button type="submit" className={buttonClass("ghost", "sm")}>
                     {t("logOut")}
-                  </button>
+                  </Button>
                 </form>
               </>
             )}

@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@ui-sdk/react/button";
 import Link from "next/link";
 import { useFormatter, useTranslations } from "next-intl";
 import { useState } from "react";
@@ -101,15 +102,14 @@ export function PosterHero({
           <ol aria-label={t("topTracks")} className="m-0 mt-2.5 flex list-none flex-col gap-1 p-0">
             {tracks.map((track, i) => (
               <li key={track.id}>
-                <button
-                  type="button"
+                <Button
                   aria-pressed={i === index}
                   onClick={() => setIndex(i)}
                   className="flex min-h-9 cursor-pointer items-baseline gap-2.5 border-0 bg-transparent py-1.5 text-left text-base text-muted aria-pressed:font-bold aria-pressed:text-ink"
                 >
                   <span className="font-mono text-xs">{String(i + 1).padStart(2, "0")}</span>
                   {track.name}
-                </button>
+                </Button>
               </li>
             ))}
           </ol>
@@ -127,25 +127,23 @@ export function PosterHero({
         {current ? (
           <>
             <div className="absolute top-7 left-1/2 flex -translate-x-1/2 flex-nowrap items-center gap-3">
-              <button
-                type="button"
+              <Button
                 aria-label={t("previousTrack")}
                 onClick={() => go(index - 1)}
                 className={buttonClass("secondary", "sm", "size-9 bg-surface px-0")}
               >
                 <Arrow direction="left" />
-              </button>
+              </Button>
               <span className="min-w-[140px] truncate text-center font-semibold text-[15px]">
                 {current.artists}
               </span>
-              <button
-                type="button"
+              <Button
                 aria-label={t("nextTrack")}
                 onClick={() => go(index + 1)}
                 className={buttonClass("secondary", "sm", "size-9 bg-surface px-0")}
               >
                 <Arrow direction="right" />
-              </button>
+              </Button>
             </div>
             <div className="relative mt-[30px] size-[min(300px,70vw)]">
               <div
