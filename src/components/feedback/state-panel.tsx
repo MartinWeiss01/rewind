@@ -1,3 +1,4 @@
+import { CircleAlertIcon, ClockIcon } from "lucide-react";
 import type { ReactNode } from "react";
 
 type Tone = "neutral" | "error";
@@ -23,18 +24,11 @@ export function StatePanel({
         aria-hidden="true"
         className={`grid size-14 place-items-center rounded-full ${tone === "error" ? "bg-danger-soft text-danger" : "bg-surface-2 text-ink-2"}`}
       >
-        <svg
-          width="26"
-          height="26"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          aria-hidden="true"
-        >
-          <circle cx="12" cy="12" r="9" />
-          <path d={tone === "error" ? "M12 8v5M12 16.5v.5" : "M12 7v5l3 2"} />
-        </svg>
+        {tone === "error" ? (
+          <CircleAlertIcon size={26} aria-hidden="true" />
+        ) : (
+          <ClockIcon size={26} aria-hidden="true" />
+        )}
       </span>
       <b>{title}</b>
       <span className="text-muted text-sm">{body}</span>

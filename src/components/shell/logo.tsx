@@ -1,3 +1,4 @@
+import { RewindIcon } from "lucide-react";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
@@ -12,9 +13,7 @@ export async function Logo({ href }: { href: "/" | "/app" }) {
         aria-hidden="true"
         className="grid size-[34px] place-items-center rounded-full bg-ink text-bg"
       >
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M11 6v12L3 12zM21 6v12l-8-6z" />
-        </svg>
+        <RewindIcon size={16} fill="currentColor" aria-hidden="true" />
       </span>
       {t("appName")}
     </Link>

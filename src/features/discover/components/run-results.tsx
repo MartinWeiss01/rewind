@@ -14,6 +14,7 @@ import {
 import { Field, FieldLabel } from "@ui-sdk/react/field";
 import { Input } from "@ui-sdk/react/input";
 import { Menu, MenuContent, MenuItem, MenuTrigger } from "@ui-sdk/react/menu";
+import { ChevronDownIcon, ExternalLinkIcon, XIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { StatePanel } from "@/components/feedback/state-panel";
@@ -223,17 +224,7 @@ export function RunResults({
                   className={buttonClass("ghost", "sm", "size-9 px-0")}
                 >
                   <span className="sr-only">{t("open", { title: track.name })}</span>
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    aria-hidden="true"
-                  >
-                    <path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" />
-                  </svg>
+                  <ExternalLinkIcon size={16} aria-hidden="true" />
                 </a>
               ) : null}
               <Button
@@ -242,7 +233,7 @@ export function RunResults({
                 onClick={() => onRemove(track.id)}
                 className={buttonClass("ghost", "sm", "size-9 px-0")}
               >
-                <span aria-hidden="true">✕</span>
+                <XIcon size={14} aria-hidden="true" />
               </Button>
             </li>
           ))}
@@ -256,17 +247,7 @@ export function RunResults({
               <b>{t("unmatchedSummary", { count: run.unmatched.length })}</b>
               <span className="text-muted"> — {t("unmatchedHint")}</span>
             </span>
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              aria-hidden="true"
-            >
-              <path d="m6 9 6 6 6-6" />
-            </svg>
+            <ChevronDownIcon size={16} aria-hidden="true" />
           </CollapsibleTrigger>
           <CollapsiblePanel>
             <ul className="mt-2.5 mb-0 text-muted text-sm leading-[1.8]">

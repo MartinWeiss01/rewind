@@ -13,6 +13,7 @@ import {
 import { Field, FieldDescription, FieldLabel } from "@ui-sdk/react/field";
 import { Input } from "@ui-sdk/react/input";
 import { Switch, SwitchThumb } from "@ui-sdk/react/switch";
+import { PlusIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { alert, buttonClass } from "@/components/ui/styles";
@@ -70,19 +71,7 @@ export function AddPersonDialog({ variant = "primary" }: { variant?: "primary" |
       }}
     >
       <DialogTrigger className={buttonClass(variant, variant === "primary" ? "md" : "sm")}>
-        {variant === "primary" ? (
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            aria-hidden="true"
-          >
-            <path d="M12 5v14M5 12h14" />
-          </svg>
-        ) : null}
+        {variant === "primary" ? <PlusIcon size={18} aria-hidden="true" /> : null}
         {t("add.open")}
       </DialogTrigger>
       <DialogBackdrop className={dialogBackdrop} />

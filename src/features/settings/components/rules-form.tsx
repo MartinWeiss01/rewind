@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@ui-sdk/react/select";
+import { MinusIcon, PlusIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { buttonClass } from "@/components/ui/styles";
@@ -56,17 +57,17 @@ export function RulesForm({
         <NumberInput value={skip} onValueChange={setSkip} min={0} max={60} step={5}>
           <NumberInputGroup className="inline-flex items-center gap-1 rounded-full border border-line-strong bg-surface p-1">
             <NumberInputDecrement
-              aria-label="−"
+              aria-label={t("skipDecrease")}
               className="grid size-9 cursor-pointer place-items-center rounded-full hover:bg-surface-2"
             >
-              −
+              <MinusIcon size={16} aria-hidden="true" />
             </NumberInputDecrement>
             <NumberInputControl className="w-12 bg-transparent text-center font-mono" />
             <NumberInputIncrement
-              aria-label="+"
+              aria-label={t("skipIncrease")}
               className="grid size-9 cursor-pointer place-items-center rounded-full hover:bg-surface-2"
             >
-              +
+              <PlusIcon size={16} aria-hidden="true" />
             </NumberInputIncrement>
           </NumberInputGroup>
         </NumberInput>
