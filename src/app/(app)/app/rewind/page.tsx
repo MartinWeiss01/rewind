@@ -1,3 +1,4 @@
+import { ChevronLeftIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getFormatter, getTranslations } from "next-intl/server";
@@ -59,17 +60,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Sea
     <>
       <div className="flex flex-wrap items-center justify-between gap-4">
         <Link href="/app" className={buttonClass("secondary", "sm")}>
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            aria-hidden="true"
-          >
-            <path d="M15 18l-6-6 6-6" />
-          </svg>
+          <ChevronLeftIcon size={16} aria-hidden="true" />
           {t("back")}
         </Link>
         <PeriodPicker

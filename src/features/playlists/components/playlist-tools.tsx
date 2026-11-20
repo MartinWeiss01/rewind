@@ -2,6 +2,7 @@
 
 import { Button } from "@ui-sdk/react/button";
 import { Menu, MenuContent, MenuItem, MenuTrigger } from "@ui-sdk/react/menu";
+import { ChevronDownIcon, HistoryIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { z } from "zod";
@@ -75,17 +76,7 @@ export function PlaylistTools({
         >
           <MenuTrigger className={buttonClass("secondary")}>
             {t("tools")}
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              aria-hidden="true"
-            >
-              <path d="M6 9l6 6 6-6" />
-            </svg>
+            <ChevronDownIcon size={16} aria-hidden="true" />
           </MenuTrigger>
           <MenuContent className={`${popup} w-[300px]`} sideOffset={8} align="start">
             {writeTools.map((tool) => (
@@ -104,17 +95,7 @@ export function PlaylistTools({
         </Menu>
       ) : null}
       <Button className={buttonClass("ghost")} onClick={() => setOpen(Tool.History)}>
-        <svg
-          width="18"
-          height="18"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          aria-hidden="true"
-        >
-          <path d="M12 7v5l3 2M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5" />
-        </svg>
+        <HistoryIcon size={18} aria-hidden="true" />
         {t("history")}
       </Button>
 

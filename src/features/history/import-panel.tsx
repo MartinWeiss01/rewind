@@ -10,6 +10,7 @@ import {
   type FileRejection,
 } from "@ui-sdk/react/file-input";
 import { Progress, ProgressIndicator, ProgressTrack } from "@ui-sdk/react/progress";
+import { CircleAlertIcon, FileIcon, FileUpIcon, InfoIcon, UploadIcon, XIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useFormatter, useTranslations } from "next-intl";
@@ -57,24 +58,6 @@ function rejectionError(rejection: FileRejection): ErrorCode {
   if (rejection.reasons.includes("too-many-files")) return "tooMany";
   return ImportFileError.NotJson;
 }
-
-function Icon({ path, size = 20 }: { path: string; size?: number }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      aria-hidden="true"
-    >
-      <path d={path} />
-    </svg>
-  );
-}
-
-const fileIcon = "M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5";
 
 /**
  * Screen header with the "Import history" button and the collapsible import panel.
@@ -199,7 +182,7 @@ export function ImportPanel({
         <div className="flex flex-wrap items-center gap-2.5">
           {status}
           <CollapsibleTrigger className={buttonClass("primary")}>
-            <Icon path="M12 15V3M7 8l5-5 5 5M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4" size={18} />
+            <UploadIcon size={18} strokeWidth={1.8} aria-hidden="true" />
             {t("open")}
           </CollapsibleTrigger>
         </div>
@@ -227,7 +210,7 @@ export function ImportPanel({
             onClick={() => setOpen(false)}
             className={buttonClass("ghost", "sm", "size-9 px-0")}
           >
-            <Icon path="M6 6l12 12M18 6L6 18" size={18} />
+            <XIcon size={18} strokeWidth={1.8} aria-hidden="true" />
           </Button>
         </div>
 
@@ -251,7 +234,7 @@ export function ImportPanel({
                 announcement={() => null}
               >
                 <FileInputDropzone className="relative flex flex-col items-center gap-2.5 rounded-[20px] border-2 border-line-strong border-dashed bg-surface-2 px-5 py-9 text-center data-dragging:border-ink">
-                  <Icon path={`${fileIcon}M12 18v-6M9 15l3-3 3 3`} size={34} />
+                  <FileUpIcon size={34} strokeWidth={1.8} aria-hidden="true" />
                   <b>{t("dropTitle")}</b>
                   <span className="text-muted text-sm">{t("dropHint")}</span>
                   <FileInputTrigger className={buttonClass("secondary", "sm")}>
@@ -300,7 +283,7 @@ export function ImportPanel({
                       key={i}
                       className="flex items-center gap-4 border-line border-b py-2.5 last:border-b-0"
                     >
-                      <Icon path={fileIcon} size={22} />
+                      <FileIcon size={22} strokeWidth={1.8} aria-hidden="true" />
                       <div className="flex grow flex-col gap-1.5">
                         <div className="flex flex-wrap justify-between gap-2">
                           <span className="break-all font-mono text-sm">{file.name}</span>
@@ -393,7 +376,7 @@ export function ImportPanel({
                 </div>
               ) : null}
               <div className={`${alert.base} ${alert.tone.neutral}`}>
-                <Icon path="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v5M12 7.5v.5" />
+                <InfoIcon size={20} strokeWidth={1.8} aria-hidden="true" />
                 <span>{t("notes")}</span>
               </div>
               <div className="flex flex-wrap gap-2.5">
@@ -409,7 +392,7 @@ export function ImportPanel({
           .with({ kind: "error" }, ({ name, error }) => (
             <>
               <div role="alert" className={`${alert.base} ${alert.tone.danger}`}>
-                <Icon path="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 8v5M12 16.5v.5" />
+                <CircleAlertIcon size={20} strokeWidth={1.8} aria-hidden="true" />
                 <div className="flex flex-col gap-1">
                   <b>{t(`errors.${errorKey(error)}.title`, { name })}</b>
                   <span>

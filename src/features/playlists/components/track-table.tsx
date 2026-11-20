@@ -2,6 +2,7 @@
 
 import { createColumnHelper, tableFeatures, useTable } from "@tanstack/react-table";
 import { Button } from "@ui-sdk/react/button";
+import { CheckIcon, GripVerticalIcon, MinusIcon, XIcon } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
 import { useId, useMemo, useState } from "react";
 import { match } from "ts-pattern";
@@ -27,33 +28,21 @@ type Row = PlaylistItem & { position: number; duplicate: boolean; plays: number 
 const features = tableFeatures({});
 const column = createColumnHelper<typeof features, Row>();
 
-const CheckIcon = () => (
-  <svg
-    width="12"
-    height="12"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="3.5"
-    aria-hidden="true"
+const CheckMark = () => (
+  <CheckIcon
+    size={12}
+    strokeWidth={3}
     className="hidden [[aria-checked=true]>&]:block"
-  >
-    <path d="M5 12l5 5L20 7" />
-  </svg>
+    aria-hidden="true"
+  />
 );
 const MixedIcon = () => (
-  <svg
-    width="12"
-    height="12"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="3.5"
-    aria-hidden="true"
+  <MinusIcon
+    size={12}
+    strokeWidth={3}
     className="hidden [[aria-checked=mixed]>&]:block"
-  >
-    <path d="M6 12h12" />
-  </svg>
+    aria-hidden="true"
+  />
 );
 
 /**
@@ -128,7 +117,7 @@ export function TrackTable({
                 id: "select",
                 header: () => (
                   <TrackOrderCheckAll aria-label={t("selectAll")} className={checkbox}>
-                    <CheckIcon />
+                    <CheckMark />
                     <MixedIcon />
                   </TrackOrderCheckAll>
                 ),
@@ -138,7 +127,7 @@ export function TrackTable({
                     aria-label={t("selectRow", { title: row.original.track.name })}
                     className={checkbox}
                   >
-                    <CheckIcon />
+                    <CheckMark />
                   </TrackOrderCheck>
                 ),
               }),
@@ -220,17 +209,7 @@ export function TrackTable({
                       "size-9 cursor-grab touch-none px-0 aria-pressed:bg-violet-soft",
                     )}
                   >
-                    <svg
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      aria-hidden="true"
-                    >
-                      <path d="M8 6h.01M8 12h.01M8 18h.01M16 6h.01M16 12h.01M16 18h.01" />
-                    </svg>
+                    <GripVerticalIcon size={18} aria-hidden="true" />
                   </TrackOrderHandle>
                 ),
               }),
@@ -305,7 +284,7 @@ export function TrackTable({
               className={buttonClass("ghost", "sm", "text-on-ink! hover:bg-white/10")}
               onClick={() => setSelected([])}
             >
-              ✕
+              <XIcon size={14} aria-hidden="true" />
             </Button>
           </div>
         </div>

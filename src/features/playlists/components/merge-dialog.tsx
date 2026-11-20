@@ -44,6 +44,7 @@ import {
   SelectValue,
 } from "@ui-sdk/react/select";
 import { Switch, SwitchThumb } from "@ui-sdk/react/switch";
+import { CheckIcon, ChevronDownIcon, XIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useFormatter, useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
@@ -207,7 +208,7 @@ export function MergeDialog({
                           aria-label={t("removeSource", { name: state.labels[index] ?? "" })}
                           className="grid size-5 cursor-pointer place-items-center rounded-full hover:bg-line"
                         >
-                          ×
+                          <XIcon size={14} aria-hidden="true" />
                         </ComboboxChipRemove>
                       </ComboboxChip>
                     ))
@@ -235,7 +236,9 @@ export function MergeDialog({
                     <span className="truncate">{p.name}</span>
                     <span className="flex items-center gap-2 font-mono text-muted text-xs">
                       {format.number(p.trackCount)}
-                      <ComboboxItemIndicator>✓</ComboboxItemIndicator>
+                      <ComboboxItemIndicator>
+                        <CheckIcon size={14} aria-hidden="true" />
+                      </ComboboxItemIndicator>
                     </span>
                   </ComboboxItem>
                 ))}
@@ -253,7 +256,7 @@ export function MergeDialog({
               <SelectLabel className={fieldLabel}>{t("into")}</SelectLabel>
               <SelectTrigger className={`${input} flex items-center justify-between text-left`}>
                 <SelectValue placeholder={t("newPlaylist")} />
-                <span aria-hidden="true">▾</span>
+                <ChevronDownIcon size={16} aria-hidden="true" />
               </SelectTrigger>
             </div>
             <SelectContent className={`${popup} max-h-72 overflow-auto`}>
@@ -263,7 +266,9 @@ export function MergeDialog({
                 className={`${popupItem} flex-row!`}
               >
                 {t("newPlaylist")}
-                <SelectItemIndicator className="ms-auto">✓</SelectItemIndicator>
+                <SelectItemIndicator className="ms-auto">
+                  <CheckIcon size={14} aria-hidden="true" />
+                </SelectItemIndicator>
               </SelectItem>
               {playlists
                 .filter((p) => p.editable)
@@ -275,7 +280,9 @@ export function MergeDialog({
                     className={`${popupItem} flex-row!`}
                   >
                     <span className="truncate">{p.name}</span>
-                    <SelectItemIndicator className="ms-auto">✓</SelectItemIndicator>
+                    <SelectItemIndicator className="ms-auto">
+                      <CheckIcon size={14} aria-hidden="true" />
+                    </SelectItemIndicator>
                   </SelectItem>
                 ))}
             </SelectContent>

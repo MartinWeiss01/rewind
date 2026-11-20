@@ -10,6 +10,7 @@ import {
   CarouselPrevious,
   CarouselViewport,
 } from "@ui-sdk/react/carousel";
+import { FastForwardIcon, RewindIcon } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
 import { type ReactNode, useState } from "react";
 import { match } from "ts-pattern";
@@ -46,10 +47,10 @@ function Big({ children }: { children: ReactNode }) {
 }
 
 function Arrow({ forward }: { forward: boolean }) {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d={forward ? "M13 6v12l9-6zM3 6v12l9-6z" : "M11 6v12L2 12zM21 6v12l-9-6z"} />
-    </svg>
+  return forward ? (
+    <FastForwardIcon size={18} fill="currentColor" aria-hidden="true" />
+  ) : (
+    <RewindIcon size={18} fill="currentColor" aria-hidden="true" />
   );
 }
 

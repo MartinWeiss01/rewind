@@ -32,6 +32,8 @@
   "skipThreshold": "Count as a skip when shorter than",
   "skipUnit": "s",
   "skipHint": "Applies to stats everywhere.",
+  "skipDecrease": "Shorter threshold",
+  "skipIncrease": "Longer threshold",
   "timeZone": "Time zone for heatmaps and streaks",
   "timeZoneSearch": "Search time zones",
   "noTimeZone": "No time zone found",

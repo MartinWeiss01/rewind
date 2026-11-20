@@ -25,6 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@ui-sdk/react/select";
+import { CheckIcon, ChevronDownIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useId, useMemo, useState } from "react";
 import { match } from "ts-pattern";
@@ -67,19 +68,7 @@ const reasonTone = (level: MatchLevel) =>
     .with(MatchLevel.Title, () => "coral" as const)
     .exhaustive();
 
-const CheckIcon = () => (
-  <svg
-    width="12"
-    height="12"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="3.5"
-    aria-hidden="true"
-  >
-    <path d="M5 12l5 5L20 7" />
-  </svg>
-);
+const CheckMark = () => <CheckIcon size={12} strokeWidth={3} aria-hidden="true" />;
 
 /**
  * Finds songs this playlist shares with another one, at a chosen strictness, and
@@ -272,7 +261,7 @@ export function CompareDialog({
               >
                 <Checkbox value={item.key} className={`${checkbox} mt-3`}>
                   <CheckboxIndicator>
-                    <CheckIcon />
+                    <CheckMark />
                   </CheckboxIndicator>
                 </Checkbox>
                 <Cover cover={item.track.album.cover} size={40} />
@@ -334,7 +323,7 @@ export function CompareDialog({
             <SelectLabel className={fieldLabel}>{t("with")}</SelectLabel>
             <SelectTrigger className={`${input} flex items-center justify-between text-left`}>
               <SelectValue placeholder={t("pick")} />
-              <span aria-hidden="true">▾</span>
+              <ChevronDownIcon size={16} aria-hidden="true" />
             </SelectTrigger>
           </div>
           <SelectContent className={`${popup} max-h-72 overflow-auto`}>
@@ -346,7 +335,9 @@ export function CompareDialog({
                 className={`${popupItem} flex-row!`}
               >
                 <span className="truncate">{p.name}</span>
-                <SelectItemIndicator className="ms-auto">✓</SelectItemIndicator>
+                <SelectItemIndicator className="ms-auto">
+                  <CheckIcon size={14} aria-hidden="true" />
+                </SelectItemIndicator>
               </SelectItem>
             ))}
           </SelectContent>

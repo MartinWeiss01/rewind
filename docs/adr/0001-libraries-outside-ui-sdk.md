@@ -1,7 +1,7 @@
 # ADR 0001: Libraries used alongside ui-sdk
 
 - Status: accepted
-- Date: 2026-11-15
+- Date: 2026-11-15, revised 2026-11-20 (Lucide icons)
 
 ## Context
 
@@ -16,6 +16,7 @@ ui-sdk is the base for every interactive element. Its component set has no data 
 | Loading placeholders | Own `Skeleton` components | Plain styled elements, no behavior | Purely visual and non-interactive, so no behavior library is involved |
 | Recap image export | html-to-image | DOM serialized into an SVG `foreignObject`, drawn to a canvas | Exports the recap card exactly as rendered, with our fonts and tokens, without a second layout for the image |
 | Spotify API types | Orval (build-time generator) | The official Spotify Web API OpenAPI schema | Request and response types plus server-side fetchers generated from the source of truth; deprecated operations filtered out, responses still validated with Zod at the boundary |
+| Icons | lucide-react | One React component per icon, rendering an inline SVG with `currentColor` strokes | The icon set ui-sdk's own docs use; consistent stroke and sizing everywhere instead of hand-drawn paths or text glyphs. Icons are imported as components, never copied as SVG. Decorative icons get `aria-hidden`; icon-only buttons keep an `aria-label` |
 
 Interactive parts inside these (row selection, sort toggles, menus, tooltips on non-chart elements, drag to reorder) still use ui-sdk behaviors and components, e.g. `createReorder`, `createSelection`, `createVirtualizer`, Menu, Tooltip.
 

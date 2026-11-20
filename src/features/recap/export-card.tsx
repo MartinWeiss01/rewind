@@ -1,3 +1,4 @@
+import { RewindIcon } from "lucide-react";
 import type { CSSProperties, Ref } from "react";
 import { match } from "ts-pattern";
 import { Cover } from "@/components/ui/cover";
@@ -118,9 +119,7 @@ export function ExportCard({
           fontSize: 40,
         }}
       >
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M11 6v12L2 12zM21 6v12l-9-6z" />
-        </svg>
+        <RewindIcon size={40} fill="currentColor" aria-hidden="true" />
         Rewind
       </div>
       {showName ? (

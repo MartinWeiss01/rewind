@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@ui-sdk/react/button";
+import { XIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { createContext, type ReactNode, use, useState } from "react";
 import { buttonClass } from "@/components/ui/styles";
@@ -79,7 +80,7 @@ function NoticeBar({
               className={buttonClass("ghost", "sm", "text-on-ink! hover:bg-white/10")}
               onClick={onDismiss}
             >
-              ✕
+              <XIcon size={14} aria-hidden="true" />
             </Button>
           </div>
         </div>

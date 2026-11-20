@@ -54,11 +54,11 @@ English for code, comments, docs, commit messages, PRs and UI copy.
 
 ## Stack
 
-Next.js (App Router), TypeScript, Tailwind CSS, ui-sdk, next-intl, ts-pattern, Zod v4, TanStack Query, TanStack Table, Recharts, Supabase, Vercel AI SDK, Vitest, Playwright, Biome. Package manager: pnpm.
+Next.js (App Router), TypeScript, Tailwind CSS, ui-sdk, Lucide icons (`lucide-react`), next-intl, ts-pattern, Zod v4, TanStack Query, TanStack Table, Recharts, Supabase, Vercel AI SDK, Vitest, Playwright, Biome. Package manager: pnpm.
 
 AI runs on Google Gemini through the Vercel AI SDK and only through the gateway in `src/server/ai.ts`: features pass their input, a Zod output schema and a model tier, never a vendor SDK or model ID. Model IDs per tier are constants there, never in env; `.env` holds only the Gemini API key.
 
-**ui-sdk** (`@ui-sdk/react`, `@ui-sdk/core`) is the base for every interactive element. Before using it, follow the `ui-sdk` skill if installed and read `node_modules/@ui-sdk/react/docs/llms.txt`; to build a new component also search `node_modules/@ui-sdk/react/docs/core.md` by heading and read `rendering.md` next to it. The shipped docs win over memory. If ui-sdk has no fitting component or behavior, stop and tell the owner what you would use instead, what it is built on and why, before adding it. Accepted exceptions (tables, charts, skeletons) are listed in [ADR 0001](docs/adr/0001-libraries-outside-ui-sdk.md).
+**ui-sdk** (`@ui-sdk/react`, `@ui-sdk/core`) is the base for every interactive element. Before using it, follow the `ui-sdk` skill if installed and read `node_modules/@ui-sdk/react/docs/llms.txt`; to build a new component also search `node_modules/@ui-sdk/react/docs/core.md` by heading and read `rendering.md` next to it. The shipped docs win over memory. If ui-sdk has no fitting component or behavior, stop and tell the owner what you would use instead, what it is built on and why, before adding it. Icons always come from `lucide-react` as components: no hand-written or copied SVG, no text glyphs as icons. Accepted exceptions (tables, charts, skeletons, icons) are listed in [ADR 0001](docs/adr/0001-libraries-outside-ui-sdk.md).
 
 ## Ask the owner first
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { createColumnHelper, tableFeatures, useTable } from "@tanstack/react-table";
+import { ExternalLinkIcon } from "lucide-react";
 import type { Route } from "next";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
@@ -141,17 +142,7 @@ export function PlaysTable({ rows, filters }: { rows: HistoryRow[]; filters: His
               rel="noreferrer"
               className={buttonClass("ghost", "sm", "size-9 px-0")}
             >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                aria-hidden="true"
-              >
-                <path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" />
-              </svg>
+              <ExternalLinkIcon size={16} aria-hidden="true" />
               <span className="sr-only">
                 {t("openInSpotify", { track: row.original.track.name })}
               </span>

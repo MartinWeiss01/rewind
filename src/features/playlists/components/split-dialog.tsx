@@ -21,6 +21,7 @@ import {
   SegmentedControlIndicator,
   SegmentedControlItem,
 } from "@ui-sdk/react/segmented-control";
+import { MinusIcon, PlusIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useId, useMemo, useState } from "react";
@@ -129,14 +130,14 @@ export function SplitDialog({
                 aria-label={t("decrease")}
                 className={buttonClass("secondary", "sm", "size-11 px-0")}
               >
-                −
+                <MinusIcon size={16} aria-hidden="true" />
               </NumberInputDecrement>
               <NumberInputControl className={`${input} w-24 text-center`} />
               <NumberInputIncrement
                 aria-label={t("increase")}
                 className={buttonClass("secondary", "sm", "size-11 px-0")}
               >
-                +
+                <PlusIcon size={16} aria-hidden="true" />
               </NumberInputIncrement>
             </NumberInputGroup>
           </NumberInput>

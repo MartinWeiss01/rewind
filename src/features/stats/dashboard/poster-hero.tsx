@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@ui-sdk/react/button";
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import Link from "next/link";
 import { useFormatter, useTranslations } from "next-intl";
 import { useState } from "react";
@@ -14,18 +15,10 @@ import type { RankedTrack } from "../view";
 const tints = ["bg-violet-soft", "bg-coral-soft", "bg-mint-soft", "bg-butter-soft"] as const;
 
 function Arrow({ direction }: { direction: "left" | "right" }) {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      aria-hidden="true"
-    >
-      <path d={direction === "left" ? "M15 18l-6-6 6-6" : "M9 18l6-6-6-6"} />
-    </svg>
+  return direction === "left" ? (
+    <ChevronLeftIcon size={16} aria-hidden="true" />
+  ) : (
+    <ChevronRightIcon size={16} aria-hidden="true" />
   );
 }
 

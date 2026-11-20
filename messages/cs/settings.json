@@ -32,6 +32,8 @@
   "skipThreshold": "Počítat jako přeskočení, když je kratší než",
   "skipUnit": "s",
   "skipHint": "Platí pro statistiky všude.",
+  "skipDecrease": "Kratší hranice",
+  "skipIncrease": "Delší hranice",
   "timeZone": "Časové pásmo pro heatmapu a série",
   "timeZoneSearch": "Hledat časové pásmo",
   "noTimeZone": "Žádné pásmo nenalezeno",

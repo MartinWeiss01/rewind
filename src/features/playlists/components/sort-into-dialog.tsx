@@ -39,6 +39,7 @@ import {
   SelectValue,
 } from "@ui-sdk/react/select";
 import { Switch, SwitchThumb } from "@ui-sdk/react/switch";
+import { CheckIcon, ChevronDownIcon, XIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useId, useMemo, useState } from "react";
@@ -89,19 +90,7 @@ const filterSchema = z.enum(Filter);
 /** Per track: where it goes (a target ID or `keep`) and whether it is ticked. */
 type Choice = { to: string; on: boolean };
 
-const CheckIcon = () => (
-  <svg
-    width="12"
-    height="12"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="3.5"
-    aria-hidden="true"
-  >
-    <path d="M5 12l5 5L20 7" />
-  </svg>
-);
+const CheckMark = () => <CheckIcon size={12} strokeWidth={3} aria-hidden="true" />;
 
 const barColor = (confidence: number) =>
   confidence >= 0.75 ? "bg-ink" : confidence >= 0.5 ? "bg-violet" : "bg-coral";
@@ -288,7 +277,7 @@ export function SortIntoDialog({
                         aria-label={t("removeTarget", { name: state.labels[index] ?? "" })}
                         className="grid size-5 cursor-pointer place-items-center rounded-full hover:bg-line"
                       >
-                        ×
+                        <XIcon size={14} aria-hidden="true" />
                       </ComboboxChipRemove>
                     </ComboboxChip>
                   ))
@@ -314,7 +303,9 @@ export function SortIntoDialog({
                   className={`${popupItem} flex-row! items-center! justify-between`}
                 >
                   <span className="truncate">{p.name}</span>
-                  <ComboboxItemIndicator>✓</ComboboxItemIndicator>
+                  <ComboboxItemIndicator>
+                    <CheckIcon size={14} aria-hidden="true" />
+                  </ComboboxItemIndicator>
                 </ComboboxItem>
               ))}
             </ComboboxList>
@@ -533,7 +524,7 @@ export function SortIntoDialog({
                         className={checkbox}
                       >
                         <CheckboxIndicator>
-                          <CheckIcon />
+                          <CheckMark />
                         </CheckboxIndicator>
                       </Checkbox>
                     </td>
@@ -574,7 +565,7 @@ export function SortIntoDialog({
                           <span className="truncate">
                             <SelectValue />
                           </span>
-                          <span aria-hidden="true">▾</span>
+                          <ChevronDownIcon size={16} aria-hidden="true" />
                         </SelectTrigger>
                         <SelectContent className={`${popup} max-h-72 overflow-auto`}>
                           {targets.map((id) => (
@@ -585,7 +576,9 @@ export function SortIntoDialog({
                               className={`${popupItem} flex-row!`}
                             >
                               <span className="truncate">{nameOf(id)}</span>
-                              <SelectItemIndicator className="ms-auto">✓</SelectItemIndicator>
+                              <SelectItemIndicator className="ms-auto">
+                                <CheckIcon size={14} aria-hidden="true" />
+                              </SelectItemIndicator>
                             </SelectItem>
                           ))}
                           <SelectItem
@@ -594,7 +587,9 @@ export function SortIntoDialog({
                             className={`${popupItem} flex-row!`}
                           >
                             <span className="truncate">{t("keep", { name: playlistName })}</span>
-                            <SelectItemIndicator className="ms-auto">✓</SelectItemIndicator>
+                            <SelectItemIndicator className="ms-auto">
+                              <CheckIcon size={14} aria-hidden="true" />
+                            </SelectItemIndicator>
                           </SelectItem>
                         </SelectContent>
                       </Select>
